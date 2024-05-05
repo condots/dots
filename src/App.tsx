@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import SbomEditor from "@/components/SbomEditor";
-import ProfileMenu from "@/components/ProfileMenu";
-import InstanceDrawer from "@/components/InstanceDrawer";
+import SbomEditor from "@/components/SbomEditor/SbomEditor";
+import ProfileMenu from "@/components/ProfileMenu/ProfileMenu";
+import ElementDialog from "@/components/ElementDrawer/ElementDialog";
 import { tracked, actions } from "@/store/global";
 import { Splitter, SplitterPanel } from "primereact/splitter";
 
@@ -18,7 +18,7 @@ export default function App() {
 
   return (
     <>
-      <InstanceDrawer />
+      <ElementDialog />
       <Splitter className="h-screen w-screen">
         <SplitterPanel size={20} minSize={10}>
           <ProfileMenu />

@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { tracked } from "@/store/global";
 import { PanelMenu } from "primereact/panelmenu";
 import { Tooltip } from "primereact/tooltip";
-import ClassSearch from "./ClassSearch";
+import ClassSearch from "@/components/ProfileMenu/ClassSearch";
 
 const clsRenderer = (cls) => {
   const onDragStart = (event, iri) => {
@@ -65,7 +65,7 @@ const ProfileMenu = () => {
   }, [profilesModel, selected]);
 
   return (
-    <div className="card flex flex-col h-full w-full">
+    <div className="card flex h-full w-full flex-col">
       <ClassSearch selected={selected} setSelected={setSelected} />
       <p className="text-center text-sm text-gray-300">{selected?.iri}</p>
       <PanelMenu model={profileItems} className="overflow-scroll" />

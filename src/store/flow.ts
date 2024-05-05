@@ -16,8 +16,8 @@ import {
   ConnectionLineType,
 } from "reactflow";
 import type { NodeTypes, EdgeTypes, DefaultEdgeOptions } from "reactflow";
-import ElementNode from "@/components/ElementNode";
-import ElementEdge from "@/components/ElementEdge";
+import ElementNode from "@/components/SbomEditor/ElementNode";
+import ElementEdge from "@/components/SbomEditor/ElementEdge";
 
 type DevtoolsActive = {
   nodeInspector: boolean;
@@ -134,7 +134,7 @@ export const flowStore = createStore("flow")(<RFState>{
                 return n;
               }
               return node;
-            })
+            }),
           );
         },
         setDevtoolsActive: (name: string) => {
@@ -143,5 +143,5 @@ export const flowStore = createStore("flow")(<RFState>{
             [name]: !get.devtoolsActive()[name],
           });
         },
-      }
+      },
   );

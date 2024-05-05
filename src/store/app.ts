@@ -1,11 +1,9 @@
 import { createStore } from "zustand-x";
 
-interface State {}
-
-const initialState = <State>{};
-
 export const appStore = createStore("app")({
-  ...initialState,
+  elementDialog: {
+    nodeId: <string | null>null,
+  },
   middlewares: ["immer", "devtools", "persist"],
 })
   .extendSelectors((state, get, api) => ({}))

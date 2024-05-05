@@ -2,11 +2,11 @@ import { type ReactNode, HTMLAttributes } from "react";
 import { Panel } from "reactflow";
 import { tracked, actions } from "@/store/global";
 
-import "@/components/devtools.css";
+import "@/components/DevTools/devtools.css";
 
-import NodeInspector from "@/components/NodeInspector";
-import ChangeLogger from "@/components/ChangeLogger";
-import ViewportLogger from "@/components/ViewportLogger";
+import NodeInspector from "@/components/DevTools/NodeInspector";
+import ChangeLogger from "@/components/DevTools/ChangeLogger";
+import ViewportLogger from "@/components/DevTools/ViewportLogger";
 
 export default function DevTools() {
   const dtActive = tracked().flow.devtoolsActive();

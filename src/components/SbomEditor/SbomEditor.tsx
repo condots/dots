@@ -1,6 +1,6 @@
 import { useRef, useState, useCallback } from "react";
 import { Background, Controls, ReactFlow } from "reactflow";
-import DevTools from "@/components/DevTools";
+import DevTools from "@/components/DevTools/DevTools";
 
 import { tracked, actions } from "@/store/global";
 
@@ -36,11 +36,11 @@ export default function SbomEditor() {
 
       actions.flow.addNode(node);
     },
-    [reactFlowInstance]
+    [reactFlowInstance],
   );
 
   return (
-    <div ref={reactFlowWrapper} className="h-full bg-primary-800">
+    <div ref={reactFlowWrapper} className="bg-primary-800 h-full">
       <ReactFlow
         proOptions={{ hideAttribution: true }}
         nodes={tracked().flow.nodes()}
@@ -61,9 +61,9 @@ export default function SbomEditor() {
         fitViewOptions={{ padding: 1 }}
         connectionMode={tracked().flow.connectionMode()}
       >
+        <DevTools />
         <Background />
         <Controls />
-        <DevTools />
       </ReactFlow>
     </div>
   );

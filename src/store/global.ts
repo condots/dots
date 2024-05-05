@@ -1,15 +1,11 @@
 import { mapValuesKey } from "zustand-x";
 import { appStore } from "@/store/app";
 import { ontoStore } from "@/store/onto";
-import { sbomStore } from "@/store/sbom";
-import { infoStore } from "@/store/info";
 import { flowStore } from "@/store/flow";
 
 export const globalStore = {
   app: appStore,
   onto: ontoStore,
-  sbom: sbomStore,
-  info: infoStore,
   flow: flowStore,
 };
 
