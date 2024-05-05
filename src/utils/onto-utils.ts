@@ -13,6 +13,10 @@ export const ns = {
   xsd: rdfext.namespace("http://www.w3.org/2001/XMLSchema#"),
 };
 
+// export function iriName(iri: string) {
+//   return graph?.getSubjects(ns.rdf.type, ns.owl.Ontology)[0]?.id;
+// }
+
 export function getSpdxNs(graph: Store) {
   return graph?.getSubjects(ns.rdf.type, ns.owl.Ontology)[0]?.id;
 }
@@ -88,9 +92,7 @@ export function createModel(graph: Store, spdxNs: string) {
 
   for (const iri in iris) {
     const cls = iris[iri];
-    if (cls.subClassOf) {
-      cls.subClassOf = iris[cls.subClassOf];
-    }
+    cls.inheritedConstraints = getInheritedConstraints(iris, cls.subClassOf);
   }
 
   return model;
@@ -133,7 +135,15 @@ function extractNodeShape(graph: Store, node: OTerm) {
   return constraints;
 }
 
-// export function getClassProperties(profile, iri: string) {
-//   const properties = graph.getSubjects(ns.rdfs.domain, cls);
-//   return properties;
-// }
+export function getInheritedConstraints(iris: object, iri: string): object[] {
+  if (!iri) {
+    return [];
+  }
+  const cls = iris[iri];
+  const c = {
+    iri: cls.iri,
+    name: cls.name,
+    constraints: cls.constraints,
+  };
+  return [c, ...getInheritedConstraints(iris, cls.subClassOf)];
+}

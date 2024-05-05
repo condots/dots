@@ -18,6 +18,8 @@ import {
 import type { NodeTypes, EdgeTypes, DefaultEdgeOptions } from "reactflow";
 import ElementNode from "@/components/SbomEditor/ElementNode";
 import ElementEdge from "@/components/SbomEditor/ElementEdge";
+import { ontoStore } from "@/store/onto";
+import { find } from "lodash-es";
 
 type DevtoolsActive = {
   nodeInspector: boolean;
@@ -104,7 +106,11 @@ export const flowStore = createStore("flow")(<RFState>{
   },
   middlewares: ["immer", "devtools", "persist"],
 })
-  .extendSelectors((state, get, api) => ({}))
+  .extendSelectors((state, get, api) => ({
+    getNode: (nodeId: string) => {
+      return find(get.nodes(), { id: nodeId });
+    },
+  }))
   .extendActions(
     (set, get, api) =>
       <RFActions>{
@@ -124,19 +130,22 @@ export const flowStore = createStore("flow")(<RFState>{
           set.edges(edges);
         },
         addNode: (node: Node) => {
+          const cls = ontoStore.get.cls(node.data.iri);
+          node.data = { ...node.data, cls };
           set.nodes(get.nodes().concat(node));
         },
-        updateNodeColor: (nodeId: string, color: string) => {
-          set.nodes(
-            get.nodes().map((node) => {
-              if (node.id === nodeId) {
-                const n = { ...node, data: { ...node.data, color } };
-                return n;
-              }
-              return node;
-            }),
-          );
-        },
+        // updateNodeColor: (nodeId: string, color: string) => {
+        //   const node = get.getNode(nodeId);
+        //   set.nodes(
+        //     get.nodes().map((node) => {
+        //       if (node.id === nodeId) {
+        //         const n = { ...node, data: { ...node.data, color } };
+        //         return n;
+        //       }
+        //       return node;
+        //     }),
+        //   );
+        // },
         setDevtoolsActive: (name: string) => {
           set.devtoolsActive({
             ...get.devtoolsActive(),
