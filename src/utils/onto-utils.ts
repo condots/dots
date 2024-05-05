@@ -17,7 +17,7 @@ export function getSpdxNs(graph: Store) {
   return graph?.getSubjects(ns.rdf.type, ns.owl.Ontology)[0]?.id;
 }
 
-export async function loadOntology(source: string | File) {
+export async function createGraph(source: string | File) {
   const url = source.name ?? source;
   const ext = url.split(".").pop() || "";
   let text: string;
@@ -47,13 +47,13 @@ export async function loadOntology(source: string | File) {
   return new Store(quads);
 }
 
-export function getProfiles(graph: Store, spdxNs: string) {
+export function createModel(graph: Store, spdxNs: string) {
   if (!graph || !spdxNs) {
     return {};
   }
   const classes = graph.getSubjects(ns.rdf.type, ns.owl.Class);
   const iris = {};
-  const profiles =
+  const model =
     classes?.reduce((acc, subject) => {
       const iri = subject.value;
       if (!iri.startsWith(spdxNs)) {
@@ -93,7 +93,7 @@ export function getProfiles(graph: Store, spdxNs: string) {
     }
   }
 
-  return profiles;
+  return model;
 }
 
 export async function sparql(graph: Store, query: string) {

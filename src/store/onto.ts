@@ -1,7 +1,7 @@
 import { createStore } from "zustand-x";
 import { Store } from "n3";
 import rdfext from "rdf-ext";
-import { getSpdxNs, getProfiles, loadOntology } from "@/utils/onto-utils";
+import { getSpdxNs, createModel, createGraph } from "@/utils/onto-utils";
 
 export const ontoStore = createStore("onto")({
   source: <string | File>"https://spdx.org/rdf/3.0.0/spdx-model.ttl",
@@ -32,9 +32,9 @@ export const ontoStore = createStore("onto")({
   }))
   .extendActions((set, get, api) => ({
     updateOntology: () => {
-      loadOntology(get.source()).then((graph) => {
+      createGraph(get.source()).then((graph) => {
         const spdxNs = getSpdxNs(graph);
-        const model = getProfiles(graph, spdxNs);
+        const model = createModel(graph, spdxNs);
         set.state((draft) => {
           draft.graph = graph;
           draft.spdxNs = spdxNs;
