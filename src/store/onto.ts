@@ -3,22 +3,11 @@ import { Store } from "n3";
 import rdfext from "rdf-ext";
 import { getSpdxNs, getProfiles, loadOntology } from "@/utils/onto-utils";
 
-interface State {
-  source: string | File;
-  graph: Store | null;
-  spdxNs: string | null;
-  model: object;
-}
-
-const initialState = <State>{
-  source: "https://spdx.org/rdf/3.0.0/spdx-model.ttl",
-  graph: null,
-  spdxNs: null,
-  model: {},
-};
-
 export const ontoStore = createStore("onto")({
-  ...initialState,
+  source: <string | File>"https://spdx.org/rdf/3.0.0/spdx-model.ttl",
+  graph: <Store | null>null,
+  spdxNs: <string | null>null,
+  model: <object>{},
   middlewares: ["immer", "devtools", "persist"],
 })
   .extendSelectors((state, get, api) => ({
@@ -43,13 +32,13 @@ export const ontoStore = createStore("onto")({
   }))
   .extendActions((set, get, api) => ({
     updateOntology: () => {
-      loadOntology(get.source()).then((model) => {
-        const spdxNs = getSpdxNs(model);
-        const profiles = getProfiles(model, spdxNs);
+      loadOntology(get.source()).then((graph) => {
+        const spdxNs = getSpdxNs(graph);
+        const model = getProfiles(graph, spdxNs);
         set.state((draft) => {
-          draft.graph = model;
+          draft.graph = graph;
           draft.spdxNs = spdxNs;
-          draft.model = profiles;
+          draft.model = model;
         });
         console.log("updated ontology");
       });

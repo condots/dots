@@ -13,8 +13,8 @@ export const ns = {
   xsd: rdfext.namespace("http://www.w3.org/2001/XMLSchema#"),
 };
 
-export function getSpdxNs(model: Store) {
-  return model?.getSubjects(ns.rdf.type, ns.owl.Ontology)[0]?.id;
+export function getSpdxNs(graph: Store) {
+  return graph?.getSubjects(ns.rdf.type, ns.owl.Ontology)[0]?.id;
 }
 
 export async function loadOntology(source: string | File) {
@@ -47,11 +47,11 @@ export async function loadOntology(source: string | File) {
   return new Store(quads);
 }
 
-export function getProfiles(model: Store, spdxNs: string) {
-  if (!model || !spdxNs) {
+export function getProfiles(graph: Store, spdxNs: string) {
+  if (!graph || !spdxNs) {
     return {};
   }
-  const classes = model.getSubjects(ns.rdf.type, ns.owl.Class);
+  const classes = graph.getSubjects(ns.rdf.type, ns.owl.Class);
   const iris = {};
   const profiles =
     classes?.reduce((acc, subject) => {
@@ -62,14 +62,14 @@ export function getProfiles(model: Store, spdxNs: string) {
       }
       const fqname = iri.slice(spdxNs.length - 1);
       const [profile, name] = fqname.slice(1).split("/", 2);
-      const subClassOf = model.getObjects(iri, ns.rdfs.subClassOf)[0]?.value;
-      const constraints = extractNodeShape(model, iri);
-      const summary = model.getObjects(subject, ns.rdfs.comment)[0]?.value;
-      const options = model.getSubjects(ns.rdf.type, iri).map((o) => ({
+      const subClassOf = graph.getObjects(iri, ns.rdfs.subClassOf)[0]?.value;
+      const constraints = extractNodeShape(graph, iri);
+      const summary = graph.getObjects(subject, ns.rdfs.comment)[0]?.value;
+      const options = graph.getSubjects(ns.rdf.type, iri).map((o) => ({
         name: o.value.slice(iri.length + 1),
         iri: o.value,
-        summary: model.getObjects(o.value, ns.rdfs.comment)[0]?.value,
-        label: model.getObjects(o.value, ns.rdfs.label)[0]?.value,
+        summary: graph.getObjects(o.value, ns.rdfs.comment)[0]?.value,
+        label: graph.getObjects(o.value, ns.rdfs.label)[0]?.value,
       }));
 
       const cls = {
@@ -96,34 +96,34 @@ export function getProfiles(model: Store, spdxNs: string) {
   return profiles;
 }
 
-export async function sparql(model: Store, query: string) {
+export async function sparql(graph: Store, query: string) {
   const bindingsStream = await comunicaEngine.queryBindings(query, {
-    sources: [model],
+    sources: [graph],
   });
   return await bindingsStream.toArray();
 }
 
-function shInToList(model: Store, node: OTerm) {
+function shInToList(graph: Store, node: OTerm) {
   const list: string[] = [];
-  model.getObjects(node, ns.rdf.first).forEach((first) => {
+  graph.getObjects(node, ns.rdf.first).forEach((first) => {
     list.push(first.id);
-    model
+    graph
       .getObjects(node, ns.rdf.rest)
-      .forEach((n) => list.push(...shInToList(model, n)));
+      .forEach((n) => list.push(...shInToList(graph, n)));
   });
   return list;
 }
 
-function extractNodeShape(model: Store, node: OTerm) {
+function extractNodeShape(graph: Store, node: OTerm) {
   const len = ns.sh().value.length;
   const constraints = [];
-  const propertyShapes = model.getObjects(node, ns.sh.property);
+  const propertyShapes = graph.getObjects(node, ns.sh.property);
   for (const pshape of propertyShapes) {
     const constraint = {};
-    for (const c of model.getQuads(pshape)) {
+    for (const c of graph.getQuads(pshape)) {
       const k = c.predicate.value.slice(len);
       if (c.object.termType === "BlankNode") {
-        constraint[k] = shInToList(model, c.object);
+        constraint[k] = shInToList(graph, c.object);
       } else {
         constraint[k] = c.object.value;
       }
@@ -132,3 +132,8 @@ function extractNodeShape(model: Store, node: OTerm) {
   }
   return constraints;
 }
+
+// export function getClassProperties(profile, iri: string) {
+//   const properties = graph.getSubjects(ns.rdfs.domain, cls);
+//   return properties;
+// }
