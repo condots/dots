@@ -30,6 +30,7 @@ const ClassMenu = () => {
         label: profile,
         draggable: false,
         droppable: false,
+        className: "select-none",
         children,
       });
     }
@@ -51,8 +52,8 @@ const ClassMenu = () => {
           label={node.label}
           text
           severity="secondary"
-          className={`${options.className} m-0 px-2 py-1`}
-          size="small"
+          className={`${options.className} m-0 px-2 py-1 font-normal`}
+          // size="small"
           tooltip={node.data?.summary}
           tooltipOptions={{
             position: "right",
@@ -65,7 +66,7 @@ const ClassMenu = () => {
         />
       );
     } else {
-      return <div className="select-none">{node.label}</div>;
+      return <div>{node.label}</div>;
     }
   };
 
