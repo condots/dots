@@ -44,11 +44,27 @@ const ElementNode = ({ id, data }: NodeProps<NodeData>) => {
   return (
     <>
       <Card
-        className="fira-code-q w-24rem justify-content-center card-appear flex justify-center text-balance rounded-md border border-slate-600 bg-white/20 shadow-lg shadow-slate-900/40 hover:bg-white/30"
+        className="
+          font-lato 
+          card-appear 
+          rounded-md 
+          w-24rem 
+          flex 
+          justify-content-center 
+          justify-center 
+          text-balance 
+          border 
+          bg-gray-50/90
+          hover:bg-gray-100
+          border-slate-600 
+          shadow-lg
+          shadow-slate-900/40 
+          hover:shadow-xl
+          "
         style={style}
       >
         <button
-          className="pi pi-info-circle absolute right-0 top-0 m-2 rounded-full text-lg text-blue-100 hover:text-blue-200"
+          className="pi pi-info-circle absolute right-0 top-0 m-2 rounded-full hover:text-primary hover:backdrop-brightness-110 transition"
           onClick={() =>
             actions.app.state((state) => {
               state.elementDialog.nodeId = id;
@@ -56,7 +72,7 @@ const ElementNode = ({ id, data }: NodeProps<NodeData>) => {
           }
         />
 
-        <div className="p-card-title w-20rem my-0 flex justify-center font-medium text-slate-50">
+        <div className="font-lato p-card-title w-20rem my-0 flex justify-center text-2xl">
           <p className="truncate">{cls?.name}</p>
         </div>
         {cls.options && (
@@ -67,14 +83,14 @@ const ElementNode = ({ id, data }: NodeProps<NodeData>) => {
               options={cls.options}
               optionLabel="name"
               optionValue="iri"
-              className="w-full bg-gray-50"
+              className="w-full"
               checkmark={true}
               highlightOnSelect={false}
               placeholder="Select a type..."
-              panelClassName="text-[1.2rem] fira-code-q bg-gray-50"
+              panelClassName="font-lato text-[1.2rem]"
               pt={{
                 input: {
-                  className: "text-[1.2rem] fira-code-q bg-gray-50 font-medium",
+                  className: "font-lato text-[1.2rem] font-medium",
                 },
               }}
             />

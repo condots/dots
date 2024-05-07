@@ -11,23 +11,6 @@
   @tailwind utilities;
 }
 
-.fira-code-q {
-  font-family: "Fira Code", monospace;
-  font-optical-sizing: auto;
-  font-weight: 700;
-  font-style: normal;
-}
-
-.nunito-sans-q {
-  font-family: "Nunito Sans", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 900;
-  font-style: normal;
-  font-variation-settings:
-    "wdth" 100,
-    "YTLC" 500;
-}
-
 html,
 body,
 #root {

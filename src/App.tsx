@@ -1,6 +1,14 @@
 import { useEffect } from "react";
 import SbomEditor from "@/components/SbomEditor/SbomEditor";
 import ElementDialog from "@/components/ElementDialog/ElementDialog";
+import {
+  initialNodes,
+  initialEdges,
+  nodeTypes,
+  edgeTypes,
+  defaultEdgeOptions,
+} from "@/utils/flow-init";
+
 import { tracked, actions } from "@/store/global";
 import { Splitter, SplitterPanel } from "primereact/splitter";
 
@@ -11,6 +19,14 @@ import ClassMenu from "./components/ClassMenu/ClassMenu";
 
 export default function App() {
   const source = tracked().onto.source();
+
+  useEffect(() => {
+    actions.flow.nodes(initialNodes);
+    actions.flow.edges(initialEdges);
+    actions.flow.nodeTypes(nodeTypes);
+    actions.flow.edgeTypes(edgeTypes);
+    actions.flow.defaultEdgeOptions(defaultEdgeOptions);
+  }, []);
 
   useEffect(() => {
     actions.onto.updateOntology();

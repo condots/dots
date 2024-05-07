@@ -8,7 +8,12 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        lato: ["Lato", "sans-serif"],
+        roboto: ["Roboto Slab", "sans-serif"],
+      },
+    },
   },
   plugins: [typography],
 };

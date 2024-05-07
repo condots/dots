@@ -16,8 +16,6 @@ import {
   ConnectionLineType,
 } from "reactflow";
 import type { NodeTypes, EdgeTypes, DefaultEdgeOptions } from "reactflow";
-import ElementNode from "@/components/SbomEditor/ElementNode";
-import ElementEdge from "@/components/SbomEditor/ElementEdge";
 import { ontoStore } from "@/store/onto";
 import { find } from "lodash-es";
 
@@ -51,52 +49,11 @@ type RFActions = {
 };
 
 export const flowStore = createStore("flow")(<RFState>{
-  nodes: [
-    {
-      id: "1",
-      position: { x: 0, y: 0 },
-      data: {
-        iri: "https://spdx.org/rdf/3.0.0/terms/Software/File",
-        flowElement: true,
-      },
-      type: "element",
-    },
-    {
-      id: "2",
-      position: { x: 200, y: 350 },
-      data: {
-        iri: "https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType",
-        flowElement: true,
-      },
-      type: "element",
-    },
-  ] satisfies Node[],
-  edges: [
-    {
-      id: "1-2",
-      source: "1",
-      target: "2",
-      data: {
-        property: "edge label",
-      },
-    },
-  ] satisfies Edge[],
-  nodeTypes: {
-    element: ElementNode,
-  } satisfies NodeTypes,
-  edgeTypes: {
-    element: ElementEdge,
-  } satisfies EdgeTypes,
-  defaultEdgeOptions: {
-    type: "element",
-    markerEnd: {
-      type: MarkerType.ArrowClosed,
-      strokeWidth: 2,
-      width: 30,
-      height: 30,
-    },
-    data: {},
-  } satisfies DefaultEdgeOptions,
+  nodes: [],
+  edges: [],
+  nodeTypes: {},
+  edgeTypes: {},
+  defaultEdgeOptions: {},
   connectionLineType: ConnectionLineType.SmoothStep,
   connectionMode: ConnectionMode.Loose,
   devtoolsActive: {
