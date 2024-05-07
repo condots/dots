@@ -46,7 +46,7 @@ export default function ElementDialog() {
       <Dialog
         header={cls?.name}
         visible={cls}
-        style={{ width: "50vw" }}
+        className="w-1/2"
         onHide={() =>
           actions.app.state((state) => {
             state.elementDialog.nodeId = null;

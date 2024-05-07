@@ -64,7 +64,7 @@ const ElementNode = ({ id, data }: NodeProps<NodeData>) => {
         style={style}
       >
         <button
-          className="pi pi-info-circle absolute right-0 top-0 m-2 rounded-full hover:text-primary hover:backdrop-brightness-110 transition"
+          className="pi pi-info-circle absolute right-0 top-0 m-2 rounded-full hover:backdrop-brightness-110 transition"
           onClick={() =>
             actions.app.state((state) => {
               state.elementDialog.nodeId = id;

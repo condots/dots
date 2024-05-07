@@ -21,8 +21,8 @@ export default function App() {
   const source = tracked().onto.source();
 
   useEffect(() => {
-    actions.flow.nodes(initialNodes);
-    actions.flow.edges(initialEdges);
+    // actions.flow.nodes(initialNodes);
+    // actions.flow.edges(initialEdges);
     actions.flow.nodeTypes(nodeTypes);
     actions.flow.edgeTypes(edgeTypes);
     actions.flow.defaultEdgeOptions(defaultEdgeOptions);
