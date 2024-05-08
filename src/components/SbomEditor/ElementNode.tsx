@@ -75,12 +75,12 @@ const ElementNode = ({ id, data }: NodeProps<NodeData>) => {
         <div className="font-lato p-card-title w-20rem my-0 flex justify-center text-2xl">
           <p className="truncate">{cls?.name}</p>
         </div>
-        {cls.options && (
+        {cls.entries && (
           <div className="card justify-content-center w-20rem mt-5 flex">
             <Dropdown
               value={selected}
               onChange={(e) => setSelected(e.value)}
-              options={cls.options}
+              options={cls.entries}
               optionLabel="name"
               optionValue="iri"
               className="w-full"

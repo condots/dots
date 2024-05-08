@@ -1,7 +1,12 @@
 import { createStore } from "zustand-x";
 import { Store } from "n3";
 import rdfext from "rdf-ext";
-import { getSpdxNs, createModel, createGraph } from "@/utils/onto-utils";
+import {
+  getSpdxNs,
+  createModel,
+  createGraph,
+  getInheritedConstraints,
+} from "@/utils/onto-utils";
 
 export const ontoStore = createStore("onto")({
   source: <string | File>"https://spdx.org/rdf/3.0.0/spdx-model.ttl",
@@ -15,20 +20,24 @@ export const ontoStore = createStore("onto")({
       const spdxNs = get.spdxNs();
       return spdxNs && rdfext.namespace(`${spdxNs}/${profile}/`);
     },
-    iris: () => {
+    classes: () => {
       const profiles = get.model();
-      const iris = {};
+      const classes = {};
       for (const profile in profiles) {
         for (const name in profiles[profile]) {
           const cls = profiles[profile][name];
-          iris[cls.iri] = cls;
+          classes[cls.iri] = cls;
         }
       }
-      return iris;
+      return classes;
     },
   }))
   .extendSelectors((state, get, api) => ({
-    cls: (iri: string) => get.iris()[iri],
+    cls: (iri: string) => get.classes()[iri],
+    inheritedConstraints: (iri: string) => {
+      const classes = get.classes();
+      return getInheritedConstraints(classes, classes[iri].subClassOf);
+    },
   }))
   .extendActions((set, get, api) => ({
     updateOntology: () => {
@@ -41,6 +50,7 @@ export const ontoStore = createStore("onto")({
           draft.model = model;
         });
         console.log("updated ontology");
+        console.log(JSON.stringify(model));
       });
     },
   }));

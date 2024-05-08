@@ -13,10 +13,6 @@ export const ns = {
   xsd: rdfext.namespace("http://www.w3.org/2001/XMLSchema#"),
 };
 
-// export function iriName(iri: string) {
-//   return graph?.getSubjects(ns.rdf.type, ns.owl.Ontology)[0]?.id;
-// }
-
 export function getSpdxNs(graph: Store) {
   return graph?.getSubjects(ns.rdf.type, ns.owl.Ontology)[0]?.id;
 }
@@ -55,48 +51,93 @@ export function createModel(graph: Store, spdxNs: string) {
   if (!graph || !spdxNs) {
     return {};
   }
-  const classes = graph.getSubjects(ns.rdf.type, ns.owl.Class);
-  const iris = {};
-  const model =
-    classes?.reduce((acc, subject) => {
-      const iri = subject.value;
-      if (!iri.startsWith(spdxNs)) {
-        console.warn("not an spdx iri: ", iri);
-        return acc;
-      }
-      const fqname = iri.slice(spdxNs.length - 1);
-      const [profile, name] = fqname.slice(1).split("/", 2);
-      const subClassOf = graph.getObjects(iri, ns.rdfs.subClassOf)[0]?.value;
-      const constraints = extractNodeShape(graph, iri);
-      const summary = graph.getObjects(subject, ns.rdfs.comment)[0]?.value;
-      const options = graph.getSubjects(ns.rdf.type, iri).map((o) => ({
-        name: o.value.slice(iri.length + 1),
-        iri: o.value,
-        summary: graph.getObjects(o.value, ns.rdfs.comment)[0]?.value,
-        label: graph.getObjects(o.value, ns.rdfs.label)[0]?.value,
-      }));
+  const classes = addClasses(graph, spdxNs);
+  const datatypeProperties = addDatatypeProperties(graph, spdxNs);
+  const objectProperties = addObjectProperties(graph, spdxNs);
+  const vocabularies = addVocabularies(graph, spdxNs);
+  const individuals = addIndividuals(graph, spdxNs);
+  const datatypes = addDatatypes(graph, spdxNs);
 
-      const cls = {
-        iri,
-        profile,
-        name,
-        ...(subClassOf && { subClassOf }),
-        constraints,
-        summary,
-        options: options.length ? options : undefined,
-      };
-      iris[iri] = cls;
-      (acc[profile] ??= {})[name] = cls;
-      return acc;
-    }, {}) || {};
-
-  for (const iri in iris) {
-    const cls = iris[iri];
-    cls.inheritedConstraints = getInheritedConstraints(iris, cls.subClassOf);
-  }
-
+  const model = {};
   return model;
 }
+
+const sharedFields = (s: OTerm, graph: Store, spdxNs: string) => ({
+  iri: s.value,
+  name: fqname.slice(1).split("/", 2)[1],
+  profile: fqname.slice(1).split("/", 2)[0],
+  fqname: s.value.slice(spdxNs.length - 1),
+  summary: graph.getObjects(s, ns.rdfs.comment)[0]?.value,
+});
+
+const addClasses = (graph: Store, spdxNs: string) =>
+  graph
+    .getSubjects(ns.rdf.type, ns.owl.Class)
+    .filter((s) => !graph.countQuads(null, ns.rdf.type, s))
+    .map((s) => ({
+      ...sharedFields(s, graph, spdxNs),
+      subClassOf: graph.getObjects(s.value, ns.rdfs.subClassOf)[0]?.value,
+      properties: extractNodeShape(graph, s.value),
+    }));
+
+const addVocabularies = (graph: Store, spdxNs: string) =>
+  graph
+    .getSubjects(ns.rdf.type, ns.owl.Class)
+    .filter((s) => graph.countQuads(null, ns.rdf.type, s))
+    .map((s) => ({
+      ...sharedFields(s, graph, spdxNs),
+      entries: graph.getSubjects(ns.rdf.type, iri).map((o) => ({
+        iri: o.value,
+        name: o.value.slice(iri.length + 1),
+        summary: graph.getObjects(o.value, ns.rdfs.comment)[0]?.value,
+      })),
+    }));
+
+const addDatatypeProperties = (graph: Store, spdxNs: string) =>
+  graph.getSubjects(ns.rdf.type, ns.owl.DatatypeProperty).map((s) => ({
+    ...sharedFields(s, graph, spdxNs),
+    kind: "DatatypeProperty",
+    range: graph.getObjects(s.value, ns.rdfs.range)[0]?.value,
+  }));
+
+const addObjectProperties = (graph: Store, spdxNs: string) =>
+  graph.getSubjects(ns.rdf.type, ns.owl.ObjectProperty).map((s) => ({
+    ...sharedFields(s, graph, spdxNs),
+    kind: "ObjectProperty",
+    range: graph.getObjects(s.value, ns.rdfs.range)[0]?.value,
+  }));
+
+const addIndividuals = (graph: Store, spdxNs: string) =>
+  graph
+    .getSubjects(ns.rdf.type, ns.owl.NamedIndividual)
+    .filter((s) => graph.countQuads(s, ns.rdfs.range, null))
+    .map((s) => ({
+      ...sharedFields(s, graph, spdxNs),
+      range: graph.getObjects(s.value, ns.rdfs.range)[0]?.value,
+    }));
+
+// export function irisFromSpdxMarkdown() {
+//   const iris = {};
+//   fetch("/model.json")
+//   .then((res) => res.json())
+//   .then((markdown) => markdown.namespaces.forEach((ns) => {
+//     iris[ns.iri] = {
+//       name: ns.name,
+//       summary: ns.summary,
+//       description: ns.description,
+//       iri: ns.iri,
+//     }
+//     Object.values(ns.classes).forEach((cls) => {
+//       const cls = profile.classes[mdCls.name];
+//       cls.description = mdCls.description;
+//       cls.concrete = mdCls.metadata.Instantiability === "Concrete";
+//       const name = `${ns.prefix}:${cls.iri}`;
+//       const modelCls = model[ns.prefix][cls.name];
+//       modelCls.summary = cls.summary;
+//       modelCls.examples = cls.examples;
+//     });
+//   });
+// }
 
 export async function sparql(graph: Store, query: string) {
   const bindingsStream = await comunicaEngine.queryBindings(query, {
@@ -135,15 +176,18 @@ function extractNodeShape(graph: Store, node: OTerm) {
   return constraints;
 }
 
-export function getInheritedConstraints(iris: object, iri: string): object[] {
+export function getInheritedConstraints(
+  classes: object,
+  iri: string,
+): object[] {
   if (!iri) {
     return [];
   }
-  const cls = iris[iri];
+  const cls = classes[iri];
   const c = {
     iri: cls.iri,
     name: cls.name,
     constraints: cls.constraints,
   };
-  return [c, ...getInheritedConstraints(iris, cls.subClassOf)];
+  return [c, ...getInheritedConstraints(classes, cls.subClassOf)];
 }
