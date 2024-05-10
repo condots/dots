@@ -1,4 +1,4 @@
-import { Parser, Store, OTerm } from "n3";
+import { Parser, Store, Term } from "n3";
 import jsonld from "jsonld";
 import { QueryEngine } from "@comunica/query-sparql-rdfjs";
 import rdfext from "rdf-ext";
@@ -47,74 +47,153 @@ export async function createGraph(source: string | File) {
   return new Store(quads);
 }
 
-export function createModel(graph: Store, spdxNs: string) {
-  if (!graph || !spdxNs) {
+export function createModel(graph: Store) {
+  if (!graph) {
     return {};
   }
-  const classes = addClasses(graph, spdxNs);
-  const datatypeProperties = addDatatypeProperties(graph, spdxNs);
-  const objectProperties = addObjectProperties(graph, spdxNs);
-  const vocabularies = addVocabularies(graph, spdxNs);
-  const individuals = addIndividuals(graph, spdxNs);
-  const datatypes = addDatatypes(graph, spdxNs);
+  const classes = getClasses(graph);
+  const datatypeProperties = getDatatypeProperties(graph);
+  const objectProperties = getObjectProperties(graph);
+  const vocabularies = getVocabularies(graph);
+  const individuals = getIndividuals(graph);
 
   const model = {};
+  addToModel(model, classes, "classes");
+  addToModel(model, datatypeProperties, "properties");
+  addToModel(model, objectProperties, "properties");
+  addToModel(model, vocabularies, "vocabularies");
+  addToModel(model, individuals, "individuals");
+
   return model;
 }
 
-const sharedFields = (s: OTerm, graph: Store, spdxNs: string) => ({
-  iri: s.value,
-  name: fqname.slice(1).split("/", 2)[1],
-  profile: fqname.slice(1).split("/", 2)[0],
-  fqname: s.value.slice(spdxNs.length - 1),
-  summary: graph.getObjects(s, ns.rdfs.comment)[0]?.value,
-});
+function getFqname(iri: string, graph: Store) {
+  return iri.slice(getSpdxNs(graph).length - 1);
+}
 
-const addClasses = (graph: Store, spdxNs: string) =>
+function addToModel(model, items: [], type: string) {
+  items.forEach((item: object) => {
+    model[item.profile] = model[item.profile] || {};
+    model[item.profile][type] = model[item.profile][type] || {};
+    model[item.profile][type][item.fqname] = item;
+  });
+}
+
+const sharedFields = (s: Term, graph: Store) => {
+  const fqname = getFqname(s.value, graph);
+  const [profile, name] = fqname.slice(1).split("/", 2);
+  return {
+    iri: s.value,
+    fqname,
+    profile,
+    name,
+    summary: graph.getObjects(s, ns.rdfs.comment)[0]?.value,
+  };
+};
+
+const getClasses = (graph: Store) =>
   graph
     .getSubjects(ns.rdf.type, ns.owl.Class)
     .filter((s) => !graph.countQuads(null, ns.rdf.type, s))
     .map((s) => ({
-      ...sharedFields(s, graph, spdxNs),
+      ...sharedFields(s, graph),
       subClassOf: graph.getObjects(s.value, ns.rdfs.subClassOf)[0]?.value,
       properties: extractNodeShape(graph, s.value),
     }));
 
-const addVocabularies = (graph: Store, spdxNs: string) =>
+const getVocabularies = (graph: Store) =>
   graph
     .getSubjects(ns.rdf.type, ns.owl.Class)
     .filter((s) => graph.countQuads(null, ns.rdf.type, s))
     .map((s) => ({
-      ...sharedFields(s, graph, spdxNs),
-      entries: graph.getSubjects(ns.rdf.type, iri).map((o) => ({
+      ...sharedFields(s, graph),
+      entries: graph.getSubjects(ns.rdf.type, s.value).map((o) => ({
         iri: o.value,
-        name: o.value.slice(iri.length + 1),
+        name: o.value.slice(o.value.length + 1),
         summary: graph.getObjects(o.value, ns.rdfs.comment)[0]?.value,
       })),
     }));
 
-const addDatatypeProperties = (graph: Store, spdxNs: string) =>
+const getDatatypeProperties = (graph: Store) =>
   graph.getSubjects(ns.rdf.type, ns.owl.DatatypeProperty).map((s) => ({
-    ...sharedFields(s, graph, spdxNs),
-    kind: "DatatypeProperty",
-    range: graph.getObjects(s.value, ns.rdfs.range)[0]?.value,
+    ...sharedFields(s, graph),
+    datatype: graph.getObjects(s.value, ns.rdfs.range)[0]?.value.split("#")[1],
   }));
 
-const addObjectProperties = (graph: Store, spdxNs: string) =>
+const getObjectProperties = (graph: Store) =>
   graph.getSubjects(ns.rdf.type, ns.owl.ObjectProperty).map((s) => ({
-    ...sharedFields(s, graph, spdxNs),
-    kind: "ObjectProperty",
+    ...sharedFields(s, graph),
     range: graph.getObjects(s.value, ns.rdfs.range)[0]?.value,
   }));
 
-const addIndividuals = (graph: Store, spdxNs: string) =>
+const getIndividuals = (graph: Store) =>
   graph
     .getSubjects(ns.rdf.type, ns.owl.NamedIndividual)
     .filter((s) => graph.countQuads(s, ns.rdfs.range, null))
     .map((s) => ({
-      ...sharedFields(s, graph, spdxNs),
+      ...sharedFields(s, graph),
       range: graph.getObjects(s.value, ns.rdfs.range)[0]?.value,
     }));
+
+export async function sparql(graph: Store, query: string) {
+  const bindingsStream = await comunicaEngine.queryBindings(query, {
+    sources: [graph],
+  });
+  return await bindingsStream.toArray();
+}
+
+function shInToList(graph: Store, node: Term) {
+  const list: string[] = [];
+  graph.getObjects(node, ns.rdf.first).forEach((first) => {
+    list.push(first.id);
+    graph
+      .getObjects(node, ns.rdf.rest)
+      .forEach((n) => list.push(...shInToList(graph, n)));
+  });
+  return list;
+}
+
+function extractNodeShape(graph: Store, node: Term) {
+  const len = ns.sh().value.length;
+  const properties = {};
+  const propertyShapes = graph.getObjects(node, ns.sh.property);
+  for (const pshape of propertyShapes) {
+    const constraint = {};
+    for (const c of graph.getQuads(pshape)) {
+      const k = c.predicate.value.slice(len);
+      if (c.object.termType === "BlankNode") {
+        constraint[k] = shInToList(graph, c.object);
+      } else {
+        if (k === "path") {
+          constraint.fqname = getFqname(c.object.value, graph);
+          constraint.name = constraint.fqname.slice(1).split("/", 2)[1];
+        } else if (k === "datatype") {
+          const dt = c.object.value.split("#")[1];
+          constraint.keyfilter = dt;
+        }
+        constraint[k] = c.object.value;
+      }
+    }
+    properties[constraint.name] = constraint;
+  }
+  return properties;
+}
+
+export function getInheritedConstraints(
+  classes: object,
+  iri: string,
+): object[] {
+  if (!iri) {
+    return [];
+  }
+  const cls = classes[iri];
+  const c = {
+    iri: cls.iri,
+    name: cls.name,
+    constraints: cls.constraints,
+  };
+  return [c, ...getInheritedConstraints(classes, cls.subClassOf)];
+}
 
 // export function irisFromSpdxMarkdown() {
 //   const iris = {};
@@ -139,55 +218,16 @@ const addIndividuals = (graph: Store, spdxNs: string) =>
 //   });
 // }
 
-export async function sparql(graph: Store, query: string) {
-  const bindingsStream = await comunicaEngine.queryBindings(query, {
-    sources: [graph],
-  });
-  return await bindingsStream.toArray();
-}
-
-function shInToList(graph: Store, node: OTerm) {
-  const list: string[] = [];
-  graph.getObjects(node, ns.rdf.first).forEach((first) => {
-    list.push(first.id);
-    graph
-      .getObjects(node, ns.rdf.rest)
-      .forEach((n) => list.push(...shInToList(graph, n)));
-  });
-  return list;
-}
-
-function extractNodeShape(graph: Store, node: OTerm) {
-  const len = ns.sh().value.length;
-  const constraints = [];
-  const propertyShapes = graph.getObjects(node, ns.sh.property);
-  for (const pshape of propertyShapes) {
-    const constraint = {};
-    for (const c of graph.getQuads(pshape)) {
-      const k = c.predicate.value.slice(len);
-      if (c.object.termType === "BlankNode") {
-        constraint[k] = shInToList(graph, c.object);
-      } else {
-        constraint[k] = c.object.value;
-      }
-    }
-    constraints.push(constraint);
-  }
-  return constraints;
-}
-
-export function getInheritedConstraints(
-  classes: object,
-  iri: string,
-): object[] {
-  if (!iri) {
-    return [];
-  }
-  const cls = classes[iri];
-  const c = {
-    iri: cls.iri,
-    name: cls.name,
-    constraints: cls.constraints,
-  };
-  return [c, ...getInheritedConstraints(classes, cls.subClassOf)];
-}
+// if (
+//   ![
+//     "string",
+//     "anyURI",
+//     "dateTimeStamp",
+//     "nonNegativeInteger",
+//     "boolean",
+//     "decimal",
+//     "positiveInteger",
+//   ].includes(dt)
+// ) {
+//   console.log("Datatype: ", dt);
+// }
