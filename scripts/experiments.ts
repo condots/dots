@@ -56,5 +56,41 @@ function saveSortedModel() {
   );
 }
 
-saveSpdxExplorerModel();
-saveSortedModel();
+function saveEnrichedModel() {
+  const model = JSON.parse(
+    fs.readFileSync("./public/spdx-explorer-model.json").toString(),
+  );
+  const namespaces = JSON.parse(
+    fs.readFileSync("./public/model.json").toString(),
+  ).namespaces;
+  for (const namespace of namespaces) {
+    const profile = namespace.name;
+    if (!model[profile]) continue;
+    model[profile].iri = namespace.iri;
+    model[profile].summary = namespace.summary;
+    model[profile].description = namespace.description;
+    for (const section of [
+      "classes",
+      "properties",
+      "vocabularies",
+      "individuals",
+    ]) {
+      for (const [k, v] of _.entries(namespace[section])) {
+        if (v.name === "spdxId") continue;
+        model[profile][section][v.name].description = v.description;
+        if (section === "classes") {
+          model[profile][section][v.name].abstract =
+            v.metadata.Instantiability === "Abstract";
+        }
+      }
+    }
+  }
+  fs.writeFileSync(
+    "./public/spdx-explorer-model-enriched.json",
+    JSON.stringify(model, replacer, 2),
+  );
+}
+
+// saveSpdxExplorerModel();
+// saveSortedModel();
+saveEnrichedModel();
