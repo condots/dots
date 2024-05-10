@@ -23,11 +23,12 @@ function saveSpdxExplorerModel() {
 
   const graph = getGraph();
   const spdxNs = getSpdxNs(graph);
-  const model = createModel(graph, spdxNs);
+  const [model, iris] = createModel(graph, spdxNs);
   fs.writeFileSync(
     "./public/spdx-explorer-model.json",
     JSON.stringify(model, replacer, 2),
   );
+  console.log("iris:", _.keys(iris).length);
 }
 
 function saveSortedModel() {
