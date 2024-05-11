@@ -1,62 +1,164 @@
-import React, { useState } from "react";
-import { tracked, actions } from "@/store/global";
+import React, { useEffect, useRef, useState } from "react";
+import { tracked, actions, getters } from "@/store/global";
 import { Dialog } from "primereact/dialog";
-import { FloatLabel } from "primereact/floatlabel";
 import { InputText } from "primereact/inputtext";
-import { InputNumber } from "primereact/inputnumber";
 import { Divider } from "primereact/divider";
+import { Tree } from "primereact/tree";
+import { MegaMenu, MenuItem } from "primereact/megamenu";
+import { TieredMenu } from "primereact/tieredmenu";
+import { Button } from "primereact/button";
+
+const getTreeProperties = (iri: string) => {
+  const items: MenuItem[] = [];
+  let i = 0;
+  while (iri) {
+    const c = getters.onto.byIri(iri);
+    const item = {
+      key: `${i++}`,
+      label: c.name,
+      children: Object.entries(c.properties).map(([k, v], j) => ({
+        key: `${i}-${j}`,
+        label: k,
+        data: v,
+      })),
+    };
+    items.push(item);
+    iri = c.subClassOf;
+  }
+  return items;
+};
+
+const getTieredMenuProperties = (iri: string) => {
+  const items: MenuItem[] = [];
+  while (iri) {
+    const c = getters.onto.byIri(iri);
+    const item = {
+      label: c.name,
+      items: Object.entries(c.properties).map(([k, v]) => ({
+        label: k,
+        data: v,
+      })),
+    };
+    items.push(item);
+    iri = c.subClassOf;
+  }
+  return items;
+};
+
+const getMenuProperties = (iri: string) => {
+  const items: MenuItem[] = [];
+  while (iri) {
+    const c = getters.onto.byIri(iri);
+    const item = [
+      {
+        label: c.name,
+        items: Object.entries(c.properties).map(([k, v]) => ({
+          label: k,
+          // data: v,
+        })),
+      },
+    ];
+    items.push(item);
+    iri = c.subClassOf;
+  }
+  const properties = [{ label: "Add", items }];
+  // console.log("properties:", properties);
+
+  return properties;
+};
+
+const items: MenuItem[] = [
+  {
+    label: "Add",
+    items: [
+      [
+        {
+          label: "Build",
+          items: [
+            { label: "buildType" },
+            { label: "buildId" },
+            { label: "buildStartTime" },
+            { label: "buildEndTime" },
+          ],
+        },
+      ],
+      [
+        {
+          label: "Element",
+          items: [
+            { label: "verifiedUsing" },
+            { label: "name" },
+            { label: "extension" },
+            { label: "summary" },
+            { label: "comment" },
+            { label: "description" },
+            { label: "creationInfo" },
+            { label: "externalRef" },
+            { label: "externalIdentifier" },
+          ],
+        },
+      ],
+    ],
+  },
+];
 
 export default function ElementDialog() {
   const nodeId = tracked().app.elementDialog().nodeId;
-  const cls = tracked().flow.getNode(nodeId)?.data.cls;
+  const node = tracked().flow.getNode(nodeId);
+  const cls = tracked().onto.byIri(node?.data.iri);
+  const [properties, setProperties] = useState<object[]>();
   const [values, setValues] = useState({});
+  const menu = useRef(null);
 
-  const dataTypes = cls?.inheritedConstraints.map((h) =>
-    h.constraints.map((c) => {
-      if (c.datatype) {
-        return (
-          <div key={c.path} className="card justify-content-start flex">
-            <div
-              className="p-inputgroup card justify-content-start flex flex-1"
-              key={c.path}
-            >
-              {/* <span className="p-inputgroup-addon">
-              <i className="pi pi-user"></i>
-            </span> */}
-              <FloatLabel>
-                <label htmlFor="property">{c.path.split("/").pop()}</label>
-                <InputText
-                  id="property"
-                  aria-describedby="property-help"
-                  value={values[c.path] ?? ""}
-                  onChange={(e) =>
-                    setValues((vals) => ({ ...vals, [c.path]: e.target.value }))
-                  }
-                />
-              </FloatLabel>
-            </div>
-          </div>
-        );
-      }
-    }),
-  );
+  useEffect(() => {
+    setProperties(() => getTieredMenuProperties(node?.data.iri));
+  }, [node]);
 
   return (
     <div className="card justify-content-center flex">
       <Dialog
-        header={cls?.name}
+        header={nodeId}
         visible={cls}
-        className="w-1/2"
+        className="w-1/2 h-2/3"
+        // content={<MegaMenu model={properties} />}
+        // style={{ width: "50vw" }}
+        // breakpoints={{ "960px": "75vw", "641px": "100vw" }}
         onHide={() =>
           actions.app.state((state) => {
             state.elementDialog.nodeId = null;
           })
         }
       >
-        {/* <div className="mt-4 flex flex-col space-y-8">{dataTypes}</div> */}
-        <Divider />
+        {/* <MegaMenu model={properties} /> */}
+        <TieredMenu model={properties} ref={menu} popup />
+        <Button label="Show" onClick={(e) => menu.current.toggle(e)} />
 
-        <div className="card">
+        {/* <Divider /> */}
+        {/* <div className="h-1"> */}
+        {/* <MegaMenu
+          className="content"
+          // model={items}
+          model={properties}
+          // scrollHeight="100px"
+          // breakpoint="100px"
+          // className="w-full h-full overflow-scroll"
+          pt={{
+            panel: {
+              className: "card justify-content-center flex",
+            },
+          }}
+        /> */}
+        {/* </div> */}
+
+        {/* <Tree
+          value={properties}
+          filter
+          filterMode="strict"
+          filterPlaceholder="Search..."
+          className="h-full w-full overflow-scroll"
+        /> */}
+
+        {/* <div className="card">
           <div className="mb-4 flex flex-wrap gap-3">
             <div className="flex-auto">
               <label htmlFor="integer" className="mb-2 block font-bold">
@@ -121,7 +223,7 @@ export default function ElementDialog() {
               <InputText id="email" keyfilter="email" className="w-full" />
             </div>
           </div>
-        </div>
+        </div> */}
       </Dialog>
     </div>
   );

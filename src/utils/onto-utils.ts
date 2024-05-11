@@ -2,7 +2,6 @@ import { Parser, Store, Term } from "n3";
 import jsonld from "jsonld";
 import { QueryEngine } from "@comunica/query-sparql-rdfjs";
 import rdfext from "rdf-ext";
-import { entries, isEmpty } from "lodash-es";
 
 const comunicaEngine = new QueryEngine();
 export async function sparql(graph: Store, query: string) {
@@ -56,7 +55,7 @@ export async function createGraph(source: string | File) {
 
 export function createModel(graph: Store) {
   if (!graph) return {};
-  const model = {};
+  let model = {};
   const iris = {
     ...addToModel(model, getClasses(graph), "classes"),
     ...addToModel(model, getDatatypeProperties(graph), "properties"),
@@ -64,7 +63,9 @@ export function createModel(graph: Store) {
     ...addToModel(model, getVocabularies(graph), "vocabularies"),
     ...addToModel(model, getIndividuals(graph), "individuals"),
   };
-  enrichModelFromMarkdown(model, "model.json");
+  (async () => {
+    await enrichModelFromMarkdown(model, "model.json");
+  })();
   return [model, iris];
 }
 
@@ -177,31 +178,27 @@ function extractNodeShape(graph: Store, node: Term) {
 }
 
 async function enrichModelFromMarkdown(model: object, source: string) {
-  // const namespaces = await (await fetch(source)).json().namespaces;
-  fetch(source)
-    .then((response) => response.json())
-    .then((namespaces) => {
-      for (const namespace of namespaces) {
-        const profile = namespace.name;
-        if (!model[profile]) continue;
-        model[profile].iri = namespace.iri;
-        model[profile].summary = namespace.summary;
-        model[profile].description = namespace.description;
-        for (const section of [
-          "classes",
-          "properties",
-          "vocabularies",
-          "individuals",
-        ]) {
-          for (const [k, v] of _.entries(namespace[section])) {
-            if (v.name === "spdxId") continue;
-            model[profile][section][v.name].description = v.description;
-            if (section === "classes") {
-              model[profile][section][v.name].abstract =
-                v.metadata.Instantiability === "Abstract";
-            }
-          }
+  const markdown = await (await fetch(source)).json();
+  for (const namespace of markdown.namespaces) {
+    const profile = namespace.name;
+    if (!model[profile]) continue;
+    model[profile].iri = namespace.iri;
+    model[profile].summary = namespace.summary;
+    model[profile].description = namespace.description;
+    for (const section of [
+      "classes",
+      "properties",
+      "vocabularies",
+      "individuals",
+    ]) {
+      for (const [k, v] of Object.entries(namespace[section])) {
+        if (v.name === "spdxId") continue;
+        model[profile][section][v.name].description = v.description;
+        if (section === "classes") {
+          model[profile][section][v.name].abstract =
+            v.metadata.Instantiability === "Abstract";
         }
       }
-    });
+    }
+  }
 }

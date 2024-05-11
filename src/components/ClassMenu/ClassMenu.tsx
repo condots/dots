@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { tracked } from "@/store/global";
 import { Tree, TreeNodeTemplateOptions } from "primereact/tree";
 import { TreeNode } from "primereact/treenode";
@@ -6,12 +6,18 @@ import { Button } from "primereact/button";
 
 const ClassMenu = () => {
   const model = tracked().onto.model();
+  const [expandedKeys, setExpandedKeys] = useState({});
+  const [classes, setClasses] = useState([]);
 
-  const classes = useMemo(() => {
+  useEffect(() => {
     const items = [];
-    for (const [i, [profile, clss]] of Object.entries(model).sort().entries()) {
+    for (const [i, [profile, sections]] of Object.entries(model)
+      .sort()
+      .entries()) {
       const children = [];
-      for (const [j, [name, cls]] of Object.entries(clss).sort().entries()) {
+      for (const [j, [name, cls]] of Object.entries(sections.classes)
+        .sort()
+        .entries()) {
         children.push({
           key: `${i}-${j}`,
           label: name,
@@ -31,10 +37,14 @@ const ClassMenu = () => {
         draggable: false,
         droppable: false,
         className: "select-none",
+        data: {
+          iri: sections.iri,
+          summary: sections.summary,
+        },
         children,
       });
     }
-    return items;
+    setClasses(items);
   }, [model]);
 
   const onDragStart = (
@@ -53,7 +63,6 @@ const ClassMenu = () => {
           text
           severity="secondary"
           className={`${options.className} m-0 px-2 py-1 font-normal`}
-          // size="small"
           tooltip={node.data?.summary}
           tooltipOptions={{
             position: "right",
@@ -74,12 +83,17 @@ const ClassMenu = () => {
     <Tree
       value={classes}
       filter
-      filterMode="lenient"
+      filterMode="strict"
       filterPlaceholder="Search..."
       className="h-full w-full overflow-scroll"
       nodeTemplate={nodeTemplate}
       dragdropScope="reactflow"
       pt={{ droppoint: { className: "h-0" } }}
+      // to allow only single expansion
+      expandedKeys={expandedKeys}
+      onToggle={() => {}}
+      onExpand={(e) => setExpandedKeys(() => ({ [e.node.key]: true }))}
+      onCollapse={() => setExpandedKeys(() => ({}))}
     />
   );
 };

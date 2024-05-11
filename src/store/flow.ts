@@ -87,8 +87,8 @@ export const flowStore = createStore("flow")(<RFState>{
           set.edges(edges);
         },
         addNode: (node: Node) => {
-          const cls = ontoStore.get.cls(node.data.iri);
-          node.data = { ...node.data, cls };
+          // const cls = ontoStore.get.byIri(node.data.iri);
+          // node.data = { ...node.data, cls };
           set.nodes(get.nodes().concat(node));
         },
         // updateNodeColor: (nodeId: string, color: string) => {

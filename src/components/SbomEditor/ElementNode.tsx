@@ -30,8 +30,14 @@ const CustomHandle = ({ id, position }: CustomHandleProps) => {
 };
 
 const ElementNode = ({ id, data }: NodeProps<NodeData>) => {
-  const cls = tracked().onto.cls(data.iri);
+  const cls = tracked().onto.byIri(data.iri);
   const [selected, setSelected] = useState(null);
+
+  const onClickDetails = () => {
+    actions.app.state((state) => {
+      state.elementDialog.nodeId = id;
+    });
+  };
 
   const style = {
     "--scale-start": 0.8,
@@ -65,11 +71,7 @@ const ElementNode = ({ id, data }: NodeProps<NodeData>) => {
       >
         <button
           className="pi pi-info-circle absolute right-0 top-0 m-2 rounded-full hover:backdrop-brightness-110 transition"
-          onClick={() =>
-            actions.app.state((state) => {
-              state.elementDialog.nodeId = id;
-            })
-          }
+          onClick={onClickDetails}
         />
 
         <div className="font-lato p-card-title w-20rem my-0 flex justify-center text-2xl">
