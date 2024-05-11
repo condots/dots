@@ -12,11 +12,9 @@ import {
   applyNodeChanges,
   applyEdgeChanges,
   ConnectionMode,
-  MarkerType,
   ConnectionLineType,
 } from "reactflow";
 import type { NodeTypes, EdgeTypes, DefaultEdgeOptions } from "reactflow";
-import { ontoStore } from "@/store/onto";
 import { find } from "lodash-es";
 
 type DevtoolsActive = {
@@ -87,8 +85,6 @@ export const flowStore = createStore("flow")(<RFState>{
           set.edges(edges);
         },
         addNode: (node: Node) => {
-          // const cls = ontoStore.get.byIri(node.data.iri);
-          // node.data = { ...node.data, cls };
           set.nodes(get.nodes().concat(node));
         },
         // updateNodeColor: (nodeId: string, color: string) => {
