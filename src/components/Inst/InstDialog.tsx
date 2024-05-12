@@ -8,11 +8,25 @@ import { InputText } from "primereact/inputtext";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import ReactHtmlParser from "react-html-parser";
+import { Checkbox } from "primereact/checkbox";
+import { ToggleButton } from "primereact/togglebutton";
 
-type FieldProps = {
+type Prop = {
   iri: string;
-  value: string;
+  value: string | boolean | number;
   valid: boolean;
+};
+
+const patterns = {
+  anyURI: /^[a-zA-Z][a-zA-Z0-9+.-]*:(\/\/[^\s/]+)?[^\s]*$/,
+  dateTimeStamp:
+    /^-?([1-9][0-9]{3,}|0[0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\.[0-9]+)?|(24:00:00(\.0+)?))(Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?(Z|(\+|-)[0-9][0-9]:[0-9][0-9])$/,
+  decimal: /^(\+|-)?([0-9]+(\.[0-9]*)?|\.[0-9]+)$/,
+  "https://spdx.org/rdf/3.0.0/terms/Core/PositiveIntegerRange": null,
+  "https://spdx.org/rdf/3.0.0/terms/Software/ContentIdentifier": null,
+  nonNegativeInteger: /^[0-9]+$/,
+  positiveInteger: /^[1-9][0-9]*$/,
+  string: /^.*$/,
 };
 
 export default function InstDialog() {
@@ -20,14 +34,14 @@ export default function InstDialog() {
   const node = tracked().flow.getNode(nodeId);
   const cls = tracked().onto.byIri(node?.data.iri);
   const [classProperties, setClassProperties] = useState<object[]>();
-  const [instProp, setInstProp] = useImmer<FieldProps[]>([]);
+  const [instProps, setInstProps] = useImmer<Prop[]>([]);
   const menu = useRef(null);
 
   useEffect(() => {
     setClassProperties(() => getClassProperties(node?.data.iri));
   }, [node]);
 
-  const fieldIcon = (datatype: string) => {
+  const propIcon = (datatype: string) => {
     const icon = {
       string: "text_fields",
       anyURI: "link",
@@ -43,6 +57,7 @@ export default function InstDialog() {
       </span>
     );
   };
+
   const itemRenderer = (item) => {
     const property = getters.onto.byIri(item.data.path);
     return (
@@ -51,7 +66,7 @@ export default function InstDialog() {
         className="p-menuitem-link w-full"
         tooltip={property.summary}
         tooltipOptions={{ showDelay: 1000 }}
-        icon={fieldIcon(property.datatype)}
+        icon={propIcon(property.datatype)}
         onClick={() => addProperty(item.data.path)}
       >
         {item.label}
@@ -78,16 +93,24 @@ export default function InstDialog() {
   };
 
   const addProperty = (iri: string) => {
-    setInstProp((draft) => {
-      draft.push({ iri: iri, value: "", valid: false });
+    const property = getters.onto.byIri(iri);
+    const initProp: Prop = { iri, value: "", valid: false };
+    if (property.datatype === "boolean") {
+      initProp.value = false;
+      initProp.valid = true;
+    }
+    setInstProps((draft) => {
+      draft.push(initProp);
     });
   };
 
+  const getProp = (iri: string) => instProps.find((prop) => prop.iri === iri);
+
   const validateInput = (event, validatePattern) => {
-    setInstProp((draft) => {
-      const field = draft.find((field) => field.iri === event.target.id);
-      field.value = event.target.value;
-      field.valid = validatePattern;
+    setInstProps((draft) => {
+      const p = draft.find((prop) => prop.iri === event.target.id);
+      p.value = event.target.value;
+      p.valid = validatePattern && event.target.value !== "";
     });
   };
 
@@ -113,43 +136,58 @@ export default function InstDialog() {
     return <div className="htmlContent">{ReactHtmlParser(clean)}</div>;
   };
 
-  const NodeProperties = (field: FieldProps) => {
-    const item = getters.onto.byIri(field.iri);
-    const patterns = {
-      anyURI: /^[a-zA-Z][a-zA-Z0-9+.-]*:(\/\/[^\s/]+)?[^\s]*$/,
-      // anyURI:
-      //   /^(?:[a-z][a-z0-9+.-]*):(?:\/\/(?:(?:[a-z0-9\-._~!$&'()*+,;=:]|%[0-9a-f]{2})*)?(?:\?(?:[a-z0-9\-._~!$&'()*+,;=:@\/?]|%[0-9a-f]{2})*)?(?:\#(?:[a-z0-9\-._~!$&'()*+,;=:@\/?]|%[0-9a-f]{2})*)?)$/i,
-      // anyURI:
-      //   /^(http(s)?:\/\/.)[-a-zA-Z0-9@:%._+~#=]{2,256}.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)$/,
-      boolean: /^(true|false|1|0)$/,
-      // "dateTimeStamp": /.*(Z|(\+|-)[0-9][0-9]:[0-9][0-9])/,
-      dateTimeStamp:
-        /^-?([1-9][0-9]{3,}|0[0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\.[0-9]+)?|(24:00:00(\.0+)?))(Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?(Z|(\+|-)[0-9][0-9]:[0-9][0-9])$/,
-      decimal: /^(\+|-)?([0-9]+(\.[0-9]*)?|\.[0-9]+)$/,
-      "https://spdx.org/rdf/3.0.0/terms/Core/PositiveIntegerRange": null,
-      "https://spdx.org/rdf/3.0.0/terms/Software/ContentIdentifier": null,
-      nonNegativeInteger: /^[0-9]+$/,
-      positiveInteger: /^[1-9][0-9]*$/,
-      string: /^.*$/,
-    };
-    if (item.datatype) {
-      return (
-        <div key={item.iri} className="flex flex-column gap-2 my-3">
-          <label htmlFor={item.iri}>{item.name}</label>
+  const NodeProperties = (prop: Prop) => {
+    const property = getters.onto.byIri(prop.iri);
+    let el = null;
+    if (property.datatype === "boolean") {
+      el = (
+        <>
+          <ToggleButton
+            checked={prop.value}
+            onChange={(e) => {
+              setInstProps((draft) => {
+                const p = draft.find((p) => p.iri === property.iri);
+                p.value = e.value;
+              });
+            }}
+            className="w-8rem"
+          />
+          {/* <Checkbox
+            value={property.name}
+            onChange={() => {
+              setInstProps((draft) => {
+                const p = draft.find((p) => p.iri === property.iri);
+                p.value = !p.value;
+              });
+            }}
+            checked={prop.value}
+          /> */}
+        </>
+      );
+    } else {
+      el = (
+        <>
           <InputText
-            id={item.iri}
-            value={field.value}
-            keyfilter={patterns[item.datatype]}
+            id={property.iri}
+            value={prop.value}
+            keyfilter={patterns[property.datatype]}
             validateOnly
             onInput={validateInput}
-            invalid={!field.valid}
+            invalid={!prop.valid}
             className="border-2"
           />
-          <small className="text-balance">{advisoryText(item.summary)}</small>
-          <small>{item.datatype}</small>
-        </div>
+          {/* <small className="text-balance">
+            {advisoryText(property.summary)}
+          </small> */}
+        </>
       );
     }
+    return (
+      <div key={property.iri} className="flex flex-column gap-1 my-3">
+        <label className="font-bold block">{property.name}</label>
+        {el}
+      </div>
+    );
   };
 
   return (
@@ -171,7 +209,7 @@ export default function InstDialog() {
           onClick={(e) => menu.current.toggle(e)}
         />
         <TieredMenu model={classProperties} ref={menu} popup />
-        {instProp.map(NodeProperties)}
+        {instProps.map(NodeProperties)}
       </Dialog>
     </div>
   );
