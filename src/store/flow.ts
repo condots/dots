@@ -15,7 +15,6 @@ import {
   ConnectionLineType,
 } from "reactflow";
 import type { NodeTypes, EdgeTypes, DefaultEdgeOptions } from "reactflow";
-import { find } from "lodash-es";
 
 type DevtoolsActive = {
   nodeInspector: boolean;
@@ -62,9 +61,7 @@ export const flowStore = createStore("flow")(<RFState>{
   middlewares: ["immer", "devtools", "persist"],
 })
   .extendSelectors((state, get, api) => ({
-    getNode: (nodeId: string) => {
-      return find(get.nodes(), { id: nodeId });
-    },
+    getNode: (nodeId: string) => get.nodes().find((n) => n.id === nodeId),
   }))
   .extendActions(
     (set, get, api) =>

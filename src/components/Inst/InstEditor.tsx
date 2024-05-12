@@ -30,9 +30,8 @@ export default function InstEditor() {
         id: getId(),
         type: "inst",
         position,
-        data: { label: iri, iri, inst: true },
+        data: { label: iri, iri, inst: true, properties: {} },
       };
-
       actions.flow.addNode(node);
     },
     [reactFlowInstance],
