@@ -1,5 +1,5 @@
-import InstNode from "@/components/InstEditor/InstNode";
-import InstEdge from "@/components/InstEditor/InstEdge";
+import InstNode from "@/components/Inst/InstNode";
+import InstEdge from "@/components/Inst/InstEdge";
 import {
   Node,
   Edge,

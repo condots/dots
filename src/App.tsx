@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import InstEditor from "@/components/InstEditor/InstEditor";
-import InstDialog from "@/components/InstEditor/InstDialog";
+import InstEditor from "@/components/Inst/InstEditor";
+import InstDialog from "@/components/Inst/InstDialog";
 import {
   initialNodes,
   initialEdges,
@@ -15,7 +15,7 @@ import { Splitter, SplitterPanel } from "primereact/splitter";
 import "primereact/resources/primereact.min.css"; //core css
 import "primeicons/primeicons.css"; //icons
 import "primeflex/primeflex.css"; // flex
-import ClassMenu from "./components/ClassMenu/ClassMenu";
+import ClassMenu from "./components/Onto/ClassMenu";
 
 export default function App() {
   const source = tracked().onto.source();
