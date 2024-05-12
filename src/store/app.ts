@@ -1,7 +1,7 @@
 import { createStore } from "zustand-x";
 
 export const appStore = createStore("app")({
-  elementDialog: {
+  instDialog: {
     nodeId: <string | null>null,
   },
   middlewares: ["immer", "devtools", "persist"],

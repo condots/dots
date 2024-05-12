@@ -6,7 +6,7 @@ import { tracked, actions } from "@/store/global";
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
-export default function SbomEditor() {
+export default function InstEditor() {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
@@ -28,9 +28,9 @@ export default function SbomEditor() {
       });
       const node = {
         id: getId(),
-        type: "element",
+        type: "inst",
         position,
-        data: { label: iri, iri, flowElement: true },
+        data: { label: iri, iri, inst: true },
       };
 
       actions.flow.addNode(node);

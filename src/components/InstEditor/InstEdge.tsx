@@ -4,19 +4,12 @@ import type { EdgeProps } from "reactflow";
 
 import { getEdgeParams } from "@/utils/flow-utils.js";
 
-function ElementEdge({
-  id,
-  source,
-  target,
-  markerEnd,
-  style,
-  data,
-}: EdgeProps) {
+function InstEdge({ id, source, target, markerEnd, style, data }: EdgeProps) {
   const sourceNode = useStore(
-    useCallback((store) => store.nodeInternals.get(source), [source])
+    useCallback((store) => store.nodeInternals.get(source), [source]),
   );
   const targetNode = useStore(
-    useCallback((store) => store.nodeInternals.get(target), [target])
+    useCallback((store) => store.nodeInternals.get(target), [target]),
   );
 
   if (!sourceNode || !targetNode) {
@@ -25,7 +18,7 @@ function ElementEdge({
 
   const { sx, sy, tx, ty, sourcePos, targetPos } = getEdgeParams(
     sourceNode,
-    targetNode
+    targetNode,
   );
 
   const [edgePath, labelX, labelY] = getSmoothStepPath({
@@ -62,4 +55,4 @@ function ElementEdge({
   );
 }
 
-export default ElementEdge;
+export default InstEdge;

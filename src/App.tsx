@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import SbomEditor from "@/components/SbomEditor/SbomEditor";
-import ElementDialog from "@/components/ElementDialog/ElementDialog";
+import InstEditor from "@/components/InstEditor/InstEditor";
+import InstDialog from "@/components/InstEditor/InstDialog";
 import {
   initialNodes,
   initialEdges,
@@ -34,13 +34,13 @@ export default function App() {
 
   return (
     <>
-      <ElementDialog />
+      <InstDialog />
       <Splitter className="h-screen w-screen">
         <SplitterPanel size={20} minSize={10}>
           <ClassMenu />
         </SplitterPanel>
         <SplitterPanel className="h-full w-full" size={80}>
-          <SbomEditor />
+          <InstEditor />
         </SplitterPanel>
       </Splitter>
     </>

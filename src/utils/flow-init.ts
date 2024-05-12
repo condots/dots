@@ -1,5 +1,5 @@
-import ElementNode from "@/components/SbomEditor/ElementNode";
-import ElementEdge from "@/components/SbomEditor/ElementEdge";
+import InstNode from "@/components/InstEditor/InstNode";
+import InstEdge from "@/components/InstEditor/InstEdge";
 import {
   Node,
   Edge,
@@ -15,18 +15,18 @@ export const initialNodes = [
     position: { x: 0, y: 0 },
     data: {
       iri: "https://spdx.org/rdf/3.0.0/terms/Software/File",
-      flowElement: true,
+      inst: true,
     },
-    type: "element",
+    type: "inst",
   },
   {
     id: "2",
     position: { x: 200, y: 350 },
     data: {
       iri: "https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType",
-      flowElement: true,
+      inst: true,
     },
-    type: "element",
+    type: "inst",
   },
 ] satisfies Node[];
 
@@ -42,15 +42,15 @@ export const initialEdges = [
 ] satisfies Edge[];
 
 export const nodeTypes = {
-  element: ElementNode,
+  inst: InstNode,
 } satisfies NodeTypes;
 
 export const edgeTypes = {
-  element: ElementEdge,
+  inst: InstEdge,
 } satisfies EdgeTypes;
 
 export const defaultEdgeOptions = {
-  type: "element",
+  type: "inst",
   markerEnd: {
     type: MarkerType.ArrowClosed,
     strokeWidth: 2,

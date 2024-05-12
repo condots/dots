@@ -6,11 +6,9 @@ import { tracked, actions } from "@/store/global";
 import { Card } from "primereact/card";
 import { Dropdown } from "primereact/dropdown";
 
-import "@/components/SbomEditor/SbomEditor.css";
-
 type NodeData = {
   iri: string;
-  flowElement?: boolean;
+  inst?: boolean;
 };
 
 type CustomHandleProps = {
@@ -29,13 +27,13 @@ const CustomHandle = ({ id, position }: CustomHandleProps) => {
   );
 };
 
-const ElementNode = ({ id, data }: NodeProps<NodeData>) => {
+const InstNode = ({ id, data }: NodeProps<NodeData>) => {
   const cls = tracked().onto.byIri(data.iri);
   const [selected, setSelected] = useState(null);
 
   const onClickDetails = () => {
     actions.app.state((state) => {
-      state.elementDialog.nodeId = id;
+      state.instDialog.nodeId = id;
     });
   };
 
@@ -99,7 +97,7 @@ const ElementNode = ({ id, data }: NodeProps<NodeData>) => {
           </div>
         )}
       </Card>
-      {data.flowElement && (
+      {data.inst && (
         <>
           <CustomHandle id="a" position={Position.Top} />
           <CustomHandle id="b" position={Position.Right} />
@@ -111,4 +109,4 @@ const ElementNode = ({ id, data }: NodeProps<NodeData>) => {
   );
 };
 
-export default ElementNode;
+export default InstNode;
