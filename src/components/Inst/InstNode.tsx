@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import type { NodeProps } from "reactflow";
 import { Position, Handle } from "reactflow";
-import { tracked, actions } from "@/store/global";
+// import { tracked, actions } from "@/store/global";
+import { ontoStore } from "@/zustand/onto";
+import { appStore } from "@/zustand/app";
 
 import { Card } from "primereact/card";
 import { Dropdown } from "primereact/dropdown";
@@ -28,13 +30,11 @@ const CustomHandle = ({ id, position }: CustomHandleProps) => {
 };
 
 const InstNode = ({ id, data }: NodeProps<NodeData>) => {
-  const cls = tracked().onto.byIri(data.iri);
+  const cls = ontoStore.use.byIri()(data.iri);
   const [selected, setSelected] = useState(null);
 
   const onClickDetails = () => {
-    actions.app.state((state) => {
-      state.instDialog.nodeId = id;
-    });
+    appStore.setState({ selectedNode: id });
   };
 
   const style = {
@@ -42,6 +42,7 @@ const InstNode = ({ id, data }: NodeProps<NodeData>) => {
     "--animation-duration": `${0.2}s`,
   };
 
+  // if (!byIri(data.iri)) {
   if (!cls) {
     return null;
   }
@@ -73,7 +74,7 @@ const InstNode = ({ id, data }: NodeProps<NodeData>) => {
         />
 
         <div className="font-lato p-card-title w-20rem my-0 flex justify-center text-2xl">
-          <p className="truncate">{cls?.name}</p>
+          <p className="truncate">{cls.name}</p>
         </div>
         {cls.entries && (
           <div className="card justify-content-center w-20rem mt-5 flex">

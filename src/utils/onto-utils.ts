@@ -53,9 +53,8 @@ export async function createGraph(source: string | File) {
   return new Store(quads);
 }
 
-export function createModel(graph: Store) {
-  if (!graph) return {};
-  let model = {};
+export async function createModel(graph: Store): Promise<[object, object]> {
+  const model = {};
   const iris = {
     ...addToModel(model, getClasses(graph), "classes"),
     ...addToModel(model, getDatatypeProperties(graph), "properties"),
@@ -63,9 +62,7 @@ export function createModel(graph: Store) {
     ...addToModel(model, getVocabularies(graph), "vocabularies"),
     ...addToModel(model, getIndividuals(graph), "individuals"),
   };
-  (async () => {
-    await enrichModelFromMarkdown(model, "model.json");
-  })();
+  await enrichModelFromMarkdown(model, "model.json");
   return [model, iris];
 }
 
@@ -178,7 +175,8 @@ function extractNodeShape(graph: Store, node: Term) {
 }
 
 async function enrichModelFromMarkdown(model: object, source: string) {
-  const markdown = await (await fetch(source)).json();
+  const res = await fetch(source);
+  const markdown = await res.json();
   for (const namespace of markdown.namespaces) {
     const profile = namespace.name;
     if (!model[profile]) continue;

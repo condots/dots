@@ -1,7 +1,7 @@
 import { useRef, useState, useCallback } from "react";
+import { flowStore, addNode } from "@/zustand/flow";
 import { Background, Controls, ReactFlow } from "reactflow";
 import DevTools from "@/components/Flow/DevTools";
-import { tracked, actions } from "@/store/global";
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
@@ -32,7 +32,7 @@ export default function InstEditor() {
         position,
         data: { label: iri, iri, inst: true, properties: {} },
       };
-      actions.flow.addNode(node);
+      addNode(node);
     },
     [reactFlowInstance],
   );
@@ -41,23 +41,23 @@ export default function InstEditor() {
     <div ref={reactFlowWrapper} className="bg-primary-800 h-full">
       <ReactFlow
         proOptions={{ hideAttribution: true }}
-        nodes={tracked().flow.nodes()}
-        nodeTypes={tracked().flow.nodeTypes()}
-        onNodesChange={actions.flow.onNodesChange}
+        nodes={flowStore.use.nodes()}
+        nodeTypes={flowStore.use.nodeTypes()}
+        onNodesChange={flowStore.use.onNodesChange()}
         nodeOrigin={[0.5, 0.5]}
-        edges={tracked().flow.edges()}
-        edgeTypes={tracked().flow.edgeTypes()}
-        onEdgesChange={actions.flow.onEdgesChange}
-        onConnect={actions.flow.onConnect}
+        edges={flowStore.use.edges()}
+        edgeTypes={flowStore.use.edgeTypes()}
+        onEdgesChange={flowStore.use.onEdgesChange()}
+        onConnect={flowStore.use.onConnect()}
         onInit={setReactFlowInstance}
         onDrop={onDrop}
         onDragOver={onDragOver}
-        connectionLineType={tracked().flow.connectionLineType()}
-        defaultEdgeOptions={tracked().flow.defaultEdgeOptions()}
+        connectionLineType={flowStore.use.connectionLineType()}
+        defaultEdgeOptions={flowStore.use.defaultEdgeOptions()}
         // connectionLineComponent={FloatingConnectionLine}
         fitView
         fitViewOptions={{ padding: 1 }}
-        connectionMode={tracked().flow.connectionMode()}
+        connectionMode={flowStore.use.connectionMode()}
       >
         <DevTools />
         <Background />

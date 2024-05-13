@@ -8,7 +8,6 @@ import { Node } from "reactflow";
 export default function ClassPropsMenu() {
   const nodeId = tracked().app.instDialog().nodeId;
   const [classProperties, setClassProperties] = useState<object[]>();
-  // const [instProps, setInstProps] = useImmer<Prop[]>([]);
   const menu = useRef(null);
 
   useEffect(() => {

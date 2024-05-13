@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { tracked } from "@/store/global";
+// import { tracked } from "@/store/global";
+import { ontoStore } from "@/zustand/onto";
 import { Tree, TreeNodeTemplateOptions } from "primereact/tree";
 import { TreeNode } from "primereact/treenode";
 import { Button } from "primereact/button";
 
 const ClassMenu = () => {
-  const model = tracked().onto.model();
+  const model = ontoStore.use.model();
   const [expandedKeys, setExpandedKeys] = useState({});
   const [classes, setClasses] = useState([]);
 
