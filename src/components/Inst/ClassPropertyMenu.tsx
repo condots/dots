@@ -34,15 +34,16 @@ export default function ClassPropertyMenu() {
     const propertyComponent = byIri(propertyIri);
     return (
       <Button
-        unstyled
-        className="p-menuitem-link w-full"
+        text
+        className="p-menuitem-link w-full text-left"
         tooltip={propertyComponent.summary}
         tooltipOptions={{ showDelay: 1000 }}
         icon={itemIcon(propertyComponent.datatype)}
+        badge="1+"
+        badgeClassName="p-badge-secondary"
+        label={item.label}
         onClick={() => addProperty(nodeId!, propertyIri)}
-      >
-        {item.label}
-      </Button>
+      />
     );
   };
 
