@@ -1,22 +1,21 @@
-import { useCallback, useEffect } from "react";
-import { flowStore, addNode, PropertyData, NodeData } from "@/store/flow";
+import { useCallback } from "react";
+import { flowStore, addNode, NodeData } from "@/store/flow";
 import {
   Background,
   ConnectionLineType,
   ConnectionMode,
+  ControlButton,
   Controls,
   DefaultEdgeOptions,
   EdgeTypes,
   MarkerType,
   NodeOrigin,
   NodeTypes,
-  Panel,
   ReactFlow,
 } from "reactflow";
 
 import InstNode from "@/components/Inst/InstNode";
 import InstEdge from "@/components/Inst/InstEdge";
-import { Button } from "primereact/button";
 
 const nodeTypes = {
   inst: InstNode,
@@ -81,21 +80,21 @@ export default function InstBoard() {
         onDragOver={onDragOver}
         connectionLineType={connectionLineType}
         defaultEdgeOptions={defaultEdgeOptions}
-        // connectionLineComponent={FloatingConnectionLine}
         fitViewOptions={{ padding: 1 }}
         connectionMode={connectionMode}
       >
         {/* <DevTools /> */}
-        <Panel className="space-x-4" position="top-right">
-          <Button
-            className="px-2 py-1 shadow"
-            onClick={() => flowStore.getState().reset()}
-          >
-            Clear
-          </Button>
-        </Panel>
         <Background />
-        <Controls />
+        <Controls position="bottom-right">
+          <ControlButton
+            onClick={() => flowStore.getState().reset()}
+            title="clear"
+            aria-label="clear"
+            className="text-black"
+          >
+            <div className="pi pi-eraser" />
+          </ControlButton>
+        </Controls>
       </ReactFlow>
     </div>
   );
