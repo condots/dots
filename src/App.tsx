@@ -1,4 +1,4 @@
-import InstEditor from "@/components/Inst/InstEditor";
+import InstBoard from "@/components/Inst/InstBoard";
 import PropDialog from "@/components/Prop/PropDialog";
 import ClassMenu from "@/components/Onto/ClassMenu";
 
@@ -16,7 +16,7 @@ export default function App() {
           <ClassMenu />
         </SplitterPanel>
         <SplitterPanel className="h-full w-full" size={80}>
-          <InstEditor />
+          <InstBoard />
         </SplitterPanel>
       </Splitter>
     </>

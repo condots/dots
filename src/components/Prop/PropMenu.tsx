@@ -55,13 +55,12 @@ export default function PropMenu() {
 
   return (
     <>
+      <TieredMenu model={classProperties(node?.data.iri)} ref={menu} popup />
       <Button
-        icon="pi pi-bars"
-        outlined
-        severity="secondary"
+        label="Add property"
+        icon="pi pi-plus"
         onClick={(e) => menu.current.toggle(e)}
       />
-      <TieredMenu model={classProperties(node?.data.iri)} ref={menu} popup />
     </>
   );
 }

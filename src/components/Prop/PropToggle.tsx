@@ -1,6 +1,6 @@
 import { getProperty, updateProperty } from "@/store/flow";
 import { ToggleButton } from "primereact/togglebutton";
-import { PropLabel } from "./PropLabel";
+import { PropLabel } from "@/components/Prop/PropLabel";
 
 interface PropToggle {
   nodeId: string;

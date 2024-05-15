@@ -7,7 +7,7 @@ import {
 import { InputNumber } from "primereact/inputnumber";
 import { InputMask } from "primereact/inputmask";
 import { InputText } from "primereact/inputtext";
-import { PropLabel } from "./PropLabel";
+import { PropLabel } from "@/components/Prop/PropLabel";
 
 interface PropInput {
   nodeId: string;

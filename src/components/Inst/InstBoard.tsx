@@ -41,7 +41,7 @@ const nodeOrigin: NodeOrigin = [0.5, 0.5];
 const connectionLineType = ConnectionLineType.SmoothStep;
 const connectionMode = ConnectionMode.Loose;
 
-export default function InstEditor() {
+export default function InstBoard() {
   const onDragOver = useCallback((event) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
