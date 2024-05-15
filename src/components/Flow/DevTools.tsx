@@ -1,6 +1,5 @@
 import { type ReactNode, HTMLAttributes } from "react";
 import { Panel } from "reactflow";
-// import { tracked, actions } from "@/store/global";
 import { flowStore } from "@/zustand/flow";
 
 import "@/components/Flow/devtools.css";
@@ -10,7 +9,6 @@ import ChangeLogger from "@/components/Flow/ChangeLogger";
 import ViewportLogger from "@/components/Flow/ViewportLogger";
 
 export default function DevTools() {
-  // const dtActive = tracked().flow.devtoolsActive();
   const active = flowStore.use.devtoolsActive();
 
   return (
@@ -41,7 +39,6 @@ function DevToolButton({
   name: string;
   children: ReactNode;
 } & HTMLAttributes<HTMLButtonElement>) {
-  // const dtActive = tracked().flow.devtoolsActive();
   const active = flowStore.use.devtoolsActive();
   const setDevtoolsActive = flowStore.use.setDevtoolsActive();
 

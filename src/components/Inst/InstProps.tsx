@@ -1,22 +1,7 @@
-import React from "react";
-import { tracked, actions, getters } from "@/store/global";
-import { InputText } from "primereact/inputtext";
-
-export interface Prop {
-  iri: string;
-  value: string | boolean | number;
-  valid: boolean;
-}
+import { validProperty } from "@/zustand/flow";
+import { byIri } from "@/zustand/onto";
 
 export default function InstProps() {
-  const validateInput = (event, validatePattern) => {
-    setInstProps((draft) => {
-      const p = draft.find((prop) => prop.iri === event.target.id);
-      p.value = event.target.value;
-      p.valid = validatePattern && event.target.value !== "";
-    });
-  };
-
   function externalLinks() {
     for (var c = document.getElementsByTagName("a"), a = 0; a < c.length; a++) {
       var b = c[a];
@@ -39,7 +24,7 @@ export default function InstProps() {
   };
 
   const NodeProperties = (prop: Prop) => {
-    const property = getters.onto.byIri(prop.iri);
+    const property = byIri(prop.iri);
     let el = null;
     if (property.datatype === "boolean") {
       el = (
@@ -62,10 +47,9 @@ export default function InstProps() {
           <InputText
             id={property.iri}
             value={prop.value}
-            keyfilter={patterns[property.datatype]}
             validateOnly
             onInput={validateInput}
-            invalid={!prop.valid}
+            invalid={!validProperty(nodeId!, prop.id)}
             className="border-2"
           />
         </>

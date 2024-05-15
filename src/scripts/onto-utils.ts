@@ -19,9 +19,12 @@ export const ns = {
   xsd: rdfext.namespace("http://www.w3.org/2001/XMLSchema#"),
 };
 
-export function getSpdxNs(graph: Store) {
-  return graph?.getSubjects(ns.rdf.type, ns.owl.Ontology)[0]?.id;
-}
+export const sections = [
+  "classes",
+  "properties",
+  "vocabularies",
+  "individuals",
+];
 
 export async function createGraph(source: string | File) {
   const url = source.name ?? source;
@@ -53,42 +56,55 @@ export async function createGraph(source: string | File) {
   return new Store(quads);
 }
 
-export async function createModel(graph: Store): Promise<[object, object]> {
+export function createModel(graph: Store): object {
   const model = {};
-  const iris = {
-    ...addToModel(model, getClasses(graph), "classes"),
-    ...addToModel(model, getDatatypeProperties(graph), "properties"),
-    ...addToModel(model, getObjectProperties(graph), "properties"),
-    ...addToModel(model, getVocabularies(graph), "vocabularies"),
-    ...addToModel(model, getIndividuals(graph), "individuals"),
-  };
-  await enrichModelFromMarkdown(model, "model.json");
-  return [model, iris];
+  addToModel(model, getClasses(graph), "classes");
+  addToModel(model, getDatatypeProperties(graph), "properties");
+  addToModel(model, getObjectProperties(graph), "properties");
+  addToModel(model, getVocabularies(graph), "vocabularies");
+  addToModel(model, getIndividuals(graph), "individuals");
+  return model;
 }
 
-export function getInheritedConstraints(
-  classes: object,
-  iri: string,
-): object[] {
-  if (!iri) {
-    return [];
+export async function enrichModelFromMarkdown(model: object, source: string) {
+  const res = await fetch(source);
+  const markdown = await res.json();
+  for (const namespace of markdown.namespaces) {
+    const profile = namespace.name;
+    if (!model[profile]) continue;
+    model[profile].iri = namespace.iri;
+    model[profile].summary = namespace.summary;
+    model[profile].description = namespace.description;
+    for (const section of sections) {
+      for (const [k, v] of Object.entries(namespace[section])) {
+        if (v.name === "spdxId") continue;
+        model[profile][section][v.name].description = v.description;
+        if (section === "classes") {
+          model[profile][section][v.name].abstract =
+            v.metadata.Instantiability === "Abstract";
+        }
+      }
+    }
   }
-  const cls = classes[iri];
-  const c = {
-    iri: cls.iri,
-    name: cls.name,
-    constraints: cls.constraints,
-  };
-  return [c, ...getInheritedConstraints(classes, cls.subClassOf)];
 }
+
+export const getIris = (model: object): Record<string, object> => {
+  const iris = {};
+  for (const profile in model) {
+    for (const section in model[profile]) {
+      if (!sections.includes(section)) continue;
+      for (const o of Object.values(model[profile][section])) {
+        iris[o.iri] = o;
+      }
+    }
+  }
+  return iris;
+};
 
 function addToModel(model, items: [], section: string) {
-  const iris = {};
   items.forEach((o: object) => {
     ((model[o.profile] ??= {})[section] ??= {})[o.name] = o;
-    iris[o.iri] = o;
   });
-  return iris;
 }
 
 const sharedFields = (s: Term, graph: Store) => {
@@ -172,31 +188,4 @@ function extractNodeShape(graph: Store, node: Term) {
     properties[name] = constraint;
   }
   return properties;
-}
-
-async function enrichModelFromMarkdown(model: object, source: string) {
-  const res = await fetch(source);
-  const markdown = await res.json();
-  for (const namespace of markdown.namespaces) {
-    const profile = namespace.name;
-    if (!model[profile]) continue;
-    model[profile].iri = namespace.iri;
-    model[profile].summary = namespace.summary;
-    model[profile].description = namespace.description;
-    for (const section of [
-      "classes",
-      "properties",
-      "vocabularies",
-      "individuals",
-    ]) {
-      for (const [k, v] of Object.entries(namespace[section])) {
-        if (v.name === "spdxId") continue;
-        model[profile][section][v.name].description = v.description;
-        if (section === "classes") {
-          model[profile][section][v.name].abstract =
-            v.metadata.Instantiability === "Abstract";
-        }
-      }
-    }
-  }
 }

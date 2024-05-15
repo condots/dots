@@ -1,17 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import type { NodeProps } from "reactflow";
 import { Position, Handle } from "reactflow";
-// import { tracked, actions } from "@/store/global";
-import { ontoStore } from "@/zustand/onto";
+import { byIri } from "@/zustand/onto";
 import { appStore } from "@/zustand/app";
+import { NodeData } from "@/zustand/flow";
 
 import { Card } from "primereact/card";
 import { Dropdown } from "primereact/dropdown";
-
-type NodeData = {
-  iri: string;
-  inst?: boolean;
-};
 
 type CustomHandleProps = {
   id: string;
@@ -30,19 +25,14 @@ const CustomHandle = ({ id, position }: CustomHandleProps) => {
 };
 
 const InstNode = ({ id, data }: NodeProps<NodeData>) => {
-  const cls = ontoStore.use.byIri()(data.iri);
+  const cls = byIri(data.iri);
   const [selected, setSelected] = useState(null);
-
-  const onClickDetails = () => {
-    appStore.setState({ selectedNode: id });
-  };
 
   const style = {
     "--scale-start": 0.8,
     "--animation-duration": `${0.2}s`,
   };
 
-  // if (!byIri(data.iri)) {
   if (!cls) {
     return null;
   }
@@ -70,7 +60,7 @@ const InstNode = ({ id, data }: NodeProps<NodeData>) => {
       >
         <button
           className="pi pi-info-circle absolute right-0 top-0 m-2 rounded-full hover:backdrop-brightness-110 transition"
-          onClick={onClickDetails}
+          onClick={() => appStore.setState({ selectedNodeId: id })}
         />
 
         <div className="font-lato p-card-title w-20rem my-0 flex justify-center text-2xl">
@@ -98,7 +88,7 @@ const InstNode = ({ id, data }: NodeProps<NodeData>) => {
           </div>
         )}
       </Card>
-      {data.inst && (
+      {data.isNode && (
         <>
           <CustomHandle id="a" position={Position.Top} />
           <CustomHandle id="b" position={Position.Right} />

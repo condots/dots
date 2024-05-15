@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useStore, getSmoothStepPath, EdgeLabelRenderer } from "reactflow";
 import type { EdgeProps } from "reactflow";
 
-import { getEdgeParams } from "@/utils/flow-utils.js";
+import { getEdgeParams } from "@/scripts/flow-utils.js";
 
 function InstEdge({ id, source, target, markerEnd, style, data }: EdgeProps) {
   const sourceNode = useStore(
