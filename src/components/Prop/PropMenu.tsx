@@ -32,6 +32,24 @@ export default function PropMenu() {
   const itemRenderer = (item: MenuItem) => {
     const propertyIri = item.data.path;
     const propertyComponent = byIri(propertyIri);
+    const min = item.data.minCount;
+    const max = item.data.maxCount;
+
+    let badge = "";
+    if (min && max) {
+      if (min === max) {
+        badge = `${min}`;
+      } else {
+        badge = `${min}:${max}`;
+      }
+    } else if (min) {
+      badge = `${min}+`;
+    } else if (max) {
+      badge = `0:${max}`;
+    } else {
+      badge = `0+`;
+    }
+
     return (
       <Button
         text
@@ -39,7 +57,7 @@ export default function PropMenu() {
         tooltip={propertyComponent.summary}
         tooltipOptions={{ showDelay: 1000 }}
         icon={itemIcon(propertyComponent.datatype)}
-        badge="1+"
+        badge={badge}
         badgeClassName="p-badge-secondary"
         label={item.label}
         onClick={() => addProperty(nodeId!, propertyIri)}
