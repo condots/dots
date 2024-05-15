@@ -5,6 +5,7 @@ import createSelectors from "@/scripts/createSelectors";
 
 const initialState = {
   selectedNodeId: <string | null>null,
+  selectedInfoIri: <string | null>null,
 };
 
 export const appStoreBase = create(
