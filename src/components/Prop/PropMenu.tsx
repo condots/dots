@@ -6,7 +6,7 @@ import { TieredMenu } from "primereact/tieredmenu";
 import { MenuItem } from "primereact/menuitem";
 import { Button } from "primereact/button";
 
-export default function ClassPropertyMenu() {
+export default function PropMenu() {
   const nodeId = appStore.use.selectedNodeId();
   const node = getNode(nodeId);
   const menu = useRef(null);

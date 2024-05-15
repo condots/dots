@@ -62,7 +62,6 @@ const InstNode = ({ id, data }: NodeProps<NodeData>) => {
           className="pi pi-info-circle absolute right-0 top-0 m-2 rounded-full hover:backdrop-brightness-110 transition"
           onClick={() => appStore.setState({ selectedNodeId: id })}
         />
-
         <div className="font-lato p-card-title w-20rem my-0 flex justify-center text-2xl">
           <p className="truncate">{cls.name}</p>
         </div>

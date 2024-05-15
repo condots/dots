@@ -2,11 +2,11 @@ import { appStore } from "@/store/app";
 import { getNode, getProperties } from "@/store/flow";
 import { byIri } from "@/store/onto";
 import { Dialog } from "primereact/dialog";
-import ClassPropertyMenu from "@/components/Inst/ClassPropertyMenu";
-import InstPropertyInput from "@/components/Inst/InstPropertyInput";
-import InstPropertyToggle from "./InstPropertyToggle";
+import PropMenu from "@/components/Prop/PropMenu";
+import InstPropertyInput from "@/components/Prop/PropInput";
+import InstPropertyToggle from "@/components/Prop/PropToggle";
 
-export default function InstDialog() {
+export default function PropDialog() {
   const nodeId = appStore.use.selectedNodeId();
   const node = getNode(nodeId);
   const cls = byIri(node?.data.iri);
@@ -43,7 +43,7 @@ export default function InstDialog() {
         className="w-1/2 h-2/3"
         onHide={() => appStore.setState({ selectedNodeId: null })}
       >
-        <ClassPropertyMenu />
+        <PropMenu />
         <div className="card my-3 mx-2">
           <div className="grid grid-cols-4 gap-4">{propertyFields}</div>
         </div>

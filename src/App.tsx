@@ -1,5 +1,5 @@
 import InstEditor from "@/components/Inst/InstEditor";
-import InstDialog from "@/components/Inst/InstDialog";
+import PropDialog from "@/components/Prop/PropDialog";
 import ClassMenu from "@/components/Onto/ClassMenu";
 
 import { Splitter, SplitterPanel } from "primereact/splitter";
@@ -10,7 +10,7 @@ import "primeflex/primeflex.css"; // flex
 export default function App() {
   return (
     <>
-      <InstDialog />
+      <PropDialog />
       <Splitter className="h-screen w-screen">
         <SplitterPanel size={20} minSize={10}>
           <ClassMenu />

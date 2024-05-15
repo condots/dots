@@ -1,27 +1,20 @@
-import { advisoryText } from "@/scripts/inst-utils";
 import {
-  flowStore,
   getProperty,
   updateProperty,
-  removeProperty,
   validProperty,
   datatypes,
 } from "@/store/flow";
-import { byIri } from "@/store/onto";
 import { InputNumber } from "primereact/inputnumber";
 import { InputMask } from "primereact/inputmask";
 import { InputText } from "primereact/inputtext";
-import { Button } from "primereact/button";
+import { PropLabel } from "./PropLabel";
 
-interface InstPropertyInputProps {
+interface PropInput {
   nodeId: string;
   propertyId: string;
 }
 
-export default function InstPropertyInput({
-  nodeId,
-  propertyId,
-}: InstPropertyInputProps) {
+export default function InstPropertyInput({ nodeId, propertyId }: PropInput) {
   const propertyData = getProperty(nodeId, propertyId)!;
   const isValid = validProperty(nodeId!, propertyId);
   const dt = datatypes.get(propertyData.datatype);
@@ -38,21 +31,7 @@ export default function InstPropertyInput({
 
   return (
     <div className="flex-auto">
-      <div className="flex gap-2 align-items-center">
-        <label className="font-bold block">
-          {propertyData.name} ({propertyData.datatype})
-        </label>
-        <Button
-          icon={
-            <span className="material-icons-outlined flex justify-end">
-              delete_forever
-            </span>
-          }
-          severity="secondary"
-          text
-          onClick={() => removeProperty(nodeId, propertyId)}
-        ></Button>
-      </div>
+      <PropLabel nodeId={nodeId} propertyId={propertyId} />
       {dt?.kind === "number" ? (
         <InputNumber
           {...commonProps}
