@@ -5,8 +5,8 @@ import {
   removeProperty,
   updateProperty,
   validProperty,
-} from "@/zustand/flow";
-import { byIri } from "@/zustand/onto";
+} from "@/store/flow";
+import { byIri } from "@/store/onto";
 import { Button } from "primereact/button";
 import { ToggleButton } from "primereact/togglebutton";
 

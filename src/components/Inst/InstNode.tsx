@@ -1,9 +1,9 @@
 import { useState } from "react";
 import type { NodeProps } from "reactflow";
 import { Position, Handle } from "reactflow";
-import { byIri } from "@/zustand/onto";
-import { appStore } from "@/zustand/app";
-import { NodeData } from "@/zustand/flow";
+import { byIri } from "@/store/onto";
+import { appStore } from "@/store/app";
+import { NodeData } from "@/store/flow";
 
 import { Card } from "primereact/card";
 import { Dropdown } from "primereact/dropdown";

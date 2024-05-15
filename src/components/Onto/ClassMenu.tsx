@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ontoStore, updateOntology } from "@/zustand/onto";
+import { ontoStore, updateOntology } from "@/store/onto";
 import { Tree, TreeNodeTemplateOptions } from "primereact/tree";
 import { TreeNode } from "primereact/treenode";
 import { Button } from "primereact/button";

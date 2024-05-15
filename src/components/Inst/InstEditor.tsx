@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { flowStore, addNode, PropertyData, NodeData } from "@/zustand/flow";
+import { flowStore, addNode, PropertyData, NodeData } from "@/store/flow";
 import {
   Background,
   ConnectionLineType,

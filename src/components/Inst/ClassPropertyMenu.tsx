@@ -1,7 +1,7 @@
 import { useRef } from "react";
-import { appStore } from "@/zustand/app";
-import { addProperty, datatypeIcon, getNode } from "@/zustand/flow";
-import { byIri } from "@/zustand/onto";
+import { appStore } from "@/store/app";
+import { addProperty, datatypeIcon, getNode } from "@/store/flow";
+import { byIri } from "@/store/onto";
 import { TieredMenu } from "primereact/tieredmenu";
 import { MenuItem } from "primereact/menuitem";
 import { Button } from "primereact/button";

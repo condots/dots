@@ -1,6 +1,6 @@
 import { type ReactNode, HTMLAttributes } from "react";
 import { Panel } from "reactflow";
-import { flowStore } from "@/zustand/flow";
+import { flowStore } from "@/store/flow";
 
 import "@/components/Flow/devtools.css";
 

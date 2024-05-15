@@ -6,8 +6,8 @@ import {
   removeProperty,
   validProperty,
   datatypes,
-} from "@/zustand/flow";
-import { byIri } from "@/zustand/onto";
+} from "@/store/flow";
+import { byIri } from "@/store/onto";
 import { InputNumber } from "primereact/inputnumber";
 import { InputMask } from "primereact/inputmask";
 import { InputText } from "primereact/inputtext";

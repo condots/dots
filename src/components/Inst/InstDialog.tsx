@@ -1,6 +1,6 @@
-import { appStore } from "@/zustand/app";
-import { getNode, getProperties } from "@/zustand/flow";
-import { byIri } from "@/zustand/onto";
+import { appStore } from "@/store/app";
+import { getNode, getProperties } from "@/store/flow";
+import { byIri } from "@/store/onto";
 import { Dialog } from "primereact/dialog";
 import ClassPropertyMenu from "@/components/Inst/ClassPropertyMenu";
 import InstPropertyInput from "@/components/Inst/InstPropertyInput";

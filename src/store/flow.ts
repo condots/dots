@@ -4,7 +4,7 @@ import { immer } from "zustand/middleware/immer";
 import { nanoid } from "nanoid";
 import moment from "moment";
 import createSelectors from "@/scripts/createSelectors";
-import { byIri } from "@/zustand/onto";
+import { byIri } from "@/store/onto";
 import {
   Connection,
   Edge,
