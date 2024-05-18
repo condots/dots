@@ -37,17 +37,13 @@ export default function PropMenu() {
 
     let badge = "";
     if (min && max) {
-      if (min === max) {
-        badge = `${min}`;
-      } else {
-        badge = `${min}:${max}`;
-      }
+      badge = `${min}..${max}`;
     } else if (min) {
-      badge = `${min}+`;
+      badge = `${min}...`;
     } else if (max) {
-      badge = `0:${max}`;
+      badge = `0..${max}`;
     } else {
-      badge = `0+`;
+      badge = `0...`;
     }
 
     return (
