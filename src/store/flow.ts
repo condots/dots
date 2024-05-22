@@ -3,8 +3,9 @@ import { persist, devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { nanoid } from "nanoid";
 import moment from "moment";
+import { isIri } from "@hyperjump/uri";
 import createSelectors from "@/scripts/createSelectors";
-import { byIri } from "@/store/onto";
+import { byIRI } from "@/store/onto";
 import {
   Connection,
   Edge,
@@ -29,6 +30,7 @@ import type {
   ReactFlowInstance,
   OnInit,
 } from "reactflow";
+import { Property } from "@/scripts/onto-utils";
 
 export type PropertyData = {
   id: string;
@@ -44,6 +46,58 @@ export type NodeData = {
   isNode: boolean;
   properties: Record<string, PropertyData>;
 };
+
+export interface Datatype {
+  icon: string;
+  kind: string;
+  validator: (v) => boolean;
+  mask?: string;
+  slotChar?: string;
+}
+
+export const datatypes = new Map<string, Datatype>();
+datatypes.set("string", {
+  icon: "text_fields",
+  kind: "text",
+  validator: (v: string) => typeof v === "string" && v.length > 0,
+});
+datatypes.set("anyURI", {
+  icon: "link",
+  kind: "text",
+  validator: (v: string) => isIri(v),
+});
+datatypes.set("dateTimeStamp", {
+  icon: "schedule",
+  kind: "text",
+  validator: (v: string) => moment(v, "YYYY-MM-DDTHH:mm:ssZ", true).isValid(),
+  mask: "9999-99-99T99:99:99Z",
+  slotChar: "YYYY-MM-DDTHH:mm:ssZ",
+});
+datatypes.set("decimal", {
+  icon: "numbers",
+  kind: "number",
+  validator: (v: number) => typeof v === "number",
+});
+datatypes.set("positiveInteger", {
+  icon: "numbers",
+  kind: "number",
+  validator: (v: number) => Number.isInteger(v) && v > 0,
+});
+datatypes.set("nonNegativeInteger", {
+  icon: "numbers",
+  kind: "number",
+  validator: (v: number) => Number.isInteger(v) && v >= 0,
+});
+datatypes.set("boolean", {
+  icon: "toggle_off",
+  kind: "boolean",
+  validator: (v: number) => typeof v === "boolean",
+});
+datatypes.set("default", {
+  icon: "web_asset",
+  kind: "text",
+  validator: () => false,
+});
 
 type DevtoolsActive = {
   nodeInspector: boolean;
@@ -67,64 +121,6 @@ type RFState = {
   setDevtoolsActive: (name: keyof DevtoolsActive) => void;
   reset: () => void;
 };
-
-export const datatypes = new Map<
-  string,
-  {
-    icon: string;
-    kind: string;
-    validator: (v: any) => boolean;
-    mask?: string;
-    slotChar?: string;
-  }
->(
-  Object.entries({
-    string: {
-      icon: "text_fields",
-      kind: "text",
-      validator: (v: any) => typeof v === "string" && v.length > 0,
-    },
-    anyURI: {
-      icon: "link",
-      kind: "text",
-      validator: (v: any) =>
-        /^[a-zA-Z][a-zA-Z0-9+.-]*:(\/\/[^\s/]+)?[^\s]*$/.test(v),
-    },
-    dateTimeStamp: {
-      icon: "schedule",
-      kind: "text",
-      validator: (v: any) => moment(v, "YYYY-MM-DDTHH:mm:ssZ", true).isValid(),
-      // validator: (v: any) => /^-?([1-9][0-9]{3,}|0[0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\.[0-9]+)?|(24:00:00(\.0+)?))(Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?(Z|(\+|-)[0-9][0-9]:[0-9][0-9])$/.test(v),
-      mask: "9999-99-99T99:99:99Z",
-      slotChar: "YYYY-MM-DDTHH:mm:ssZ",
-    },
-    decimal: {
-      icon: "numbers",
-      kind: "number",
-      validator: (v: any) => typeof v === "number",
-    },
-    positiveInteger: {
-      icon: "numbers",
-      kind: "number",
-      validator: (v: any) => Number.isInteger(v) && v > 0,
-    },
-    nonNegativeInteger: {
-      icon: "numbers",
-      kind: "number",
-      validator: (v: any) => Number.isInteger(v) && v >= 0,
-    },
-    boolean: {
-      icon: "toggle_off",
-      kind: "boolean",
-      validator: (v: any) => typeof v === "boolean",
-    },
-    default: {
-      icon: "web_asset",
-      kind: "text",
-      validator: (v: any) => false,
-    },
-  }),
-);
 
 const initialState = {
   nodes: [],
@@ -216,7 +212,7 @@ export const addNode = (type: string, x: number, y: number, data: object) => {
 
 export const addProperty = (nodeId: string, propertyIri: string) => {
   const propertyId = nanoid();
-  const propertyComponent = byIri(propertyIri);
+  const propertyComponent = byIRI(propertyIri);
   const isBool = propertyComponent.datatype === "boolean";
   const propertyData: PropertyData = {
     id: propertyId,
@@ -245,8 +241,12 @@ export const removeProperty = (nodeId: string, propertyId: string) => {
   });
 };
 
-export const datatypeIcon = (datatype: string) => {
-  return datatypes.get(datatype)?.icon ?? datatypes.get("default")!.icon;
+export const datatypeIcon = (property: Property) => {
+  if (property.datatype) {
+    return datatypes.get(property.datatype)!.icon;
+  } else {
+    return datatypes.get("default")!.icon;
+  }
 };
 
 export const validProperty = (nodeId: string, propertyId: string) => {

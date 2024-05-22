@@ -1,11 +1,11 @@
 import { appStore } from "@/store/app";
-import { byIri } from "@/store/onto";
+import { byIRI } from "@/store/onto";
 import { Card } from "primereact/card";
 import { Dialog } from "primereact/dialog";
 
 export function InfoDialog() {
   const iri = appStore.use.selectedInfoIri();
-  const cmp = iri && byIri(iri);
+  const cmp = iri && byIRI(iri);
 
   return (
     <Dialog

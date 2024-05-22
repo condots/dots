@@ -1,6 +1,6 @@
 import { appStore } from "@/store/app";
 import { getNode, getProperties } from "@/store/flow";
-import { byIri } from "@/store/onto";
+import { byIRI } from "@/store/onto";
 import { Dialog } from "primereact/dialog";
 import PropMenu from "@/components/Prop/PropMenu";
 import InstPropertyInput from "@/components/Prop/PropInput";
@@ -9,7 +9,7 @@ import InstPropertyToggle from "@/components/Prop/PropToggle";
 export default function PropDialog() {
   const nodeId = appStore.use.selectedNodeId();
   const node = getNode(nodeId);
-  const cls = byIri(node?.data.iri);
+  const cls = byIRI(node?.data.iri);
   const properties = getProperties(nodeId);
 
   const propertyFields = Object.entries(properties || {}).map(

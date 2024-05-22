@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { NodeProps } from "reactflow";
 import { Position, Handle } from "reactflow";
-import { byIri } from "@/store/onto";
+import { byIRI } from "@/store/onto";
 import { appStore } from "@/store/app";
 import { NodeData } from "@/store/flow";
 
@@ -25,7 +25,7 @@ const CustomHandle = ({ id, position }: CustomHandleProps) => {
 };
 
 const InstNode = ({ id, data }: NodeProps<NodeData>) => {
-  const cls = byIri(data.iri);
+  const cls = byIRI(data.iri);
   const [selected, setSelected] = useState(null);
 
   const style = {

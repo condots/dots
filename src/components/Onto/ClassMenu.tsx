@@ -5,9 +5,9 @@ import { TreeNode } from "primereact/treenode";
 import { Button } from "primereact/button";
 
 const ClassMenu = () => {
-  const model = ontoStore.use.model();
+  const profiles = ontoStore.use.profiles();
   const [expandedKeys, setExpandedKeys] = useState({});
-  const [classes, setClasses] = useState([]);
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     const source = "https://spdx.org/rdf/3.0.0/spdx-model.ttl";
@@ -16,41 +16,43 @@ const ClassMenu = () => {
 
   useEffect(() => {
     const items = [];
-    for (const [i, [profile, sections]] of Object.entries(model)
-      .sort()
-      .entries()) {
-      const children = [];
-      for (const [j, [name, cls]] of Object.entries(sections.classes)
-        .sort()
-        .entries()) {
-        children.push({
-          key: `${i}-${j}`,
-          label: name,
-          draggable: true,
+    if (profiles === null) return;
+    try {
+      for (const [profileName, profile] of profiles) {
+        const subitems = [];
+        for (const [className, cls] of profile.classes) {
+          subitems.push({
+            key: className,
+            label: className,
+            draggable: true,
+            droppable: false,
+            className: "m-0 p-0",
+            data: {
+              iri: cls.iri,
+              summary: cls.summary,
+            },
+          });
+        }
+        items.push({
+          key: profileName,
+          label: profileName,
+          draggable: false,
           droppable: false,
-          className: "m-0 p-0",
+          className: "select-none",
           data: {
-            iri: cls.iri,
-            summary: cls.summary,
+            iri: profile.iri,
+            summary: profile.summary,
           },
+          children: subitems,
         });
       }
+    } catch (error) {
+      console.log(profiles);
 
-      items.push({
-        key: `${i}`,
-        label: profile,
-        draggable: false,
-        droppable: false,
-        className: "select-none",
-        data: {
-          iri: sections.iri,
-          summary: sections.summary,
-        },
-        children,
-      });
+      console.error(error);
     }
-    setClasses(items);
-  }, [model]);
+    setItems(items);
+  }, [profiles]);
 
   const onDragStart = (
     event: React.DragEvent<HTMLButtonElement>,
@@ -86,7 +88,7 @@ const ClassMenu = () => {
 
   return (
     <Tree
-      value={classes}
+      value={items}
       filter
       filterMode="strict"
       filterPlaceholder="Search..."

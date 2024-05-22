@@ -14,6 +14,9 @@ importers:
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.5.2
         version: 6.5.2
+      '@hyperjump/uri':
+        specifier: ^1.2.2
+        version: 1.2.2
       dompurify:
         specifier: ^3.1.3
         version: 3.1.3
@@ -959,6 +962,9 @@ packages:
 
   '@humanwhocodes/object-schema@2.0.3':
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
+
+  '@hyperjump/uri@1.2.2':
+    resolution: {integrity: sha512-Zn8AZb/j54KKUCckmcOzKCSCKpIpMVBc60zYaajD8Dq/1g4UN6TfAFi+uDa5o/6rf+I+5xDZjZpdzwfuhlC0xQ==}
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -4888,6 +4894,8 @@ snapshots:
   '@humanwhocodes/module-importer@1.0.1': {}
 
   '@humanwhocodes/object-schema@2.0.3': {}
+
+  '@hyperjump/uri@1.2.2': {}
 
   '@isaacs/cliui@8.0.2':
     dependencies:

@@ -1,22 +1,29 @@
 import { create } from "zustand";
-import { persist, devtools, combine } from "zustand/middleware";
+import { persist, devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import createSelectors from "@/scripts/createSelectors";
 
-const initialState = {
-  selectedNodeId: <string | null>null,
-  selectedInfoIri: <string | null>null,
+type AppState = {
+  selectedNodeId: string | null;
+  selectedInfoIri: string | null;
+  reset: () => void;
 };
 
-export const appStoreBase = create(
+const initialState = {
+  selectedNodeId: null,
+  selectedInfoIri: null,
+};
+
+const appStoreBase = create<AppState>()(
   immer(
     devtools(
       persist(
-        combine({ ...initialState }, (set) => ({
+        (set) => ({
+          ...initialState,
           reset: () => {
             set(initialState);
           },
-        })),
+        }),
         {
           name: "app",
         },

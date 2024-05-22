@@ -1,96 +1,92 @@
 import fs from "node:fs";
 import { Parser, Store } from "n3";
-import { ns, getSpdxNs, createModel } from "@/utils/onto-utils";
-import _ from "lodash-es";
+import {
+  createModel,
+  getIRIs,
+  Profiles,
+  Profile,
+  SharedFields,
+} from "@/scripts/onto-utils";
 
-const replacer = (key, value) =>
-  value instanceof Object && !(value instanceof Array)
-    ? Object.keys(value)
-        .sort()
-        .reduce((sorted, key) => {
-          sorted[key] = value[key];
-          return sorted;
-        }, {})
-    : value;
-
-function saveSpdxExplorerModel() {
-  function getGraph() {
-    const text = fs.readFileSync("./public/spdx-model.ttl").toString();
-    const parser = new Parser();
-    const quads = parser.parse(text);
-    return new Store(quads);
-  }
-
-  const graph = getGraph();
-  const spdxNs = getSpdxNs(graph);
-  const [model, iris] = createModel(graph, spdxNs);
-  fs.writeFileSync(
-    "./public/spdx-explorer-model.json",
-    JSON.stringify(model, replacer, 2),
-  );
-  console.log("iris:", _.keys(iris).length);
+function createGraph(source: string) {
+  const text = fs.readFileSync(source).toString();
+  const parser = new Parser();
+  const quads = parser.parse(text);
+  return new Store(quads);
 }
 
-function saveSortedModel() {
-  const markdown = JSON.parse(
-    fs.readFileSync("./public/model.json").toString(),
-  );
-  const model = {};
-  for (const namespace of markdown.namespaces) {
-    const profile = {};
-    for (const [k, v] of _.entries(namespace)) {
-      if (
-        _.isEmpty(v) ||
-        !["classes", "properties", "vocabularies", "individuals"].includes(k)
-      )
-        continue;
-      profile[k] = v;
-    }
-    if (!_.isEmpty(profile)) {
-      model[namespace.name] = profile;
-    }
-  }
-  fs.writeFileSync(
-    "./public/model-sorted.json",
-    JSON.stringify(model, replacer, 2),
-  );
-}
-
-function saveEnrichedModel() {
-  const model = JSON.parse(
-    fs.readFileSync("./public/spdx-explorer-model.json").toString(),
-  );
-  const namespaces = JSON.parse(
-    fs.readFileSync("./public/model.json").toString(),
-  ).namespaces;
-  for (const namespace of namespaces) {
-    const profile = namespace.name;
-    if (!model[profile]) continue;
-    model[profile].iri = namespace.iri;
-    model[profile].summary = namespace.summary;
-    model[profile].description = namespace.description;
-    for (const section of [
-      "classes",
-      "properties",
-      "vocabularies",
-      "individuals",
-    ]) {
-      for (const [k, v] of _.entries(namespace[section])) {
-        if (v.name === "spdxId") continue;
-        model[profile][section][v.name].description = v.description;
-        if (section === "classes") {
-          model[profile][section][v.name].abstract =
-            v.metadata.Instantiability === "Abstract";
-        }
+function enrichModelFromMarkdown(profiles: Profiles, source: string) {
+  const res = fs.readFileSync(source);
+  const markdown = JSON.parse(res.toString());
+  const modelProfiles = markdown.namespaces;
+  const enrichedProfiles: Profiles = new Map();
+  for (const [profileName, profile] of profiles) {
+    const modelProfile = Object.values(modelProfiles).find(
+      (v) => v.name === profileName,
+    )!;
+    for (const [sectionName, section] of Object.entries(profile) as [
+      keyof Profile,
+      Map<string, SharedFields>,
+    ][]) {
+      const modelSection = modelProfile[sectionName];
+      for (const [itemName, item] of section) {
+        const modelItem = Object.values(modelSection).find(
+          (v) => v.name === itemName,
+        )!;
+        item.description = modelItem.description;
+        section.set(itemName, item);
       }
+      profile[sectionName] = section as any;
     }
+    profile.iri = modelProfile.iri;
+    profile.name = modelProfile.iri.split("/").pop();
+    profile.summary = modelProfile.summary;
+    profile.description = modelProfile.description;
+    enrichedProfiles.set(profileName, profile);
   }
-  fs.writeFileSync(
-    "./public/spdx-explorer-model-enriched.json",
-    JSON.stringify(model, replacer, 2),
-  );
+  return enrichedProfiles;
 }
 
-// saveSpdxExplorerModel();
-// saveSortedModel();
-saveEnrichedModel();
+function updateOntology(source: string) {
+  const graph = createGraph(source);
+  const profiles = createModel(graph);
+  const iris = getIRIs(profiles);
+  enrichModelFromMarkdown(profiles, "./public/model.json");
+  return { graph, profiles, iris };
+}
+
+const source = "./public/spdx-model.ttl";
+const res = updateOntology(source);
+const profiles = transformProfile(res.profiles);
+console.log(JSON.stringify(profiles, null, 2));
+
+// const obj = transformProfile(map);
+// console.log(JSON.stringify(obj, null, 2));
+
+function transformProfile(profiles: Profiles): Record<string, any> {
+  const result: Record<string, any> = {};
+
+  for (const [profileName, profileData] of profiles.entries()) {
+    result[profileName] = transformData(profileData);
+  }
+
+  return result;
+}
+
+function transformData(data: any): any {
+  if (data instanceof Map) {
+    return Object.fromEntries(
+      Array.from(data.entries(), ([key, value]) => [key, transformData(value)]),
+    );
+  } else if (Array.isArray(data)) {
+    return data.map(transformData);
+  } else if (typeof data === "object" && data !== null) {
+    const result: Record<string, any> = {};
+    for (const key in data) {
+      result[key] = transformData(data[key]);
+    }
+    return result;
+  } else {
+    return data;
+  }
+}

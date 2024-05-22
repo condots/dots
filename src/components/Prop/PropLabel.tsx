@@ -1,6 +1,6 @@
 import { appStore } from "@/store/app";
 import { getProperty, removeProperty } from "@/store/flow";
-import { byIri } from "@/store/onto";
+import { byIRI } from "@/store/onto";
 import { Button } from "primereact/button";
 import { Tooltip } from "primereact/tooltip";
 
@@ -11,7 +11,7 @@ interface PropLabel {
 
 export function PropLabel({ nodeId, propertyId }: PropLabel) {
   const propertyData = getProperty(nodeId, propertyId)!;
-  const propertyComponent = byIri(propertyData.iri);
+  const propertyComponent = byIRI(propertyData.iri);
 
   return (
     <div className="flex items-center justify-between my-1">
