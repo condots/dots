@@ -5,7 +5,7 @@ import { nanoid } from "nanoid";
 import moment from "moment";
 import { isIri } from "@hyperjump/uri";
 import createSelectors from "@/scripts/createSelectors";
-import { byIRI } from "@/store/onto";
+import { getItem } from "@/store/onto";
 import {
   Connection,
   Edge,
@@ -210,13 +210,13 @@ export const addNode = (type: string, x: number, y: number, data: object) => {
   return nodeId;
 };
 
-export const addProperty = (nodeId: string, propertyIri: string) => {
+export const addProperty = (nodeId: string, propertyIRI: string) => {
   const propertyId = nanoid();
-  const propertyComponent = byIRI(propertyIri);
-  const isBool = propertyComponent.datatype === "boolean";
+  const propertyComponent = getItem(propertyIRI);
+  const isBool = propertyComponent!.datatype === "boolean";
   const propertyData: PropertyData = {
     id: propertyId,
-    iri: propertyIri,
+    iri: propertyIRI,
     name: propertyComponent.name,
     datatype: propertyComponent.datatype,
     value: isBool ? false : "",
@@ -243,9 +243,9 @@ export const removeProperty = (nodeId: string, propertyId: string) => {
 
 export const datatypeIcon = (property: Property) => {
   if (property.datatype) {
-    return datatypes.get(property.datatype)!.icon;
+    return datatypes.get(property.datatype)?.icon ?? "web_asset";
   } else {
-    return datatypes.get("default")!.icon;
+    return datatypes.get("default").icon;
   }
 };
 

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import type { NodeProps } from "reactflow";
 import { Position, Handle } from "reactflow";
-import { byIRI } from "@/store/onto";
+import { getItem } from "@/store/onto";
 import { appStore } from "@/store/app";
 import { NodeData } from "@/store/flow";
 
 import { Card } from "primereact/card";
 import { Dropdown } from "primereact/dropdown";
+import { Button } from "primereact/button";
 
 type CustomHandleProps = {
   id: string;
@@ -25,7 +26,7 @@ const CustomHandle = ({ id, position }: CustomHandleProps) => {
 };
 
 const InstNode = ({ id, data }: NodeProps<NodeData>) => {
-  const cls = byIRI(data.iri);
+  const cls = getItem(data.iri);
   const [selected, setSelected] = useState(null);
 
   const style = {
@@ -49,8 +50,8 @@ const InstNode = ({ id, data }: NodeProps<NodeData>) => {
           justify-center 
           text-balance 
           border 
-          bg-gray-50/90
-          hover:bg-gray-100
+          bg-[#88b9e6]
+          hover:bg-[#94c7f7]
           border-slate-600 
           shadow-lg
           shadow-slate-900/40 
@@ -58,10 +59,17 @@ const InstNode = ({ id, data }: NodeProps<NodeData>) => {
           "
         style={style}
       >
-        <button
-          className="pi pi-info-circle absolute right-0 top-0 m-2 rounded-full hover:backdrop-brightness-110 transition"
-          onClick={() => appStore.setState({ selectedNodeId: id })}
-        />
+        <Button
+          icon={
+            <span className="material-icons-outlined text-lg">settings</span>
+          }
+          severity="secondary"
+          unstyled
+          className="absolute right-0 top-0 m-2 p-button-icon-only p-button-rounded flex justify-center items-center text-primary hover:text-gray-600"
+          onClick={() =>
+            appStore.setState({ selectedNodeId: id, showPropDialog: true })
+          }
+        ></Button>
         <div className="font-lato p-card-title w-20rem my-0 flex justify-center text-2xl">
           <p className="truncate">{cls.name}</p>
         </div>

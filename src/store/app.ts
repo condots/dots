@@ -4,12 +4,16 @@ import { immer } from "zustand/middleware/immer";
 import createSelectors from "@/scripts/createSelectors";
 
 type AppState = {
+  showPropDialog: boolean;
+  showInfoDialog: boolean;
   selectedNodeId: string | null;
   selectedInfoIri: string | null;
   reset: () => void;
 };
 
 const initialState = {
+  showPropDialog: false,
+  showInfoDialog: false,
   selectedNodeId: null,
   selectedInfoIri: null,
 };

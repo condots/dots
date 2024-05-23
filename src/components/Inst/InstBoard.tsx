@@ -59,9 +59,9 @@ export default function InstBoard() {
     };
     addNode("inst", event.clientX, event.clientY, data);
   }, []);
-
+  // #528cc1
   return (
-    <div className="bg-primary-800 h-full w-full">
+    <div className="bg-[#3a5b87] h-full w-full">
       <ReactFlow
         proOptions={{ hideAttribution: true }}
         nodeOrigin={nodeOrigin}

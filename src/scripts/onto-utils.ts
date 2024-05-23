@@ -2,6 +2,7 @@ import { Parser, Quad, Store, Term } from "n3";
 import jsonld from "jsonld";
 import { QueryEngine } from "@comunica/query-sparql-rdfjs";
 import rdfext from "rdf-ext";
+import { keyBy } from "lodash-es";
 
 export interface SharedFields {
   iri: IRI;
@@ -32,7 +33,7 @@ export interface ClassProperty {
 }
 
 export interface Class extends SharedFields {
-  abstract: boolean;
+  abstract?: boolean;
   subClassOf?: string;
   properties: ClassProperties;
 }
@@ -50,17 +51,24 @@ export interface Individual extends SharedFields {
   range: IRI;
 }
 
-export type ClassProperties = Map<string, ClassProperty>;
-export type VocabularyEntries = Map<string, VocabularyEntry>;
+export type ClassProperties = Record<string, ClassProperty>;
+export type VocabularyEntries = Record<string, VocabularyEntry>;
 export type VocabularyEntry = Omit<SharedFields, "description">;
 
-export type Profiles = Map<string, Profile>;
-export type Classes = Map<string, Class>;
-export type Properties = Map<string, Property>;
-export type Vocabularies = Map<string, Vocabulary>;
-export type Individuals = Map<string, Individual>;
+export type Profiles = Record<string, Profile>;
+export type Classes = Record<string, Class>;
+export type Properties = Record<string, Property>;
+export type Vocabularies = Record<string, Vocabulary>;
+export type Individuals = Record<string, Individual>;
 
-export type IRIs = Map<IRI, Class | Property | Vocabulary | Individual>;
+export type Section = Classes | Properties | Vocabularies | Individuals;
+export type SectionNames =
+  | "classes"
+  | "properties"
+  | "vocabularies"
+  | "individuals";
+export type Item = Class | Property | Vocabulary | Individual;
+export type IRIs = Record<IRI, Item>;
 export type IRI = string;
 
 const NS = {
@@ -109,23 +117,25 @@ export function createModel(graph: Store) {
   const properties = getProperties(graph);
   const vocabularies = getVocabularies(graph);
   const individuals = getIndividuals(graph);
-  const profiles: Profiles = new Map();
-  for (const name of classes.keys()) {
-    profiles.set(name, {
-      classes: new Map(classes.get(name)),
-      properties: new Map(properties.get(name)),
-      vocabularies: new Map(vocabularies.get(name)),
-      individuals: new Map(individuals.get(name)),
-    });
+  const profiles: Profiles = {};
+  for (const name in classes) {
+    profiles[name] = <Profile>{
+      classes: classes[name] ?? {},
+      properties: properties[name] ?? {},
+      vocabularies: vocabularies[name] ?? {},
+      individuals: individuals[name] ?? {},
+    };
   }
   return profiles;
 }
 
 export function getIRIs(profiles: Profiles) {
-  const iris: IRIs = new Map();
-  for (const profile of profiles.values()) {
-    for (const v of Object.values(profile)) {
-      iris.set(v.iri, v);
+  const iris: IRIs = {};
+  for (const profile of Object.values(profiles)) {
+    for (const section of Object.values(profile)) {
+      for (const item of Object.values(section as Section)) {
+        iris[item.iri] = item;
+      }
     }
   }
   return iris;
@@ -138,30 +148,34 @@ export async function enrichModelFromMarkdown(
   const res = await fetch(source);
   const markdown: Record<string, object> = await res.json();
   const modelProfiles = markdown.namespaces;
-  const enrichedProfiles: Profiles = new Map();
-  for (const [profileName, profile] of profiles) {
+  const enrichedProfiles: Profiles = {};
+  for (const [profileName, profile] of Object.entries(profiles)) {
     const modelProfile = Object.values(modelProfiles).find(
       (v) => v.name === profileName,
     )!;
     for (const [sectionName, section] of Object.entries(profile) as [
-      keyof Profile,
-      Map<string, SharedFields>,
+      SectionNames,
+      Section,
     ][]) {
       const modelSection = modelProfile[sectionName];
-      for (const [itemName, item] of section) {
+      for (const [itemName, item] of Object.entries(section)) {
+        if (!(item instanceof Object)) continue;
         const modelItem = Object.values(modelSection).find(
           (v) => v.name === itemName,
         )!;
         item.description = modelItem.description;
-        section.set(itemName, item);
+        if (sectionName === "classes") {
+          item.abstract = modelItem.metadata.Instantiability === "Abstract";
+        }
+        section[itemName] = item;
       }
-      profile[sectionName] = section as any;
+      profile[sectionName] = section;
     }
     profile.iri = modelProfile.iri;
     profile.name = modelProfile.iri.split("/").pop();
     profile.summary = modelProfile.summary;
     profile.description = modelProfile.description;
-    enrichedProfiles.set(profileName, profile);
+    enrichedProfiles[profileName] = profile;
   }
   return enrichedProfiles;
 }
@@ -177,93 +191,98 @@ function getSharedFields(node: Term, graph: Store) {
   return shared;
 }
 
+function groupByProfile(section: Section) {
+  const profiles: Record<string, Section> = {};
+  for (const [itemName, item] of Object.entries(section)) {
+    profiles[item.profile] = profiles[item.profile] || {};
+    profiles[item.profile][itemName] = item;
+  }
+  return profiles;
+}
+
 function getClasses(graph: Store) {
   const nodes = graph
     .getSubjects(NS.rdf.type, NS.owl.Class, null)
     .filter((o) => !graph.countQuads(null, NS.rdf.type, o, null));
-  const classes: Classes = new Map();
+  const items: Classes = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
-    classes.set(shared.name, <Class>{
+    items[shared.name] = {
       ...shared,
       subClassOf: graph.getObjects(node, NS.rdfs.subClassOf, null)[0]?.value,
       properties: extractNodeShape(graph, node),
-    });
+    };
   }
-  const sorted = new Map([...classes.entries()].sort());
-  return Map.groupBy(sorted, (c) => c[1].profile);
+  return groupByProfile(items);
 }
 
 function getProperties(graph: Store) {
   const datatypeProperties = getDatatypeProperties(graph);
   const objectProperties = getObjectProperties(graph);
-  const properties = new Map([...datatypeProperties, ...objectProperties]);
-  const sorted = new Map([...properties.entries()].sort());
-  return Map.groupBy(sorted, (c) => c[1].profile);
+  const items = { ...datatypeProperties, ...objectProperties };
+  return groupByProfile(items);
 }
 
 function getDatatypeProperties(graph: Store) {
   const nodes = graph.getSubjects(NS.rdf.type, NS.owl.DatatypeProperty, null);
-  const properties: Properties = new Map();
+  const items: Properties = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
     const datatype = graph
       .getObjects(node.value, NS.rdfs.range, null)[0]
       .value.split("#")
       .pop();
-    properties.set(shared.name, <Property>{ ...shared, datatype });
+    items[shared.name] = { ...shared, datatype };
   }
-  return properties;
+  return items;
 }
 
 function getObjectProperties(graph: Store) {
   const nodes = graph.getSubjects(NS.rdf.type, NS.owl.ObjectProperty, null);
-  const properties: Properties = new Map();
+  const items: Properties = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
     const range = graph.getObjects(node.value, NS.rdfs.range, null)[0].value;
-    properties.set(shared.name, <Property>{ ...shared, range });
+    items[shared.name] = { ...shared, range };
   }
-  return properties;
+  return items;
 }
 
 function getVocabularies(graph: Store) {
   const nodes = graph
     .getSubjects(NS.rdf.type, NS.owl.Class, null)
     .filter((o) => graph.countQuads(null, NS.rdf.type, o, null));
-  const vocabularies: Vocabularies = new Map();
+  const items: Vocabularies = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
-    const entries: VocabularyEntries = new Map();
+    const entries: VocabularyEntries = {};
     for (const o of graph.getSubjects(NS.rdf.type, node.value, null)) {
       const name = o.value.split("/").pop() as string;
-      entries.set(name, getSharedFields(o, graph));
+      entries[name] = getSharedFields(o, graph);
     }
-    vocabularies.set(shared.name, <Vocabulary>{
+    items[shared.name] = {
       ...shared,
       entries: entries,
-    });
+    };
   }
-  const sorted = new Map([...vocabularies.entries()].sort());
-  return Map.groupBy(sorted, (c) => c[1].profile);
+  return groupByProfile(items);
 }
 
 function getIndividuals(graph: Store) {
   const nodes = graph
     .getSubjects(NS.rdf.type, NS.owl.NamedIndividual, null)
     .filter((o) => graph.countQuads(o, NS.rdfs.range, null, null));
-  const individuals: Individuals = new Map();
+  const items: Individuals = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
     const range = graph.getObjects(node.value, NS.rdfs.range, null)[0].value;
-    individuals.set(shared.name, <Individual>{ ...shared, range });
+    items[shared.name] = { ...shared, range };
   }
-  const sorted = new Map([...individuals.entries()].sort());
-  return Map.groupBy(sorted, (c) => c[1].profile);
+  return groupByProfile(items);
 }
 
-function extractNodeShape(graph: Store, node: Term): ClassProperties {
-  const classProperties: ClassProperties = new Map();
+function extractNodeShape(graph: Store, node: Term) {
+  const classProperties: ClassProperties = {};
   const propertyShapes = graph.getObjects(node, NS.sh.property, null);
   for (const pshape of propertyShapes) {
     const property = <ClassProperty>{};
@@ -298,7 +317,7 @@ function extractNodeShape(graph: Store, node: Term): ClassProperties {
       }
       property.required = Boolean(property.minCount);
     }
-    classProperties.set(property.name, property);
+    classProperties[property.name] = property;
   }
   return classProperties;
 }

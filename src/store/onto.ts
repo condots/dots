@@ -51,9 +51,7 @@ const ontoStoreBase = create<OntoState>()(
 export const ontoStore = createSelectors(ontoStoreBase);
 
 export const updateOntology = async (source: string | File) => {
-  console.log("updating ontology");
-
-  // if (ontoStore.getState().source === source) return;
+  if (ontoStore.getState().source === source) return;
   const graph = await createGraph(source);
   const profiles = createModel(graph);
   const enriched = await enrichModelFromMarkdown(profiles, "model.json");
@@ -62,42 +60,17 @@ export const updateOntology = async (source: string | File) => {
   console.log("updated ontology");
 };
 
-export const byIRI = (iri: string) => {
-  return iri && ontoStore.getState().iris?.get(iri);
+export const getItem = (iri: string | null) => {
+  const iris = ontoStore.getState().iris;
+  return iri && iris && iris[iri];
 };
 
-export const getRecursiveClassProperties = (iri: string | undefined) => {
-  const recursiveClassProperties: Map<string, ClassProperties> = new Map();
+export const getRecClassProperties = (iri: string | undefined) => {
+  const recClassProperties: Map<string, ClassProperties> = new Map();
   while (iri) {
-    const cls = byIRI(iri) as Class;
-    recursiveClassProperties.set(cls.name, cls.properties);
+    const cls = getItem(iri) as Class;
+    recClassProperties.set(cls.name, cls.properties);
     iri = cls.subClassOf;
   }
-  return recursiveClassProperties;
+  return recClassProperties;
 };
-
-// export const classProperties = (
-//   iri: string,
-//   datatypeOnly?: boolean,
-//   requiredOnly?: boolean,
-// ) => {
-//   const properties = new Map();
-//   while (iri) {
-//     const c = byIRI(iri);
-//     const props = new Map();
-//     for (const [propertyName, data] of Object.entries(c.properties)) {
-//       const p = byIRI(data.path);
-//       if (requiredOnly || data.minCount > 0) continue;
-//       if (datatypeOnly || !p.datatype) continue;
-//       const r = byIRI(p.range);
-//       // if (r?.abstract) continue;
-//       // if (r && !r.entries) continue;
-//       props.set(propertyName, data);
-//     }
-//     if (props.size) {
-//       properties.set(c.name, props);
-//     }
-//     iri = c.subClassOf;
-//   }
-//   return properties;
-// };

@@ -7,7 +7,7 @@ import { Button } from "primereact/button";
 const ClassMenu = () => {
   const profiles = ontoStore.use.profiles();
   const [expandedKeys, setExpandedKeys] = useState({});
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<TreeNode[]>([]);
 
   useEffect(() => {
     const source = "https://spdx.org/rdf/3.0.0/spdx-model.ttl";
@@ -17,22 +17,23 @@ const ClassMenu = () => {
   useEffect(() => {
     const items = [];
     if (profiles === null) return;
-    try {
-      for (const [profileName, profile] of profiles) {
-        const subitems = [];
-        for (const [className, cls] of profile.classes) {
-          subitems.push({
-            key: className,
-            label: className,
-            draggable: true,
-            droppable: false,
-            className: "m-0 p-0",
-            data: {
-              iri: cls.iri,
-              summary: cls.summary,
-            },
-          });
-        }
+    for (const [profileName, profile] of Object.entries(profiles)) {
+      const subitems = [];
+      for (const [className, cls] of Object.entries(profile.classes)) {
+        if (cls.abstract) continue;
+        subitems.push({
+          key: className,
+          label: className,
+          draggable: true,
+          droppable: false,
+          className: "m-0 p-0",
+          data: {
+            iri: cls.iri,
+            summary: cls.summary,
+          },
+        });
+      }
+      if (subitems.length > 0) {
         items.push({
           key: profileName,
           label: profileName,
@@ -46,10 +47,6 @@ const ClassMenu = () => {
           children: subitems,
         });
       }
-    } catch (error) {
-      console.log(profiles);
-
-      console.error(error);
     }
     setItems(items);
   }, [profiles]);
@@ -69,7 +66,7 @@ const ClassMenu = () => {
           label={node.label}
           text
           severity="secondary"
-          className={`${options.className} m-0 px-2 py-1 font-normal`}
+          className={`${options.className} m-0 px-2 py-1 font-normal font-lato`}
           tooltip={node.data?.summary}
           tooltipOptions={{
             position: "right",
@@ -92,12 +89,20 @@ const ClassMenu = () => {
       filter
       filterMode="strict"
       filterPlaceholder="Search..."
-      className="h-full w-full overflow-scroll"
+      className="h-full w-full overflow-scroll bg-[#fafafa] font-lato"
       nodeTemplate={nodeTemplate}
       dragdropScope="reactflow"
       pt={{ droppoint: { className: "h-0" } }}
       // to allow only single expansion
       expandedKeys={expandedKeys}
+      expandIcon={
+        <span className="material-icons-outlined text-sm">add_box</span>
+      }
+      collapseIcon={
+        <span className="material-icons-outlined text-sm">
+          indeterminate_check_box
+        </span>
+      }
       onToggle={() => {}}
       onExpand={(e) => setExpandedKeys(() => ({ [e.node.key]: true }))}
       onCollapse={() => setExpandedKeys(() => ({}))}

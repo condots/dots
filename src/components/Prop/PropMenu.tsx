@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { appStore } from "@/store/app";
 import { addProperty, datatypeIcon, getNode } from "@/store/flow";
-import { byIRI, getRecursiveClassProperties } from "@/store/onto";
+import { getItem, getRecClassProperties } from "@/store/onto";
 import { TieredMenu } from "primereact/tieredmenu";
 import { MenuItem } from "primereact/menuitem";
 import { Button } from "primereact/button";
@@ -23,29 +23,33 @@ export default function PropMenu() {
   const nodeId = appStore.use.selectedNodeId();
   const node = getNode(nodeId);
   // const cls = byIRI(node?.data.iri) as Class;
-  const recursiveClassProperties = getRecursiveClassProperties(node?.data.iri);
+  const recClassProperties = getRecClassProperties(node?.data.iri);
   // const properties = classProperties(node?.data.iri, true, true);
   const menu = useRef(null);
 
   const items = () => {
     const items: MenuItem[] = [];
     // Map.groupBy(classProperties, (v) => v[0].split("/").pop();
-    for (const [className, properties] of recursiveClassProperties) {
+    for (const [clsName, properties] of recClassProperties) {
       const subitems: MenuItem[] = [];
-      for (const [propertyName, property] of properties) {
+      for (const [propertyName, property] of Object.entries(
+        properties,
+      ).sort()) {
         subitems.push({
           label: propertyName,
           data: property,
           template: itemRenderer,
         });
       }
-      items.push({ label: className, items: subitems });
+      if (subitems.length > 0) {
+        items.push({ label: clsName, items: subitems });
+      }
     }
     return items;
   };
 
   const itemRenderer = (item: MenuItem) => {
-    const property = byIRI(item.data.path) as Property;
+    const property = getItem(item.data.path) as Property;
 
     return (
       <Button
@@ -70,7 +74,7 @@ export default function PropMenu() {
 
   return (
     <>
-      <TieredMenu model={items()} ref={menu} popup />
+      <TieredMenu model={items()} ref={menu} className="w-fit" popup />
       <Button
         label="Add property"
         icon="pi pi-plus"
