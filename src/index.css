@@ -21,19 +21,3 @@ body,
 .htmlContent a {
   @apply text-blue-500 underline;
 }
-
-@keyframes grow {
-  from {
-    transform: scale(var(--scale-start, 0.9));
-  }
-  to {
-    transform: scale(1);
-  }
-}
-
-.card-appear {
-  animation-name: grow;
-  animation-timing-function: ease;
-  animation-fill-mode: forwards;
-  animation-duration: var(--animation-duration, 0.1s);
-}

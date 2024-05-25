@@ -4,6 +4,7 @@ import { immer } from "zustand/middleware/immer";
 import createSelectors from "@/scripts/createSelectors";
 
 type AppState = {
+  showClassesMenu: boolean;
   showPropDialog: boolean;
   showInfoDialog: boolean;
   selectedNodeId: string | null;
@@ -12,6 +13,7 @@ type AppState = {
 };
 
 const initialState = {
+  showClassesMenu: true,
   showPropDialog: false,
   showInfoDialog: false,
   selectedNodeId: null,
@@ -21,17 +23,17 @@ const initialState = {
 const appStoreBase = create<AppState>()(
   immer(
     devtools(
-      persist(
-        (set) => ({
-          ...initialState,
-          reset: () => {
-            set(initialState);
-          },
-        }),
-        {
-          name: "app",
+      // persist(
+      (set) => ({
+        ...initialState,
+        reset: () => {
+          set(initialState);
         },
-      ),
+      }),
+      //   {
+      //     name: "app",
+      //   },
+      // ),
     ),
   ),
 );

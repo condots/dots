@@ -32,17 +32,17 @@ const ontoStoreBase = create<OntoState>()(
   immer(
     subscribeWithSelector(
       devtools(
-        persist(
-          (set) => ({
-            ...initialState,
-            reset: () => {
-              set(initialState);
-            },
-          }),
-          {
-            name: "onto",
+        // persist(
+        (set) => ({
+          ...initialState,
+          reset: () => {
+            set(initialState);
           },
-        ),
+        }),
+        //   {
+        //     name: "onto",
+        //   },
+        // ),
       ),
     ),
   ),

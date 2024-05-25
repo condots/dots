@@ -20,7 +20,11 @@ const CustomHandle = ({ id, position }: CustomHandleProps) => {
       id={id}
       position={position}
       type="source"
-      className="rounded bg-gray-200 p-1 hover:bg-gray-400"
+      className="
+        border-none 
+        ring-1 
+        ring-slate-100/70 
+      "
     />
   );
 };
@@ -29,80 +33,56 @@ const InstNode = ({ id, data }: NodeProps<NodeData>) => {
   const cls = getItem(data.iri);
   const [selected, setSelected] = useState(null);
 
-  const style = {
-    "--scale-start": 0.8,
-    "--animation-duration": `${0.2}s`,
-  };
-
   if (!cls) {
     return null;
   }
   return (
     <>
-      <Card
-        className="
-          font-lato 
-          card-appear 
-          rounded-md 
-          w-24rem 
-          flex 
-          justify-content-center 
-          justify-center 
-          text-balance 
-          border 
-          bg-[#88b9e6]
-          hover:bg-[#94c7f7]
-          border-slate-600 
-          shadow-lg
-          shadow-slate-900/40 
-          hover:shadow-xl
-          "
-        style={style}
+      <div
+        className={`
+          rounded-md
+          transition-all 
+          delay-0 
+          duration-75 
+          ease-out 
+          active:translate-y-[-3px] 
+          active:translate-x-[1.5px] 
+          shadow-md 
+          active:shadow-lg
+          shadow-black/55 
+          active:shadow-black/55 
+        `}
       >
-        <Button
-          icon={
-            <span className="material-icons-outlined text-lg">settings</span>
-          }
-          severity="secondary"
-          unstyled
-          className="absolute right-0 top-0 m-2 p-button-icon-only p-button-rounded flex justify-center items-center text-primary hover:text-gray-600"
-          onClick={() =>
-            appStore.setState({ selectedNodeId: id, showPropDialog: true })
-          }
-        ></Button>
-        <div className="font-lato p-card-title w-20rem my-0 flex justify-center text-2xl">
-          <p className="truncate">{cls.name}</p>
+        <div
+          className={`
+            px-3 py-3 w-64 
+            font-lato rounded-md
+            text-center truncate
+            cursor-pointer 
+          bg-[#00416b] 
+          text-slate-100 
+          border border-sky-900
+        `}
+        >
+          {cls.name}
+          <button
+            className="absolute right-0 top-0 m-2 p-button-icon-only p-button-rounded flex justify-center items-center nodrag"
+            onClick={() =>
+              appStore.setState({ selectedNodeId: id, showPropDialog: true })
+            }
+          >
+            <span className="material-icons-outlined text-sm">menu</span>
+          </button>
         </div>
-        {cls.entries && (
-          <div className="card justify-content-center w-20rem mt-5 flex">
-            <Dropdown
-              value={selected}
-              onChange={(e) => setSelected(e.value)}
-              options={cls.entries}
-              optionLabel="name"
-              optionValue="iri"
-              className="w-full"
-              checkmark={true}
-              highlightOnSelect={false}
-              placeholder="Select a type..."
-              panelClassName="font-lato text-[1.2rem]"
-              pt={{
-                input: {
-                  className: "font-lato text-[1.2rem] font-medium",
-                },
-              }}
-            />
+        {data.isNode && (
+          <div>
+            <CustomHandle id="a" position={Position.Top} />
+            <CustomHandle id="b" position={Position.Right} />
+            <CustomHandle id="c" position={Position.Bottom} />
+            <CustomHandle id="d" position={Position.Left} />
           </div>
         )}
-      </Card>
-      {data.isNode && (
-        <>
-          <CustomHandle id="a" position={Position.Top} />
-          <CustomHandle id="b" position={Position.Right} />
-          <CustomHandle id="c" position={Position.Bottom} />
-          <CustomHandle id="d" position={Position.Left} />
-        </>
-      )}
+      </div>
     </>
   );
 };

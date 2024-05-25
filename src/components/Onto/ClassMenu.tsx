@@ -3,8 +3,11 @@ import { ontoStore, updateOntology } from "@/store/onto";
 import { Tree, TreeNodeTemplateOptions } from "primereact/tree";
 import { TreeNode } from "primereact/treenode";
 import { Button } from "primereact/button";
+import { Sidebar } from "primereact/sidebar";
+import { appStore } from "@/store/app";
 
 const ClassMenu = () => {
+  const showClassesMenu = appStore.use.showClassesMenu();
   const profiles = ontoStore.use.profiles();
   const [expandedKeys, setExpandedKeys] = useState({});
   const [items, setItems] = useState<TreeNode[]>([]);
@@ -26,7 +29,7 @@ const ClassMenu = () => {
           label: className,
           draggable: true,
           droppable: false,
-          className: "m-0 p-0",
+          className: "m-0 p-0 rounded-md",
           data: {
             iri: cls.iri,
             summary: cls.summary,
@@ -66,7 +69,9 @@ const ClassMenu = () => {
           label={node.label}
           text
           severity="secondary"
-          className={`${options.className} m-0 px-2 py-1 font-normal font-lato`}
+          unstyled
+          className={`${options.className} m-0 px-2 py-1 font-lato w-full rounded-md
+            text-left hover:bg-[#00416b] text-secondary hover:text-white truncate`}
           tooltip={node.data?.summary}
           tooltipOptions={{
             position: "right",
@@ -83,30 +88,45 @@ const ClassMenu = () => {
     }
   };
 
-  return (
+  // #d5d5d5
+
+  const TreeMenu = () => (
     <Tree
       value={items}
       filter
       filterMode="strict"
       filterPlaceholder="Search..."
-      className="h-full w-full overflow-scroll bg-[#fafafa] font-lato"
+      className="h-full w-full overflow-scroll bg-[#e6e5e6] font-lato border-none rounded-none"
       nodeTemplate={nodeTemplate}
       dragdropScope="reactflow"
       pt={{ droppoint: { className: "h-0" } }}
-      // to allow only single expansion
-      expandedKeys={expandedKeys}
       expandIcon={
-        <span className="material-icons-outlined text-sm">add_box</span>
+        <span className="material-icons-outlined text-sm text-gray-500">
+          add_box
+        </span>
       }
       collapseIcon={
-        <span className="material-icons-outlined text-sm">
+        <span className="material-icons-outlined text-sm text-gray-500">
           indeterminate_check_box
         </span>
       }
+      expandedKeys={expandedKeys}
       onToggle={() => {}}
       onExpand={(e) => setExpandedKeys(() => ({ [e.node.key]: true }))}
       onCollapse={() => setExpandedKeys(() => ({}))}
     />
+  );
+
+  return (
+    <div>
+      <Sidebar
+        visible={showClassesMenu}
+        modal={false}
+        className="bg-transparent"
+        onHide={() => appStore.setState({ showClassesMenu: false })}
+        content={() => <TreeMenu />}
+      />
+    </div>
   );
 };
 

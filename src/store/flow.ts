@@ -136,45 +136,45 @@ const initialState = {
 const flowStoreBase = create<RFState>()(
   immer(
     devtools(
-      persist(
-        (set, get) => ({
-          ...initialState,
-          onNodesChange: (changes: NodeChange[]) => {
-            set({
-              nodes: applyNodeChanges(changes, get().nodes),
-            });
-          },
-          onEdgesChange: (changes: EdgeChange[]) => {
-            set({
-              edges: applyEdgeChanges(changes, get().edges),
-            });
-          },
-          onNodesDelete: (nodes: Node[]) => {},
-          onEdgesDelete: (edges: Edge[]) => {},
-          onConnect: (connection: Connection) => {
-            set({
-              edges: addEdge(connection, get().edges),
-            });
-          },
-          onInit: (reactFlowInstance: ReactFlowInstance) => {
-            set({ reactFlowInstance });
-          },
-          setNodes: (nodes: Node[]) => {
-            set({ nodes });
-          },
-          setEdges: (edges: Edge[]) => {
-            set({ edges });
-          },
-          setDevtoolsActive: (name: keyof DevtoolsActive) =>
-            set((state) => {
-              state.devtoolsActive[name] = !state.devtoolsActive[name];
-            }),
-          reset: () => set({ nodes: [], edges: [] }),
-        }),
-        {
-          name: "flow",
+      // persist(
+      (set, get) => ({
+        ...initialState,
+        onNodesChange: (changes: NodeChange[]) => {
+          set({
+            nodes: applyNodeChanges(changes, get().nodes),
+          });
         },
-      ),
+        onEdgesChange: (changes: EdgeChange[]) => {
+          set({
+            edges: applyEdgeChanges(changes, get().edges),
+          });
+        },
+        onNodesDelete: (nodes: Node[]) => {},
+        onEdgesDelete: (edges: Edge[]) => {},
+        onConnect: (connection: Connection) => {
+          set({
+            edges: addEdge(connection, get().edges),
+          });
+        },
+        onInit: (reactFlowInstance: ReactFlowInstance) => {
+          set({ reactFlowInstance });
+        },
+        setNodes: (nodes: Node[]) => {
+          set({ nodes });
+        },
+        setEdges: (edges: Edge[]) => {
+          set({ edges });
+        },
+        setDevtoolsActive: (name: keyof DevtoolsActive) =>
+          set((state) => {
+            state.devtoolsActive[name] = !state.devtoolsActive[name];
+          }),
+        reset: () => set({ nodes: [], edges: [] }),
+      }),
+      //   {
+      //     name: "flow",
+      //   },
+      // ),
     ),
   ),
 );

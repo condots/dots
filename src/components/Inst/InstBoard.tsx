@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { flowStore, addNode, NodeData } from "@/store/flow";
 import {
   Background,
+  BackgroundVariant,
   ConnectionLineType,
   ConnectionMode,
   ControlButton,
@@ -11,11 +12,13 @@ import {
   MarkerType,
   NodeOrigin,
   NodeTypes,
+  Panel,
   ReactFlow,
 } from "reactflow";
 
 import InstNode from "@/components/Inst/InstNode";
 import InstEdge from "@/components/Inst/InstEdge";
+import { appStore } from "@/store/app";
 
 const nodeTypes = {
   inst: InstNode,
@@ -29,10 +32,12 @@ const defaultEdgeOptions = {
   type: "inst",
   markerEnd: {
     type: MarkerType.ArrowClosed,
-    strokeWidth: 2,
-    width: 30,
-    height: 30,
+    strokeWidth: 1,
+    width: 20,
+    height: 20,
+    color: "#00416b",
   },
+  style: { stroke: "#00416b", strokeWidth: 1, boxShadow: "0 0 5px #00416b" },
   data: {},
 } satisfies DefaultEdgeOptions;
 
@@ -59,9 +64,12 @@ export default function InstBoard() {
     };
     addNode("inst", event.clientX, event.clientY, data);
   }, []);
+  // #00446b
   // #528cc1
+  // #40536c
+  // #647c9b
   return (
-    <div className="bg-[#3a5b87] h-full w-full">
+    <div className="h-screen w-screen bg-[#fafafa]">
       <ReactFlow
         proOptions={{ hideAttribution: true }}
         nodeOrigin={nodeOrigin}
@@ -80,12 +88,16 @@ export default function InstBoard() {
         onDragOver={onDragOver}
         connectionLineType={connectionLineType}
         defaultEdgeOptions={defaultEdgeOptions}
-        fitViewOptions={{ padding: 1 }}
+        fitViewOptions={{ padding: 2 }}
         connectionMode={connectionMode}
       >
         {/* <DevTools /> */}
-        <Background />
-        <Controls position="bottom-right">
+        <Background color="#00416b" variant={BackgroundVariant.Dots} />
+        <Controls
+          position="bottom-left"
+          showZoom={false}
+          showInteractive={false}
+        >
           <ControlButton
             onClick={() => flowStore.getState().reset()}
             title="clear"
@@ -95,6 +107,26 @@ export default function InstBoard() {
             <div className="pi pi-eraser" />
           </ControlButton>
         </Controls>
+        <Panel position="top-left">
+          <button onClick={() => appStore.setState({ showClassesMenu: true })}>
+            {" "}
+            <span className="material-icons-outlined text-black">menu</span>
+          </button>
+          {/* <button className="p-button p-button-text p-button p-button-icon-only">
+            <span className="material-icons-outlined text-black">
+              menu_open
+            </span>
+          </button> */}
+          {/* <ControlButton
+            onClick={() => appStore.setState({ showClassesMenu: true })}
+            title="menu"
+            aria-label="menu"
+          >
+            <span className="material-icons-outlined text-black">
+              menu_open
+            </span>
+          </ControlButton> */}
+        </Panel>
       </ReactFlow>
     </div>
   );
