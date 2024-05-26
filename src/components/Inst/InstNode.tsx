@@ -37,7 +37,7 @@ const InstNode = ({ id, data }: NodeProps<NodeData>) => {
           rounded-md
           transition-all 
           delay-0 
-          duration-75 
+          duration-0 
           ease-out 
           shadow-black/55 
           ${
@@ -60,7 +60,7 @@ const InstNode = ({ id, data }: NodeProps<NodeData>) => {
         >
           {cls.name}
           <button
-            className="absolute right-0 top-0 m-2 p-sidebar-icon flex justify-center items-center hover:text-blue-200 nodrag"
+            className="absolute right-0 top-0 m-2 flex hover:text-[#b3dbff] nodrag"
             onClick={() =>
               appStore.setState({ selectedNodeId: id, showPropDialog: true })
             }

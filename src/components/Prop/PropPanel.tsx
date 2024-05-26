@@ -4,7 +4,6 @@ import { getItem } from "@/store/onto";
 import PropMenu from "@/components/Prop/PropMenu";
 import InstPropertyInput from "@/components/Prop/PropInput";
 import InstPropertyToggle from "@/components/Prop/PropToggle";
-import { Button } from "primereact/button";
 import { Sidebar } from "primereact/sidebar";
 
 const PropPanel = () => {
@@ -43,11 +42,13 @@ const PropPanel = () => {
         position="right"
         className="w-full md:w-30rem"
         header={
-          <span className="font-lato font-semibold text-lg">{cls?.name}</span>
+          <span className="font-lato font-semibold text-lg truncate">
+            {cls?.name}
+          </span>
         }
         icons={
           <button
-            className="p-sidebar-icon flex justify-center items-center text-primary hover:text-gray-600"
+            className="flex justify-center items-center text-primary hover:text-gray-600"
             onClick={() =>
               appStore.setState({
                 selectedInfoIri: cls?.iri,
