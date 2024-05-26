@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist, devtools } from "zustand/middleware";
+import { persist, devtools, subscribeWithSelector } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { nanoid } from "nanoid";
 import moment from "moment";
@@ -16,15 +16,11 @@ import {
   OnNodesChange,
   OnEdgesChange,
   OnConnect,
+  NodeDragHandler,
   applyNodeChanges,
   applyEdgeChanges,
-  ConnectionLineType,
-  ConnectionMode,
 } from "reactflow";
 import type {
-  NodeTypes,
-  EdgeTypes,
-  DefaultEdgeOptions,
   OnNodesDelete,
   OnEdgesDelete,
   ReactFlowInstance,
@@ -44,6 +40,7 @@ export type PropertyData = {
 export type NodeData = {
   iri: string;
   isNode: boolean;
+  active: boolean;
   properties: Record<string, PropertyData>;
 };
 
@@ -115,6 +112,8 @@ type RFState = {
   onNodesDelete: OnNodesDelete;
   onEdgesDelete: OnEdgesDelete;
   onConnect: OnConnect;
+  onNodeDragStart: NodeDragHandler;
+  onNodeDragStop: NodeDragHandler;
   onInit: OnInit;
   setNodes: (nodes: Node[]) => void;
   setEdges: (edges: Edge[]) => void;
@@ -134,47 +133,59 @@ const initialState = {
 };
 
 const flowStoreBase = create<RFState>()(
-  immer(
-    devtools(
-      // persist(
-      (set, get) => ({
-        ...initialState,
-        onNodesChange: (changes: NodeChange[]) => {
-          set({
-            nodes: applyNodeChanges(changes, get().nodes),
-          });
-        },
-        onEdgesChange: (changes: EdgeChange[]) => {
-          set({
-            edges: applyEdgeChanges(changes, get().edges),
-          });
-        },
-        onNodesDelete: (nodes: Node[]) => {},
-        onEdgesDelete: (edges: Edge[]) => {},
-        onConnect: (connection: Connection) => {
-          set({
-            edges: addEdge(connection, get().edges),
-          });
-        },
-        onInit: (reactFlowInstance: ReactFlowInstance) => {
-          set({ reactFlowInstance });
-        },
-        setNodes: (nodes: Node[]) => {
-          set({ nodes });
-        },
-        setEdges: (edges: Edge[]) => {
-          set({ edges });
-        },
-        setDevtoolsActive: (name: keyof DevtoolsActive) =>
-          set((state) => {
-            state.devtoolsActive[name] = !state.devtoolsActive[name];
+  subscribeWithSelector(
+    immer(
+      devtools(
+        persist(
+          (set, get) => ({
+            ...initialState,
+            onNodesChange: (changes: NodeChange[]) => {
+              set({
+                nodes: applyNodeChanges(changes, get().nodes),
+              });
+            },
+            onEdgesChange: (changes: EdgeChange[]) => {
+              set({
+                edges: applyEdgeChanges(changes, get().edges),
+              });
+            },
+            onNodesDelete: (nodes: Node[]) => {},
+            onEdgesDelete: (edges: Edge[]) => {},
+            onConnect: (connection: Connection) => {
+              set({
+                edges: addEdge(connection, get().edges),
+              });
+            },
+            onNodeDragStart: (event, node) => {
+              set((state) => {
+                state.nodes.find((n) => n.id === node.id)!.data.active = true;
+              });
+            },
+            onNodeDragStop: (event, node) => {
+              set((state) => {
+                state.nodes.find((n) => n.id === node.id)!.data.active = false;
+              });
+            },
+            onInit: (reactFlowInstance: ReactFlowInstance) => {
+              set({ reactFlowInstance });
+            },
+            setNodes: (nodes: Node[]) => {
+              set({ nodes });
+            },
+            setEdges: (edges: Edge[]) => {
+              set({ edges });
+            },
+            setDevtoolsActive: (name: keyof DevtoolsActive) =>
+              set((state) => {
+                state.devtoolsActive[name] = !state.devtoolsActive[name];
+              }),
+            reset: () => set({ nodes: [], edges: [] }),
           }),
-        reset: () => set({ nodes: [], edges: [] }),
-      }),
-      //   {
-      //     name: "flow",
-      //   },
-      // ),
+          {
+            name: "flow",
+          },
+        ),
+      ),
     ),
   ),
 );

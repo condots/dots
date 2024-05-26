@@ -10,7 +10,6 @@ import {
   DefaultEdgeOptions,
   EdgeTypes,
   MarkerType,
-  NodeOrigin,
   NodeTypes,
   Panel,
   ReactFlow,
@@ -41,10 +40,6 @@ const defaultEdgeOptions = {
   data: {},
 } satisfies DefaultEdgeOptions;
 
-const nodeOrigin: NodeOrigin = [0.5, 0.5];
-const connectionLineType = ConnectionLineType.SmoothStep;
-const connectionMode = ConnectionMode.Loose;
-
 export default function InstBoard() {
   const onDragOver = useCallback((event) => {
     event.preventDefault();
@@ -60,19 +55,17 @@ export default function InstBoard() {
     const data: NodeData = {
       iri: iri,
       isNode: true,
+      active: false,
       properties: {},
     };
     addNode("inst", event.clientX, event.clientY, data);
   }, []);
-  // #00446b
-  // #528cc1
-  // #40536c
-  // #647c9b
+
   return (
     <div className="h-screen w-screen bg-[#fafafa]">
       <ReactFlow
         proOptions={{ hideAttribution: true }}
-        nodeOrigin={nodeOrigin}
+        nodeOrigin={[0.5, 0.5]}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         nodes={flowStore.use.nodes()}
@@ -81,15 +74,18 @@ export default function InstBoard() {
         onEdgesChange={flowStore.use.onEdgesChange()}
         onNodesDelete={flowStore.use.onNodesDelete()}
         onEdgesDelete={flowStore.use.onEdgesDelete()}
+        onNodeDragStart={flowStore.use.onNodeDragStart()}
+        onNodeDragStop={flowStore.use.onNodeDragStop()}
         onConnect={flowStore.use.onConnect()}
         fitView
         onInit={flowStore.use.onInit()}
         onDrop={onDrop}
         onDragOver={onDragOver}
-        connectionLineType={connectionLineType}
+        connectionLineType={ConnectionLineType.SmoothStep}
+        connectionRadius={40}
         defaultEdgeOptions={defaultEdgeOptions}
         fitViewOptions={{ padding: 2 }}
-        connectionMode={connectionMode}
+        connectionMode={ConnectionMode.Loose}
       >
         {/* <DevTools /> */}
         <Background color="#00416b" variant={BackgroundVariant.Dots} />
@@ -112,20 +108,6 @@ export default function InstBoard() {
             {" "}
             <span className="material-icons-outlined text-black">menu</span>
           </button>
-          {/* <button className="p-button p-button-text p-button p-button-icon-only">
-            <span className="material-icons-outlined text-black">
-              menu_open
-            </span>
-          </button> */}
-          {/* <ControlButton
-            onClick={() => appStore.setState({ showClassesMenu: true })}
-            title="menu"
-            aria-label="menu"
-          >
-            <span className="material-icons-outlined text-black">
-              menu_open
-            </span>
-          </ControlButton> */}
         </Panel>
       </ReactFlow>
     </div>

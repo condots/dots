@@ -1,13 +1,8 @@
-import { useState } from "react";
 import type { NodeProps } from "reactflow";
 import { Position, Handle } from "reactflow";
 import { getItem } from "@/store/onto";
 import { appStore } from "@/store/app";
 import { NodeData } from "@/store/flow";
-
-import { Card } from "primereact/card";
-import { Dropdown } from "primereact/dropdown";
-import { Button } from "primereact/button";
 
 type CustomHandleProps = {
   id: string;
@@ -31,7 +26,6 @@ const CustomHandle = ({ id, position }: CustomHandleProps) => {
 
 const InstNode = ({ id, data }: NodeProps<NodeData>) => {
   const cls = getItem(data.iri);
-  const [selected, setSelected] = useState(null);
 
   if (!cls) {
     return null;
@@ -45,12 +39,12 @@ const InstNode = ({ id, data }: NodeProps<NodeData>) => {
           delay-0 
           duration-75 
           ease-out 
-          active:translate-y-[-3px] 
-          active:translate-x-[1.5px] 
-          shadow-md 
-          active:shadow-lg
           shadow-black/55 
-          active:shadow-black/55 
+          ${
+            data.active
+              ? "translate-y-[-3px] translate-x-[1.5px] shadow-lg"
+              : "shadow-md"
+          }
         `}
       >
         <div

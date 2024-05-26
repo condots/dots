@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist, devtools } from "zustand/middleware";
+import { persist, devtools, subscribeWithSelector } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import createSelectors from "@/scripts/createSelectors";
 
@@ -21,19 +21,21 @@ const initialState = {
 };
 
 const appStoreBase = create<AppState>()(
-  immer(
-    devtools(
-      // persist(
-      (set) => ({
-        ...initialState,
-        reset: () => {
-          set(initialState);
-        },
-      }),
-      //   {
-      //     name: "app",
-      //   },
-      // ),
+  subscribeWithSelector(
+    immer(
+      devtools(
+        persist(
+          (set) => ({
+            ...initialState,
+            reset: () => {
+              set(initialState);
+            },
+          }),
+          {
+            name: "app",
+          },
+        ),
+      ),
     ),
   ),
 );

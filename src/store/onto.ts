@@ -29,20 +29,20 @@ const initialState = {
 };
 
 const ontoStoreBase = create<OntoState>()(
-  immer(
-    subscribeWithSelector(
+  subscribeWithSelector(
+    immer(
       devtools(
-        // persist(
-        (set) => ({
-          ...initialState,
-          reset: () => {
-            set(initialState);
+        persist(
+          (set) => ({
+            ...initialState,
+            reset: () => {
+              set(initialState);
+            },
+          }),
+          {
+            name: "onto",
           },
-        }),
-        //   {
-        //     name: "onto",
-        //   },
-        // ),
+        ),
       ),
     ),
   ),
