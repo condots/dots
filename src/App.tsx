@@ -1,5 +1,5 @@
 import { InfoDialog } from "@/components/Onto/InfoDialog";
-import PropDialog from "@/components/Prop/PropDialog";
+import PropPanel from "@/components/Prop/PropPanel";
 import ClassMenu from "@/components/Onto/ClassMenu";
 import InstBoard from "@/components/Inst/InstBoard";
 
@@ -11,7 +11,7 @@ export default function App() {
   return (
     <>
       <InfoDialog />
-      <PropDialog />
+      <PropPanel />
       <ClassMenu />
       <InstBoard />
     </>

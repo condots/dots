@@ -60,7 +60,7 @@ const InstNode = ({ id, data }: NodeProps<NodeData>) => {
         >
           {cls.name}
           <button
-            className="absolute right-0 top-0 m-2 p-button-icon-only p-button-rounded flex justify-center items-center nodrag"
+            className="absolute right-0 top-0 m-2 p-sidebar-icon flex justify-center items-center hover:text-blue-200 nodrag"
             onClick={() =>
               appStore.setState({ selectedNodeId: id, showPropDialog: true })
             }
