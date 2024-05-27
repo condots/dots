@@ -187,6 +187,9 @@ export const addNodeProperty = (
       value,
       valid: false,
     };
+    if (classProperty.datatype === "boolean") {
+      nodeProperty.value = Boolean(value);
+    }
     nodeProperty.valid = isNodePropertyValid(nodeProperty);
     const data = state.nodes.find((n) => n.id === nodeId)!.data;
     data.properties[propertyId] = nodeProperty;
