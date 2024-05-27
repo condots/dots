@@ -1,3 +1,4 @@
+import types from "@/types";
 import { create } from "zustand";
 import { persist, devtools, subscribeWithSelector } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -7,25 +8,21 @@ import {
   createGraph,
   createModel,
   enrichModelFromMarkdown,
-  getIRIs,
-  Profiles,
-  IRIs,
-  Class,
-  ClassProperties,
+  mapIRIs,
 } from "@/scripts/onto-utils";
 
 type OntoState = {
-  source: string | File | null;
-  graph: Store | null;
-  profiles: Profiles | null;
-  iris: IRIs | null;
+  source: string | File | undefined;
+  graph: Store | undefined;
+  profiles: types.EnrichedProfiles | undefined;
+  iris: Record<types.IRI, types.Item> | undefined;
 };
 
 const initialState = {
-  source: null,
-  graph: null,
-  profiles: null,
-  iris: null,
+  source: undefined,
+  graph: undefined,
+  profiles: undefined,
+  iris: undefined,
 };
 
 const ontoStoreBase = create<OntoState>()(
@@ -41,36 +38,31 @@ const ontoStoreBase = create<OntoState>()(
           }),
           {
             name: "onto",
-          },
-        ),
-      ),
-    ),
-  ),
+          }
+        )
+      )
+    )
+  )
 );
 
 export const ontoStore = createSelectors(ontoStoreBase);
 
-export const updateOntology = async (source: string | File) => {
-  if (ontoStore.getState().source === source) return;
+export async function updateOntology(source: string | File) {
+  // if (ontoStore.getState().source === source) return;
   const graph = await createGraph(source);
   const profiles = createModel(graph);
   const enriched = await enrichModelFromMarkdown(profiles, "model.json");
-  const iris = getIRIs(profiles);
+  const iris = mapIRIs(profiles);
   ontoStore.setState({ source, graph, profiles: enriched, iris: iris });
   console.log("updated ontology");
-};
+}
 
-export const getItem = (iri: string | null) => {
+export const getItem = (iri: types.IRI | undefined) => {
   const iris = ontoStore.getState().iris;
-  return iri && iris && iris[iri];
+  if (iri && iris) return iris[iri];
 };
 
-export const getRecClassProperties = (iri: string | undefined) => {
-  const recClassProperties: Map<string, ClassProperties> = new Map();
-  while (iri) {
-    const cls = getItem(iri) as Class;
-    recClassProperties.set(cls.name, cls.properties);
-    iri = cls.subClassOf;
-  }
-  return recClassProperties;
+export const getClassProperty = (classIRI: types.IRI, propertyName: string) => {
+  const cls = getItem(classIRI) as types.Class | undefined;
+  return cls?.properties[propertyName];
 };

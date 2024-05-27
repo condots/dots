@@ -1,40 +1,58 @@
 import { appStore } from "@/store/app";
-import { getNode, getProperties } from "@/store/flow";
-import { getItem } from "@/store/onto";
+import { getNode } from "@/store/flow";
 import PropMenu from "@/components/Prop/PropMenu";
-import InstPropertyInput from "@/components/Prop/PropInput";
-import InstPropertyToggle from "@/components/Prop/PropToggle";
+import PropInputString from "@/components/Prop/PropInputString";
+import PropInputNumber from "@/components/Prop/PropInputNumber";
+import PropInputBoolean from "@/components/Prop/PropInputBoolean";
 import { Sidebar } from "primereact/sidebar";
+import { inputProperties } from "@/scripts/app-utils";
 
-const PropPanel = () => {
+export default function PropPanel() {
   const showPropDialog = appStore.use.showPropDialog();
   const nodeId = appStore.use.selectedNodeId();
   const node = getNode(nodeId);
-  const cls = getItem(node?.data.iri);
-  const properties = getProperties(nodeId);
+  const cls = node?.data.cls;
+  const nodeProperties = node?.data.properties;
 
-  const propertyFields = Object.entries(properties || {}).map(
-    ([propertyId, propertyData]) => {
-      if (propertyData.datatype === "boolean") {
-        return (
-          <InstPropertyToggle
-            key={propertyId}
-            nodeId={nodeId}
-            propertyId={propertyId}
-          />
-        );
-      } else {
-        return (
-          <InstPropertyInput
-            key={propertyId}
-            nodeId={nodeId}
-            propertyId={propertyId}
-          />
-        );
-      }
-    },
-  );
+  const propertyFields = nodeProperties
+    ? Object.entries(nodeProperties).map(([propertyId, nodeProperty]) => {
+        if (
+          nodeProperty.classProperty.datatype &&
+          inputProperties.has(nodeProperty.classProperty.datatype)
+        ) {
+          const inputKind = inputProperties.get(
+            nodeProperty.classProperty.datatype
+          )!.inputKind;
+          if (inputKind === "string") {
+            return (
+              <PropInputString
+                key={propertyId}
+                nodeId={nodeId!}
+                propertyId={propertyId}
+              />
+            );
+          } else if (inputKind === "number") {
+            return (
+              <PropInputNumber
+                key={propertyId}
+                nodeId={nodeId!}
+                propertyId={propertyId}
+              />
+            );
+          } else if (inputKind === "boolean") {
+            return (
+              <PropInputBoolean
+                key={propertyId}
+                nodeId={nodeId!}
+                propertyId={propertyId}
+              />
+            );
+          }
+        }
+      })
+    : [];
 
+  if (!cls) return;
   return (
     <div>
       <Sidebar
@@ -70,6 +88,4 @@ const PropPanel = () => {
       </Sidebar>
     </div>
   );
-};
-
-export default PropPanel;
+}

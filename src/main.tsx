@@ -13,10 +13,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   // <React.StrictMode>
   <PrimeReactProvider>
     <ReactFlowProvider>
-      <div style={{ width: "100vw", height: "100vh" }}>
+      <div className="h-screen w-screen bg-[#fafafa]">
         <App />
       </div>
     </ReactFlowProvider>
-  </PrimeReactProvider>,
+  </PrimeReactProvider>
   // </React.StrictMode>
 );

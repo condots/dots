@@ -1,5 +1,5 @@
-import { getProperty, updateProperty } from "@/store/flow";
-import { ToggleButton } from "primereact/togglebutton";
+import { getNodeProperty, setNodeProperty } from "@/store/flow";
+import { Dropdown } from "primereact/dropdown";
 import { PropLabel } from "@/components/Prop/PropLabel";
 
 interface PropToggle {
@@ -8,20 +8,25 @@ interface PropToggle {
 }
 
 export default function InstPropertyToggle({ nodeId, propertyId }: PropToggle) {
-  const propertyData = getProperty(nodeId, propertyId)!;
+  const propertyData = getNodeProperty(nodeId, propertyId)!;
+  const propertyData = getPropertyOptions(nodeId, propertyId)!;
 
   const setValue = (event) => {
     const value = event.target.value;
-    updateProperty(nodeId, { ...propertyData, value });
+    setNodeProperty(nodeId, { ...propertyData, value });
   };
 
   return (
     <div className="flex-auto">
       <PropLabel nodeId={nodeId} propertyId={propertyId} />
-      <ToggleButton
+      <Dropdown
         id={propertyId}
-        checked={propertyData.value as boolean}
+        invalid={!propertyData.value}
+        value={propertyData.value}
         onChange={setValue}
+        options={options}
+        optionLabel="name"
+        placeholder="Select..."
         className="w-full"
       />
     </div>

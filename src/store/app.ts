@@ -1,14 +1,17 @@
+import types from "@/types";
 import { create } from "zustand";
 import { persist, devtools, subscribeWithSelector } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import createSelectors from "@/scripts/createSelectors";
+import { getMediaTypes } from "@/scripts/app-utils";
 
 type AppState = {
   showClassesMenu: boolean;
   showPropDialog: boolean;
   showInfoDialog: boolean;
-  selectedNodeId: string | null;
-  selectedInfoIri: string | null;
+  selectedNodeId: string | undefined;
+  selectedInfoIri: string | undefined;
+  mediaTypes: types.PropertyOption[] | undefined;
   reset: () => void;
 };
 
@@ -16,8 +19,9 @@ const initialState = {
   showClassesMenu: true,
   showPropDialog: false,
   showInfoDialog: false,
-  selectedNodeId: null,
-  selectedInfoIri: null,
+  selectedNodeId: undefined,
+  selectedInfoIri: undefined,
+  mediaTypes: undefined,
 };
 
 const appStoreBase = create<AppState>()(
@@ -33,11 +37,16 @@ const appStoreBase = create<AppState>()(
           }),
           {
             name: "app",
-          },
-        ),
-      ),
-    ),
-  ),
+          }
+        )
+      )
+    )
+  )
 );
 
 export const appStore = createSelectors(appStoreBase);
+
+export async function updateMediaTypes() {
+  const mediaTypes = await getMediaTypes();
+  appStore.setState({ mediaTypes });
+}

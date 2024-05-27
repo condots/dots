@@ -1,11 +1,9 @@
+import types from "@/types";
 import { create } from "zustand";
 import { persist, devtools, subscribeWithSelector } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { nanoid } from "nanoid";
-import moment from "moment";
-import { isIri } from "@hyperjump/uri";
 import createSelectors from "@/scripts/createSelectors";
-import { getItem } from "@/store/onto";
 import {
   Connection,
   Edge,
@@ -26,75 +24,9 @@ import type {
   ReactFlowInstance,
   OnInit,
 } from "reactflow";
-import { Property } from "@/scripts/onto-utils";
-
-export type PropertyData = {
-  id: string;
-  iri: string;
-  name: string;
-  datatype: string;
-  value: string | boolean | number;
-  valid: boolean;
-};
-
-export type NodeData = {
-  iri: string;
-  isNode: boolean;
-  active: boolean;
-  properties: Record<string, PropertyData>;
-};
-
-export interface Datatype {
-  icon: string;
-  kind: string;
-  validator: (v) => boolean;
-  mask?: string;
-  slotChar?: string;
-}
-
-export const datatypes = new Map<string, Datatype>();
-datatypes.set("string", {
-  icon: "text_fields",
-  kind: "text",
-  validator: (v: string) => typeof v === "string" && v.length > 0,
-});
-datatypes.set("anyURI", {
-  icon: "link",
-  kind: "text",
-  validator: (v: string) => isIri(v),
-});
-datatypes.set("dateTimeStamp", {
-  icon: "schedule",
-  kind: "text",
-  validator: (v: string) => moment(v, "YYYY-MM-DDTHH:mm:ssZ", true).isValid(),
-  mask: "9999-99-99T99:99:99Z",
-  slotChar: "YYYY-MM-DDTHH:mm:ssZ",
-});
-datatypes.set("decimal", {
-  icon: "numbers",
-  kind: "number",
-  validator: (v: number) => typeof v === "number",
-});
-datatypes.set("positiveInteger", {
-  icon: "numbers",
-  kind: "number",
-  validator: (v: number) => Number.isInteger(v) && v > 0,
-});
-datatypes.set("nonNegativeInteger", {
-  icon: "numbers",
-  kind: "number",
-  validator: (v: number) => Number.isInteger(v) && v >= 0,
-});
-datatypes.set("boolean", {
-  icon: "toggle_off",
-  kind: "boolean",
-  validator: (v: number) => typeof v === "boolean",
-});
-datatypes.set("default", {
-  icon: "web_asset",
-  kind: "text",
-  validator: () => false,
-});
+import { isNodePropertyValid } from "@/scripts/app-utils";
+import { getItem } from "@/store/onto";
+import { getRecursiveClassProperties } from "@/scripts/onto-utils";
 
 type DevtoolsActive = {
   nodeInspector: boolean;
@@ -103,9 +35,9 @@ type DevtoolsActive = {
 };
 
 type RFState = {
-  nodes: Node[];
+  nodes: types.FlowNode[];
   edges: Edge[];
-  reactFlowInstance: ReactFlowInstance | null;
+  reactFlowInstance: ReactFlowInstance | undefined;
   devtoolsActive: DevtoolsActive;
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
@@ -124,7 +56,7 @@ type RFState = {
 const initialState = {
   nodes: [],
   edges: [],
-  reactFlowInstance: null,
+  reactFlowInstance: undefined,
   devtoolsActive: {
     nodeInspector: false,
     changeLogger: false,
@@ -183,86 +115,94 @@ const flowStoreBase = create<RFState>()(
           }),
           {
             name: "flow",
-          },
-        ),
-      ),
-    ),
-  ),
+          }
+        )
+      )
+    )
+  )
 );
 
 export const flowStore = createSelectors(flowStoreBase);
 
-export const getNode = (nodeId: string | null): Node | undefined => {
+export const getNode = (nodeId: string | undefined) => {
   return flowStore.use.nodes().find((n) => n.id === nodeId);
 };
 
-export const getProperties = (
-  nodeId: string | null,
-): Record<string, PropertyData> | undefined => {
-  return getNode(nodeId)?.data.properties;
+export const getNodeProperties = (nodeId: string | undefined) => {
+  if (nodeId) return getNode(nodeId)?.data.properties;
 };
 
-export const getProperty = (
-  nodeId: string,
-  propertyId: string,
-): PropertyData | undefined => {
-  const properties = getProperties(nodeId);
-  return properties && properties[propertyId];
+export const getNodeProperty = (
+  nodeId: string | undefined,
+  propertyId: string | undefined
+) => {
+  const nodeProperties = getNodeProperties(nodeId);
+  if (propertyId) return nodeProperties?.[propertyId];
 };
 
-export const addNode = (type: string, x: number, y: number, data: object) => {
+export const addNode = (
+  type: string,
+  x: number,
+  y: number,
+  classiri: types.IRI
+) => {
   const nodeId = nanoid();
-  const flowInst = flowStore.getState().reactFlowInstance;
-  const position = flowInst!.screenToFlowPosition({ x, y });
-  const node: Node = { id: nodeId, position, data, type };
+  const position = flowStore
+    .getState()
+    .reactFlowInstance!.screenToFlowPosition({ x, y });
+  const cls = getItem(classiri) as types.Class;
+  const data: types.NodeData = {
+    isNode: true,
+    active: false,
+    cls,
+    properties: {},
+  };
+
+  const node: types.FlowNode = { id: nodeId, position, data, type };
   flowStore.setState((state) => {
     state.nodes.push(node);
   });
   return nodeId;
 };
 
-export const addProperty = (nodeId: string, propertyIRI: string) => {
+export const addNodeProperty = (
+  nodeId: string,
+  classProperty: types.ClassProperty,
+  value: types.NodeProperty["value"] = undefined
+) => {
   const propertyId = nanoid();
-  const propertyComponent = getItem(propertyIRI);
-  const isBool = propertyComponent!.datatype === "boolean";
-  const propertyData: PropertyData = {
-    id: propertyId,
-    iri: propertyIRI,
-    name: propertyComponent.name,
-    datatype: propertyComponent.datatype,
-    value: isBool ? false : "",
-    valid: isBool,
-  };
-  updateProperty(nodeId, propertyData);
+  flowStore.setState((state) => {
+    const nodeProperty: types.NodeProperty = {
+      id: propertyId,
+      classProperty,
+      value,
+      valid: false,
+    };
+    nodeProperty.valid = isNodePropertyValid(nodeProperty);
+    const data = state.nodes.find((n) => n.id === nodeId)!.data;
+    data.properties[propertyId] = nodeProperty;
+  });
   return propertyId;
 };
 
-export const updateProperty = (nodeId: string, propertyData: PropertyData) => {
+export const setNodeProperty = (
+  nodeId: string,
+  propertyId: string,
+  value: types.NodeProperty["value"] = undefined
+) => {
   flowStore.setState((state) => {
-    const node = state.nodes.find((n) => n.id === nodeId);
-    const propertyId = propertyData.id;
-    node.data.properties[propertyId] = propertyData;
+    const nodeProperty = state.nodes.find((n) => n.id === nodeId)!.data
+      .properties[propertyId];
+    if (!nodeProperty) throw new Error("Node property not found");
+    nodeProperty.value = value;
+    nodeProperty.valid = isNodePropertyValid(nodeProperty);
   });
 };
 
-export const removeProperty = (nodeId: string, propertyId: string) => {
+export const deleteNodeProperty = (nodeId: string, propertyId: string) => {
   flowStore.setState((state) => {
-    const node = state.nodes.find((n) => n.id === nodeId);
-    delete node.data.properties[propertyId];
+    const nodeProperties = state.nodes.find((n) => n.id === nodeId)!.data
+      .properties;
+    delete nodeProperties[propertyId];
   });
-};
-
-export const datatypeIcon = (property: Property) => {
-  if (property.datatype) {
-    return datatypes.get(property.datatype)?.icon ?? "web_asset";
-  } else {
-    return datatypes.get("default").icon;
-  }
-};
-
-export const validProperty = (nodeId: string, propertyId: string) => {
-  const propertyData = getProperty(nodeId, propertyId);
-  const value = propertyData!.value;
-  const validator = datatypes.get(propertyData!.datatype)?.validator;
-  return validator ? validator(value) : false;
 };

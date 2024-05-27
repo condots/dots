@@ -1,11 +1,13 @@
+import types from "@/types";
 import { useRef } from "react";
 import { appStore } from "@/store/app";
-import { addProperty, datatypeIcon, getNode } from "@/store/flow";
-import { getItem, getRecClassProperties } from "@/store/onto";
+import { addNodeProperty, getNode } from "@/store/flow";
+import { inputProperties } from "@/scripts/app-utils";
 import { TieredMenu } from "primereact/tieredmenu";
 import { MenuItem } from "primereact/menuitem";
 import { Button } from "primereact/button";
-import { Property } from "@/scripts/onto-utils";
+import { getItem } from "@/store/onto";
+import { getRecursiveClassProperties } from "@/scripts/onto-utils";
 
 const badge = (min: number | undefined, max: number | undefined) => {
   if (min && max) {
@@ -22,34 +24,51 @@ const badge = (min: number | undefined, max: number | undefined) => {
 export default function PropMenu() {
   const nodeId = appStore.use.selectedNodeId();
   const node = getNode(nodeId);
-  // const cls = byIRI(node?.data.iri) as Class;
-  const recClassProperties = getRecClassProperties(node?.data.iri);
-  // const properties = classProperties(node?.data.iri, true, true);
-  const menu = useRef(null);
+  const recursiveClassProperties = getRecursiveClassProperties(
+    node?.data.cls.iri
+  );
+  const menu = useRef<TieredMenu>(null);
+
+  const classPropertyIcon = (classProperty: types.ClassProperty) => {
+    if (classProperty.nodeKind === "Literal") {
+      return inputProperties.get(classProperty.datatype)!.icon;
+    } else {
+      return "web-asset";
+    }
+  };
 
   const items = () => {
     const items: MenuItem[] = [];
     // Map.groupBy(classProperties, (v) => v[0].split("/").pop();
-    for (const [clsName, properties] of recClassProperties) {
+    for (const [
+      propertyClassName,
+      classProperties,
+    ] of recursiveClassProperties || []) {
       const subitems: MenuItem[] = [];
-      for (const [propertyName, property] of Object.entries(
-        properties,
+      for (const [propertyName, classProperty] of Object.entries(
+        classProperties
       ).sort()) {
         subitems.push({
           label: propertyName,
-          data: property,
+          data: classProperty,
           template: itemRenderer,
         });
       }
       if (subitems.length > 0) {
-        items.push({ label: clsName, items: subitems });
+        items.push({ label: propertyClassName, items: subitems });
       }
     }
     return items;
   };
 
   const itemRenderer = (item: MenuItem) => {
-    const property = getItem(item.data.path) as Property;
+    const classProperty = item.data as types.ClassProperty;
+    const property = getItem(classProperty.path) as types.Property;
+    const itemIcon = (
+      <span className="material-icons-outlined mr-2 flex justify-end">
+        {classPropertyIcon(classProperty)}
+      </span>
+    );
 
     return (
       <Button
@@ -57,20 +76,14 @@ export default function PropMenu() {
         className="p-menuitem-link w-full text-left"
         tooltip={property.summary}
         tooltipOptions={{ showDelay: 1000 }}
-        icon={itemIcon(property)}
-        badge={badge(item.data.minCount, item.data.maxCount)}
+        icon={itemIcon}
+        badge={badge(classProperty.minCount, classProperty.maxCount)}
         badgeClassName="p-badge-secondary"
         label={item.label}
-        onClick={() => addProperty(nodeId!, item.data.path)}
+        onClick={() => addNodeProperty(nodeId!, classProperty)}
       />
     );
   };
-
-  const itemIcon = (property: Property) => (
-    <span className="material-icons-outlined mr-2 flex justify-end">
-      {datatypeIcon(property)}
-    </span>
-  );
 
   return (
     <>
@@ -78,7 +91,7 @@ export default function PropMenu() {
       <Button
         label="Add property"
         icon="pi pi-plus"
-        onClick={(e) => menu.current.toggle(e)}
+        onClick={(e) => menu.current && menu.current.toggle(e)}
       />
     </>
   );

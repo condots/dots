@@ -1,12 +1,8 @@
 import fs from "node:fs";
 import { Parser, Store } from "n3";
-import {
-  createModel,
-  getIRIs,
-  Profiles,
-  SectionNames,
-  Section,
-} from "@/scripts/onto-utils";
+import { createModel, mapIRIs, Profiles } from "@/scripts/onto-utils";
+import { parseIRI } from "@/scripts/app-utils";
+import types from "@/types";
 
 function createGraph() {
   const source = "./public/spdx-model.ttl";
@@ -21,20 +17,25 @@ function enrichModelFromMarkdown(profiles: Profiles) {
   const text = fs.readFileSync(source).toString();
   const markdown: Record<string, object> = JSON.parse(text);
   const modelProfiles = markdown.namespaces;
-  const enrichedProfiles: Profiles = {};
-  for (const [profileName, profile] of Object.entries(profiles)) {
+
+  const enrichedProfiles: types.EnrichedProfiles = {};
+  for (const [profileName, profile] of Object.entries(profiles) as [
+    types.Name,
+    types.Profile,
+  ][]) {
+    const enrichedProfile = profile as types.EnrichedProfile;
     const modelProfile = Object.values(modelProfiles).find(
-      (v) => v.name === profileName,
+      (v) => v.name === profileName
     )!;
     for (const [sectionName, section] of Object.entries(profile) as [
-      SectionNames,
-      Section,
+      keyof types.Profile,
+      types.Section,
     ][]) {
       const modelSection = modelProfile[sectionName];
       for (const [itemName, item] of Object.entries(section)) {
         if (!(item instanceof Object)) continue;
         const modelItem = Object.values(modelSection).find(
-          (v) => v.name === itemName,
+          (v) => v.name === itemName
         )!;
         item.description = modelItem.description;
         if (sectionName === "classes") {
@@ -42,13 +43,13 @@ function enrichModelFromMarkdown(profiles: Profiles) {
         }
         section[itemName] = item;
       }
-      profile[sectionName] = section;
+      enrichedProfile[sectionName] = section;
     }
-    profile.iri = modelProfile.iri;
-    profile.name = modelProfile.iri.split("/").pop();
-    profile.summary = modelProfile.summary;
-    profile.description = modelProfile.description;
-    enrichedProfiles[profileName] = profile;
+    enrichedProfile.iri = modelProfile.iri;
+    enrichedProfile.name = parseIRI(profile.iri!).name;
+    enrichedProfile.summary = modelProfile.summary;
+    enrichedProfile.description = modelProfile.description;
+    enrichedProfiles[profileName] = enrichedProfile;
   }
   return enrichedProfiles;
 }
@@ -57,7 +58,7 @@ function updateOntology() {
   const graph = createGraph();
   const profiles = createModel(graph);
   const enriched = enrichModelFromMarkdown(profiles);
-  const iris = getIRIs(profiles);
+  const iris = mapIRIs(profiles);
   return { graph, profiles: enriched, iris };
 }
 
@@ -74,7 +75,7 @@ const replacer = (key, value) =>
 function saveProfiles(profiles: Profiles) {
   fs.writeFileSync(
     "./public/profiles.json",
-    JSON.stringify(profiles, replacer, 2),
+    JSON.stringify(profiles, replacer, 2)
   );
 }
 

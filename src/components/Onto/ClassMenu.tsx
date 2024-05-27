@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ontoStore, updateOntology } from "@/store/onto";
+import { ontoStore } from "@/store/onto";
 import { Tree, TreeNodeTemplateOptions } from "primereact/tree";
 import { TreeNode } from "primereact/treenode";
 import { Button } from "primereact/button";
@@ -11,11 +11,6 @@ const ClassMenu = () => {
   const profiles = ontoStore.use.profiles();
   const [expandedKeys, setExpandedKeys] = useState({});
   const [items, setItems] = useState<TreeNode[]>([]);
-
-  useEffect(() => {
-    const source = "https://spdx.org/rdf/3.0.0/spdx-model.ttl";
-    updateOntology(source);
-  }, []);
 
   useEffect(() => {
     const items = [];
@@ -56,7 +51,7 @@ const ClassMenu = () => {
 
   const onDragStart = (
     event: React.DragEvent<HTMLButtonElement>,
-    node: TreeNode,
+    node: TreeNode
   ) => {
     event.dataTransfer.setData("application/reactflow", node.data.iri);
     event.dataTransfer.effectAllowed = "move";

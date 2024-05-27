@@ -17,6 +17,15 @@ importers:
       '@hyperjump/uri':
         specifier: ^1.2.2
         version: 1.2.2
+      '@types/papaparse':
+        specifier: ^5.3.14
+        version: 5.3.14
+      '@types/semver':
+        specifier: ^7.5.8
+        version: 7.5.8
+      csv-parse:
+        specifier: ^5.5.6
+        version: 5.5.6
       dompurify:
         specifier: ^3.1.3
         version: 3.1.3
@@ -44,6 +53,9 @@ importers:
       nanoid:
         specifier: ^5.0.7
         version: 5.0.7
+      papaparse:
+        specifier: ^5.4.1
+        version: 5.4.1
       primeflex:
         specifier: ^3.3.1
         version: 3.3.1
@@ -65,6 +77,9 @@ importers:
       reactflow:
         specifier: ^11.11.3
         version: 11.11.3(@types/react@18.3.2)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      semver:
+        specifier: ^7.6.2
+        version: 7.6.2
       zustand:
         specifier: ^4.5.2
         version: 4.5.2(@types/react@18.3.2)(immer@10.1.1)(react@18.3.1)
@@ -1354,6 +1369,9 @@ packages:
   '@types/node@20.12.11':
     resolution: {integrity: sha512-vDg9PZ/zi+Nqp6boSOT7plNuthRugEKixDv5sFTIpkE89MmNtEArAShI4mxuX2+UrLEe9pxC1vm2cjm9YlWbJw==}
 
+  '@types/papaparse@5.3.14':
+    resolution: {integrity: sha512-LxJ4iEFcpqc6METwp9f6BV6VVc43m6MfH0VqFosHvrUgfXiFe6ww7R3itkOQ+TCK6Y+Iv/+RnnvtRZnkc5Kc9g==}
+
   '@types/prop-types@15.7.12':
     resolution: {integrity: sha512-5zvhXYtRNRluoE/jAp4GVsSduVUzNWKkOZrCDBWYtE7biZywwdC2AcEzg+cSMLFRfVgeAFqpfNabiPjxFddV1Q==}
 
@@ -1713,6 +1731,9 @@ packages:
 
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
+
+  csv-parse@5.5.6:
+    resolution: {integrity: sha512-uNpm30m/AGSkLxxy7d9yRXpJQFrZzVWLFBkS+6ngPcZkw/5k3L/jjFuj7tVnEpRn+QgmiXr21nDlhCiUK4ij2A==}
 
   d3-color@3.1.0:
     resolution: {integrity: sha512-zg/chbXyeBtMQ1LbD/WSoW2DpC3I0mpmPdW+ynRTj/x2DAWYrIY7qeZIHidozwV24m4iavr15lNwIwLxRmOxhA==}
@@ -2377,6 +2398,9 @@ packages:
   p-locate@5.0.0:
     resolution: {integrity: sha512-LaNjtRWUBY++zB5nE/NwcaoMylSPk+S+ZHNB1TzdbMJMny6dynpAGt7X/tl/QYq3TIeE6nxHppbo2LGymrG5Pw==}
     engines: {node: '>=10'}
+
+  papaparse@5.4.1:
+    resolution: {integrity: sha512-HipMsgJkZu8br23pW15uvo6sib6wne/4woLZPlFf3rpDyMe9ywEXUsuD7+6K9PRkJlVT51j/sCOYDKGGS3ZJrw==}
 
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
@@ -5396,6 +5420,10 @@ snapshots:
     dependencies:
       undici-types: 5.26.5
 
+  '@types/papaparse@5.3.14':
+    dependencies:
+      '@types/node': 20.12.11
+
   '@types/prop-types@15.7.12': {}
 
   '@types/rdf-ext@2.5.0':
@@ -5855,6 +5883,8 @@ snapshots:
   cssesc@3.0.0: {}
 
   csstype@3.1.3: {}
+
+  csv-parse@5.5.6: {}
 
   d3-color@3.1.0: {}
 
@@ -6563,6 +6593,8 @@ snapshots:
   p-locate@5.0.0:
     dependencies:
       p-limit: 3.1.0
+
+  papaparse@5.4.1: {}
 
   parent-module@1.0.1:
     dependencies:

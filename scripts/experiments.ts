@@ -4,89 +4,102 @@ import {
   createModel,
   getIRIs,
   Profiles,
-  Profile,
-  SharedFields,
+  SectionNames,
+  Section,
 } from "@/scripts/onto-utils";
 
-function createGraph(source: string) {
+import { propertyInputTypes } from "@/scripts/app-utils";
+
+function createGraph() {
+  const source = "./public/spdx-model.ttl";
   const text = fs.readFileSync(source).toString();
   const parser = new Parser();
   const quads = parser.parse(text);
   return new Store(quads);
 }
 
-function enrichModelFromMarkdown(profiles: Profiles, source: string) {
-  const res = fs.readFileSync(source);
-  const markdown = JSON.parse(res.toString());
+function enrichModelFromMarkdown(profiles: Profiles) {
+  const source = "./public/model.json";
+  const text = fs.readFileSync(source).toString();
+  const markdown: Record<string, object> = JSON.parse(text);
   const modelProfiles = markdown.namespaces;
-  const enrichedProfiles: Profiles = new Map();
-  for (const [profileName, profile] of profiles) {
+  const enrichedProfiles: Profiles = {};
+  for (const [profileName, profile] of Object.entries(profiles)) {
     const modelProfile = Object.values(modelProfiles).find(
       (v) => v.name === profileName,
     )!;
     for (const [sectionName, section] of Object.entries(profile) as [
-      keyof Profile,
-      Map<string, SharedFields>,
+      SectionNames,
+      Section,
     ][]) {
       const modelSection = modelProfile[sectionName];
-      for (const [itemName, item] of section) {
+      for (const [itemName, item] of Object.entries(section)) {
+        if (!(item instanceof Object)) continue;
         const modelItem = Object.values(modelSection).find(
           (v) => v.name === itemName,
         )!;
         item.description = modelItem.description;
-        section.set(itemName, item);
+        if (sectionName === "classes") {
+          item.abstract = modelItem.metadata.Instantiability === "Abstract";
+        }
+        section[itemName] = item;
       }
-      profile[sectionName] = section as any;
+      profile[sectionName] = section;
     }
     profile.iri = modelProfile.iri;
     profile.name = modelProfile.iri.split("/").pop();
     profile.summary = modelProfile.summary;
     profile.description = modelProfile.description;
-    enrichedProfiles.set(profileName, profile);
+    enrichedProfiles[profileName] = profile;
   }
   return enrichedProfiles;
 }
 
-function updateOntology(source: string) {
-  const graph = createGraph(source);
+function updateOntology() {
+  const graph = createGraph();
   const profiles = createModel(graph);
+  const enriched = enrichModelFromMarkdown(profiles);
   const iris = getIRIs(profiles);
-  enrichModelFromMarkdown(profiles, "./public/model.json");
-  return { graph, profiles, iris };
+  return { graph, profiles: enriched, iris };
 }
 
-const source = "./public/spdx-model.ttl";
-const res = updateOntology(source);
-const profiles = transformProfile(res.profiles);
-console.log(JSON.stringify(profiles, null, 2));
+const replacer = (key, value) =>
+  value instanceof Object && !(value instanceof Array)
+    ? Object.keys(value)
+        .sort()
+        .reduce((sorted, key) => {
+          sorted[key] = value[key];
+          return sorted;
+        }, {})
+    : value;
 
-// const obj = transformProfile(map);
-// console.log(JSON.stringify(obj, null, 2));
+// const profiles = updateOntology().profiles;
+// console.log(JSON.stringify(profiles, replacer, 2));
 
-function transformProfile(profiles: Profiles): Record<string, any> {
-  const result: Record<string, any> = {};
+// console.log(propertyInputTypes.get("anyURI"));
 
-  for (const [profileName, profileData] of profiles.entries()) {
-    result[profileName] = transformData(profileData);
-  }
+// const regex =
+//   "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*" +
+//   "[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?" +
+//   "(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$";
 
-  return result;
-}
+// const regex = "^[^\\/]+\\/[^\\/]+$";
 
-function transformData(data: any): any {
-  if (data instanceof Map) {
-    return Object.fromEntries(
-      Array.from(data.entries(), ([key, value]) => [key, transformData(value)]),
-    );
-  } else if (Array.isArray(data)) {
-    return data.map(transformData);
-  } else if (typeof data === "object" && data !== null) {
-    const result: Record<string, any> = {};
-    for (const key in data) {
-      result[key] = transformData(data[key]);
-    }
-    return result;
-  } else {
-    return data;
-  }
+// const re = /^[^/]+\/[^/]+$/;
+// const v = "application/json+dd";
+// console.log(re.test(v));
+
+// import semver from "semver";
+
+// const re =
+//   /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/;
+
+// const v = "42.6.7.9.3-alpha";
+// console.log(re.test(v) === Boolean(semver.valid(v)));
+
+const s = {};
+if (s) {
+  console.log("truthy");
+} else {
+  console.log("falsy");
 }

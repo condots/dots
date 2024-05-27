@@ -1,5 +1,5 @@
 import parse from "html-react-parser";
-import { advisoryText } from "@/scripts/inst-utils";
+import { advisoryText } from "@/scripts/app-utils";
 import { appStore } from "@/store/app";
 import { getItem } from "@/store/onto";
 import { Card } from "primereact/card";

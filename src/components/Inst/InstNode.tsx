@@ -1,6 +1,5 @@
 import type { NodeProps } from "reactflow";
 import { Position, Handle } from "reactflow";
-import { getItem } from "@/store/onto";
 import { appStore } from "@/store/app";
 import { NodeData } from "@/store/flow";
 
@@ -25,9 +24,7 @@ const CustomHandle = ({ id, position }: CustomHandleProps) => {
 };
 
 const InstNode = ({ id, data }: NodeProps<NodeData>) => {
-  const cls = getItem(data.iri);
-
-  if (!cls) {
+  if (!data.cls) {
     return null;
   }
   return (
@@ -58,7 +55,7 @@ const InstNode = ({ id, data }: NodeProps<NodeData>) => {
           border border-sky-900
         `}
         >
-          {cls.name}
+          {data.cls.name}
           <button
             className="absolute right-0 top-0 m-2 flex hover:text-[#b3dbff] nodrag"
             onClick={() =>

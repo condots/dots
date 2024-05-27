@@ -18,6 +18,8 @@ import {
 import InstNode from "@/components/Inst/InstNode";
 import InstEdge from "@/components/Inst/InstEdge";
 import { appStore } from "@/store/app";
+import { Class } from "@/scripts/onto-utils";
+import { getItem } from "@/store/onto";
 
 const nodeTypes = {
   inst: InstNode,
@@ -52,13 +54,7 @@ export default function InstBoard() {
     if (typeof iri === "undefined" || !iri) {
       return;
     }
-    const data: NodeData = {
-      iri: iri,
-      isNode: true,
-      active: false,
-      properties: {},
-    };
-    addNode("inst", event.clientX, event.clientY, data);
+    addNode("inst", event.clientX, event.clientY, iri);
   }, []);
 
   return (
