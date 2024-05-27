@@ -165,6 +165,15 @@ export const addNode = (
   return nodeId;
 };
 
+export const deleteNode = (nodeId: string) => {
+  flowStore.setState((state) => {
+    const nodeIndex = state.nodes.findIndex((n) => n.id === nodeId);
+    if (nodeIndex > -1) {
+      state.nodes.splice(nodeIndex, 1);
+    }
+  });
+};
+
 export const addNodeProperty = (
   nodeId: string,
   classProperty: types.ClassProperty,

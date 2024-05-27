@@ -1,7 +1,7 @@
 import type { NodeProps } from "reactflow";
 import { Position, Handle } from "reactflow";
 import { appStore } from "@/store/app";
-import { NodeData } from "@/store/flow";
+import { NodeData, deleteNode } from "@/store/flow";
 
 type CustomHandleProps = {
   id: string;
@@ -57,12 +57,20 @@ const InstNode = ({ id, data }: NodeProps<NodeData>) => {
         >
           {data.cls.name}
           <button
-            className="absolute right-0 top-0 m-2 flex hover:text-[#b3dbff] nodrag"
+            className="absolute left-0 top-0 m-2 flex hover:text-[#b3dbff] nodrag"
             onClick={() =>
               appStore.setState({ selectedNodeId: id, showPropDialog: true })
             }
           >
             <span className="material-icons-outlined text-sm">menu</span>
+          </button>
+          <button
+            className="absolute right-0 top-0 m-2 flex hover:text-[#b3dbff] nodrag"
+            onClick={() => deleteNode(id)}
+          >
+            <span className="material-icons-outlined text-sm">
+              remove_circle_outline
+            </span>
           </button>
         </div>
         {data.isNode && (
