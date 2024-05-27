@@ -30,7 +30,9 @@ export default function PropMenu() {
   const menu = useRef<TieredMenu>(null);
 
   const classPropertyIcon = (classProperty: types.ClassProperty) => {
-    if (classProperty.nodeKind === "Literal") {
+    if (classProperty.options) {
+      return "view_list";
+    } else if (classProperty.nodeKind === "Literal") {
       return inputProperties.get(classProperty.datatype)!.icon;
     } else {
       return "web-asset";
@@ -39,7 +41,6 @@ export default function PropMenu() {
 
   const items = () => {
     const items: MenuItem[] = [];
-    // Map.groupBy(classProperties, (v) => v[0].split("/").pop();
     for (const [
       propertyClassName,
       classProperties,
@@ -48,11 +49,13 @@ export default function PropMenu() {
       for (const [propertyName, classProperty] of Object.entries(
         classProperties
       ).sort()) {
-        subitems.push({
-          label: propertyName,
-          data: classProperty,
-          template: itemRenderer,
-        });
+        if (["Literal", "IRI"].includes(classProperty.nodeKind)) {
+          subitems.push({
+            label: propertyName,
+            data: classProperty,
+            template: itemRenderer,
+          });
+        }
       }
       if (subitems.length > 0) {
         items.push({ label: propertyClassName, items: subitems });
@@ -64,9 +67,10 @@ export default function PropMenu() {
   const itemRenderer = (item: MenuItem) => {
     const classProperty = item.data as types.ClassProperty;
     const property = getItem(classProperty.path) as types.Property;
+    const propertyIcon = classPropertyIcon(classProperty);
     const itemIcon = (
       <span className="material-icons-outlined mr-2 flex justify-end">
-        {classPropertyIcon(classProperty)}
+        {propertyIcon}
       </span>
     );
 

@@ -6,6 +6,7 @@ import PropInputNumber from "@/components/Prop/PropInputNumber";
 import PropInputBoolean from "@/components/Prop/PropInputBoolean";
 import { Sidebar } from "primereact/sidebar";
 import { inputProperties } from "@/scripts/app-utils";
+import PropInputOptions from "@/components/Prop/PropInputOptions";
 
 export default function PropPanel() {
   const showPropDialog = appStore.use.showPropDialog();
@@ -48,6 +49,14 @@ export default function PropPanel() {
               />
             );
           }
+        } else if (nodeProperty.classProperty.options) {
+          return (
+            <PropInputOptions
+              key={propertyId}
+              nodeId={nodeId!}
+              propertyId={propertyId}
+            />
+          );
         }
       })
     : [];

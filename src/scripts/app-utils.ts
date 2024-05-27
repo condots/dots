@@ -26,7 +26,8 @@ export const inputProperties: types.InputProperties = new Map([
     {
       icon: "link",
       inputKind: "string",
-      validator: (v: string) => isIri(v),
+      validator: (v: string) =>
+        typeof v === "string" && v.length > 0 && isIri(v),
     },
   ],
   [
@@ -83,7 +84,7 @@ export const inputProperties: types.InputProperties = new Map([
   [
     "SemVer",
     {
-      icon: "text_fields",
+      icon: "pin",
       inputKind: "string",
       validator: (v: string) => Boolean(semver.valid(v)),
     },
