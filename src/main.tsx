@@ -13,9 +13,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   // <React.StrictMode>
   <PrimeReactProvider>
     <ReactFlowProvider>
-      <div className="h-screen w-screen bg-[#fafafa]">
-        <App />
-      </div>
+      <App />
     </ReactFlowProvider>
   </PrimeReactProvider>
   // </React.StrictMode>

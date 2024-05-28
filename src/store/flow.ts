@@ -17,16 +17,11 @@ import {
   NodeDragHandler,
   applyNodeChanges,
   applyEdgeChanges,
+  getOutgoers,
 } from "reactflow";
-import type {
-  OnNodesDelete,
-  OnEdgesDelete,
-  ReactFlowInstance,
-  OnInit,
-} from "reactflow";
+import type { ReactFlowInstance, OnInit } from "reactflow";
 import { isNodePropertyValid } from "@/scripts/app-utils";
 import { getItem } from "@/store/onto";
-import { getRecursiveClassProperties } from "@/scripts/onto-utils";
 
 type DevtoolsActive = {
   nodeInspector: boolean;
@@ -41,8 +36,6 @@ type RFState = {
   devtoolsActive: DevtoolsActive;
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
-  onNodesDelete: OnNodesDelete;
-  onEdgesDelete: OnEdgesDelete;
   onConnect: OnConnect;
   onNodeDragStart: NodeDragHandler;
   onNodeDragStop: NodeDragHandler;
@@ -81,8 +74,6 @@ const flowStoreBase = create<RFState>()(
                 edges: applyEdgeChanges(changes, get().edges),
               });
             },
-            onNodesDelete: (nodes: Node[]) => {},
-            onEdgesDelete: (edges: Edge[]) => {},
             onConnect: (connection: Connection) => {
               set({
                 edges: addEdge(connection, get().edges),
@@ -166,12 +157,9 @@ export const addNode = (
 };
 
 export const deleteNode = (nodeId: string) => {
-  flowStore.setState((state) => {
-    const nodeIndex = state.nodes.findIndex((n) => n.id === nodeId);
-    if (nodeIndex > -1) {
-      state.nodes.splice(nodeIndex, 1);
-    }
-  });
+  const state = flowStore.getState();
+  const node = state.nodes.find((n) => n.id === nodeId);
+  state.reactFlowInstance!.deleteElements({ nodes: [node!], edges: [] });
 };
 
 export const addNodeProperty = (
@@ -217,4 +205,21 @@ export const deleteNodeProperty = (nodeId: string, propertyId: string) => {
       .properties;
     delete nodeProperties[propertyId];
   });
+};
+
+export const isValidConnection = (connection: Connection) => {
+  const state = flowStore.getState();
+  const nodes = state.nodes;
+  const edges = state.edges;
+  const target = nodes.find((node) => node.id === connection.target);
+  const hasCycle = (node: Node, visited = new Set()) => {
+    if (visited.has(node.id)) return false;
+    visited.add(node.id);
+    for (const outgoer of getOutgoers(node, nodes, edges)) {
+      if (outgoer.id === connection.source) return true;
+      if (hasCycle(outgoer, visited)) return true;
+    }
+  };
+  if (target!.id === connection.source) return false;
+  return !hasCycle(target!);
 };

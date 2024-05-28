@@ -13,6 +13,12 @@ export default {
         lato: ["Lato", "sans-serif"],
         roboto: ["Roboto Slab", "sans-serif"],
       },
+      colors: {
+        spdx: {
+          dark: "#00416b",
+          light: "#b3dbff",
+        },
+      },
     },
   },
   plugins: [typography],

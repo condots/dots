@@ -1,7 +1,9 @@
+import { memo } from "react";
+import types from "@/types";
 import type { NodeProps } from "reactflow";
 import { Position, Handle } from "reactflow";
 import { appStore } from "@/store/app";
-import { NodeData, deleteNode } from "@/store/flow";
+import { deleteNode } from "@/store/flow";
 
 type CustomHandleProps = {
   id: string;
@@ -23,7 +25,7 @@ const CustomHandle = ({ id, position }: CustomHandleProps) => {
   );
 };
 
-const InstNode = ({ id, data }: NodeProps<NodeData>) => {
+const InstNode = ({ id, data }: NodeProps<types.NodeData>) => {
   if (!data.cls) {
     return null;
   }
@@ -46,18 +48,17 @@ const InstNode = ({ id, data }: NodeProps<NodeData>) => {
       >
         <div
           className={`
-            px-3 py-3 w-64 
+            p-3 w-64 h-22 
             font-lato rounded-md
             text-center truncate
-            cursor-pointer 
-          bg-[#00416b] 
+            cursor-move 
+          bg-spdx-dark 
           text-slate-100 
-          border border-sky-900
         `}
         >
           {data.cls.name}
           <button
-            className="absolute left-0 top-0 m-2 flex hover:text-[#b3dbff] nodrag"
+            className="absolute left-0 top-0 m-1.5 flex hover:text-[#b3dbff] nodrag"
             onClick={() =>
               appStore.setState({ selectedNodeId: id, showPropDialog: true })
             }
@@ -65,7 +66,7 @@ const InstNode = ({ id, data }: NodeProps<NodeData>) => {
             <span className="material-icons-outlined text-sm">menu</span>
           </button>
           <button
-            className="absolute right-0 top-0 m-2 flex hover:text-[#b3dbff] nodrag"
+            className="absolute right-0 top-0 m-1.5 flex hover:text-[#b3dbff] nodrag"
             onClick={() => deleteNode(id)}
           >
             <span className="material-icons-outlined text-sm">
@@ -86,4 +87,4 @@ const InstNode = ({ id, data }: NodeProps<NodeData>) => {
   );
 };
 
-export default InstNode;
+export default memo(InstNode);

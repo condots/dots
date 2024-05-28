@@ -4,11 +4,11 @@ import { updateMediaTypes } from "@/store/app";
 import { InfoDialog } from "@/components/Onto/InfoDialog";
 import PropPanel from "@/components/Prop/PropPanel";
 import ClassMenu from "@/components/Onto/ClassMenu";
-import InstBoard from "@/components/Inst/InstBoard";
+import InstCanvas from "@/components/Inst/InstCanvas";
 
-import "primereact/resources/primereact.min.css"; //core css
-import "primeicons/primeicons.css"; //icons
-import "primeflex/primeflex.css"; // flex
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
+import "primeflex/primeflex.css";
 
 export default function App() {
   useEffect(() => {
@@ -18,11 +18,11 @@ export default function App() {
   }, []);
 
   return (
-    <>
+    <div className="h-screen w-screen bg-[#fafafa]">
       <InfoDialog />
       <PropPanel />
       <ClassMenu />
-      <InstBoard />
-    </>
+      <InstCanvas />
+    </div>
   );
 }
