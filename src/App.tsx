@@ -12,7 +12,7 @@ import "primeflex/primeflex.css";
 
 export default function App() {
   useEffect(() => {
-    const source = "https://spdx.org/rdf/3.0.0/spdx-model.ttl";
+    const source = "spdx-model.ttl";
     updateOntology(source);
     updateMediaTypes();
   }, []);

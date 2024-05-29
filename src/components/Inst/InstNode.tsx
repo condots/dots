@@ -1,9 +1,10 @@
-import { memo } from "react";
+import { memo, useRef } from "react";
 import types from "@/types";
 import type { NodeProps } from "reactflow";
-import { Position, Handle } from "reactflow";
+import { Position, Handle, useOnSelectionChange } from "reactflow";
 import { appStore } from "@/store/app";
 import { deleteNode } from "@/store/flow";
+import InstMenu from "./InstMenu";
 
 type CustomHandleProps = {
   id: string;
@@ -25,7 +26,9 @@ const CustomHandle = ({ id, position }: CustomHandleProps) => {
   );
 };
 
-const InstNode = ({ id, data }: NodeProps<types.NodeData>) => {
+const InstNode = ({ id, data, selected }: NodeProps<types.NodeData>) => {
+  const cmRef = useRef(null);
+
   const menuButton = (
     <button
       className="absolute left-0 top-0 m-1 flex hover:text-[#b3dbff] nodrag"
@@ -48,12 +51,23 @@ const InstNode = ({ id, data }: NodeProps<types.NodeData>) => {
     </button>
   );
 
+  // useOnSelectionChange({
+  //   onChange: ({ nodes, edges }) => {
+  //     console.log("selected nodes", nodes);
+
+  //     // setSelectedNodes(nodes.map((node) => node.id));
+  //     // setSelectedEdges(edges.map((edge) => edge.id));
+  //   },
+  // });
+
   if (!data.cls) {
     return null;
   }
   return (
     <>
+      <InstMenu nodeId={id} ref={cmRef} />
       <div
+        onContextMenu={(e) => cmRef.current!.show(e)}
         className={`
           rounded-md
           transition-all 
@@ -63,14 +77,15 @@ const InstNode = ({ id, data }: NodeProps<types.NodeData>) => {
           shadow-black/55 
           ${
             data.active
-              ? "translate-y-[-3px] translate-x-[1.5px] shadow-lg"
+              ? "translate-y-[-2px] translate-x-[1px] shadow-lg"
               : "shadow-md"
           }
         `}
       >
         <div
           className={`
-            p-3 w-64 h-22 
+          ${selected && "ring-2 ring-sky-400"}
+          p-3 w-64 h-22 
             font-lato rounded-md
             text-center truncate
             cursor-move 

@@ -1,14 +1,14 @@
 import types from "@/types";
-import { useEffect, useRef, useState } from "react";
-import { useClickOutside } from "primereact/hooks";
-import { appStore } from "@/store/app";
-import { addNodeProperty, getNode } from "@/store/flow";
+import { forwardRef, useEffect, useState } from "react";
+import { addNode, getNode } from "@/store/flow";
 import { getClassPropertyIcon } from "@/scripts/app-utils";
-import { TieredMenu } from "primereact/tieredmenu";
 import { MenuItem } from "primereact/menuitem";
 import { Button } from "primereact/button";
 import { getItem } from "@/store/onto";
 import { getRecursiveClassProperties } from "@/scripts/onto-utils";
+import { ContextMenu } from "primereact/contextmenu";
+import { useReactFlow } from "reactflow";
+import { nanoid } from "nanoid";
 
 const badge = (min: number | undefined, max: number | undefined) => {
   if (min && max) {
@@ -22,12 +22,10 @@ const badge = (min: number | undefined, max: number | undefined) => {
   }
 };
 
-export default function PropMenu() {
-  const nodeId = appStore.use.selectedNodeId();
+const InstMenu = forwardRef(({ nodeId }: { nodeId: string }, cmRef) => {
   const node = getNode(nodeId);
-  const divRef = useRef(null);
-  const [visible, setVisible] = useState(false);
   const [items, setItems] = useState<MenuItem[]>([]);
+  const { addEdges } = useReactFlow();
 
   const reachedMaxCount = (path: types.IRI, maxCount: number | undefined) => {
     if (maxCount === undefined) return false;
@@ -53,7 +51,10 @@ export default function PropMenu() {
         for (const [propertyName, classProperty] of Object.entries(
           classProperties
         ).sort()) {
-          if (classProperty.nodeKind !== "BlankNodeOrIRI") {
+          if (
+            classProperty.nodeKind === "BlankNodeOrIRI" &&
+            !getItem(classProperty.targetClass).abstract
+          ) {
             subitems.push({
               label: propertyName,
               data: classProperty,
@@ -86,40 +87,41 @@ export default function PropMenu() {
         text
         className="p-menuitem-link w-full text-left py-1.5"
         tooltip={property.summary}
-        tooltipOptions={{
-          showDelay: 1000,
-          className: "text-md text-balance",
-        }}
+        tooltipOptions={{ showDelay: 1000 }}
         icon={itemIcon}
         badge={badge(classProperty.minCount, classProperty.maxCount)}
         badgeClassName="p-badge-secondary"
         label={item.label}
-        onClick={() => {
-          addNodeProperty(nodeId!, classProperty);
-          setVisible(false);
+        onMouseDown={(event) => {
+          if (event.button !== 0) return;
+          // cmRef.current!.hide();
+          const targetNodeId = addNode(
+            "inst",
+            event.clientX,
+            event.clientY,
+            classProperty.targetClass
+          );
+          const newEdge = [
+            {
+              id: nanoid(),
+              source: nodeId,
+              target: targetNodeId,
+              data: { classProperty },
+            },
+          ];
+          addEdges(newEdge);
         }}
       />
     );
   };
 
-  useClickOutside(divRef, () => {
-    setVisible(false);
-  });
-
   return (
-    <div>
-      <Button
-        onClick={() => setVisible(!visible)}
-        label="Add property"
-        icon="pi pi-plus"
-      />
-      <div ref={divRef}>
-        <TieredMenu
-          model={items}
-          className="absolute w-fit scalein origin-top z-50"
-          hidden={!visible}
-        />
-      </div>
-    </div>
+    <ContextMenu
+      model={items}
+      ref={cmRef}
+      className="absolute w-fit scalein origin-top"
+    />
   );
-}
+});
+
+export default InstMenu;

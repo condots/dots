@@ -5,7 +5,7 @@ import type { EdgeProps } from "reactflow";
 
 import { getEdgeParams } from "@/scripts/flow-utils.js";
 
-function InstEdge({ id, source, target, markerEnd, style, data }: EdgeProps) {
+function InstEdge({ id, source, target, markerEnd, data }: EdgeProps) {
   const sourceNode = useStore(
     useCallback((store) => store.nodeInternals.get(source), [source])
   );
@@ -49,9 +49,9 @@ function InstEdge({ id, source, target, markerEnd, style, data }: EdgeProps) {
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
             fontSize: 16,
           }}
-          className="surface-card px-2 py-1 text-xs text-spdx-dark border-1 border-spdx-dark rounded-md"
+          className="font-lato font-bold surface-card px-2 py-1 text-xs text-spdx-dark border border-spdx-dark rounded-md"
         >
-          property name{data.property}
+          {data.classProperty?.name}
         </div>
       </EdgeLabelRenderer>
     </>
