@@ -2,7 +2,6 @@ import { appStore } from "@/store/app";
 import { getNodeProperty, deleteNodeProperty } from "@/store/flow";
 import { getItem } from "@/store/onto";
 import types from "@/types";
-import { Button } from "primereact/button";
 import { Tooltip } from "primereact/tooltip";
 
 interface PropLabel {
@@ -21,28 +20,30 @@ export function PropLabel({ nodeId, propertyId }: PropLabel) {
         className="font-bold prop-label"
         data-pr-tooltip={property.summary}
       >
-        {property.name} ({property.datatype})
+        {property.name}
       </label>
-      <div className="flex gap-2">
-        <Button
-          icon="pi pi-question-circle"
-          severity="secondary"
-          unstyled
-          className="p-button-icon-only p-button-rounded flex justify-center items-center text-primary hover:text-gray-600"
+      <div className="flex">
+        <button
+          className="flex p-1 rounded text-spdx-dark hover:bg-spdx-dark/15"
           onClick={() =>
             appStore.setState({
               selectedInfoIri: property.iri,
               showInfoDialog: true,
             })
           }
-        ></Button>
-        <Button
-          icon="pi pi-minus-circle"
-          severity="secondary"
-          unstyled
-          className="p-button-icon-only p-button-rounded flex justify-center items-center text-primary hover:text-gray-600"
+        >
+          <span className="material-icons-outlined text-base">
+            help_outline
+          </span>
+        </button>
+        <button
+          className="flex p-1 rounded text-spdx-dark hover:bg-spdx-dark/15"
           onClick={() => deleteNodeProperty(nodeId, propertyId)}
-        ></Button>
+        >
+          <span className="material-icons-outlined text-base">
+            remove_circle_outline
+          </span>
+        </button>
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ interface PropInput {
 export default function PropInputString({ nodeId, propertyId }: PropInput) {
   const nodeProperty = getNodeProperty(nodeId, propertyId)!;
   const inputProperty = inputProperties.get(
-    nodeProperty.classProperty.datatype,
+    nodeProperty.classProperty.datatype
   )!;
 
   const setValue = (event) => {
@@ -39,6 +39,9 @@ export default function PropInputString({ nodeId, propertyId }: PropInput) {
         />
       ) : (
         <InputText {...commonProps} />
+      )}
+      {inputProperty.helpText && (
+        <small className="font-lato">{inputProperty.helpText}</small>
       )}
     </div>
   );

@@ -115,6 +115,7 @@ namespace types {
     validator: (v) => boolean;
     mask?: string;
     slotChar?: string;
+    helpText?: string;
   }
 }
 

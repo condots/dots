@@ -75,7 +75,7 @@ export default function PropPanel() {
         }
         icons={
           <button
-            className="flex justify-center items-center text-primary hover:text-gray-600"
+            className="flex p-1 rounded text-spdx-dark hover:bg-spdx-dark/15"
             onClick={() =>
               appStore.setState({
                 selectedInfoIri: cls?.iri,
@@ -87,6 +87,9 @@ export default function PropPanel() {
               question_mark
             </span>
           </button>
+        }
+        closeIcon={
+          <span className="flex p-1 rounded text-spdx-dark hover:bg-spdx-dark/15 pi pi-times" />
         }
         onHide={() => appStore.setState({ showPropDialog: false })}
       >

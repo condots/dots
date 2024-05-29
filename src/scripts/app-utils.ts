@@ -28,6 +28,7 @@ export const inputProperties: types.InputProperties = new Map([
       inputKind: "string",
       validator: (v: string) =>
         typeof v === "string" && v.length > 0 && isIri(v),
+      helpText: "Enter a valid IRI",
     },
   ],
   [
@@ -47,6 +48,7 @@ export const inputProperties: types.InputProperties = new Map([
         moment(v, "YYYY-MM-DDTHH:mm:ssZ", true).isValid(),
       mask: "9999-99-99T99:99:99Z",
       slotChar: "YYYY-MM-DDTHH:mm:ssZ",
+      helpText: "Enter date-time in UTC using ISO-8601",
     },
   ],
   [
@@ -55,6 +57,7 @@ export const inputProperties: types.InputProperties = new Map([
       icon: "numbers",
       inputKind: "number",
       validator: (v: number) => typeof v === "number",
+      helpText: "Enter a number",
     },
   ],
   [
@@ -63,6 +66,7 @@ export const inputProperties: types.InputProperties = new Map([
       icon: "numbers",
       inputKind: "number",
       validator: (v: number) => Number.isInteger(v) && v >= 0,
+      helpText: "Enter a positive integer",
     },
   ],
   [
@@ -71,6 +75,7 @@ export const inputProperties: types.InputProperties = new Map([
       icon: "numbers",
       inputKind: "number",
       validator: (v: number) => Number.isInteger(v) && v > 0,
+      helpText: "Enter zero or a positive integer",
     },
   ],
   [
@@ -79,6 +84,7 @@ export const inputProperties: types.InputProperties = new Map([
       icon: "text_fields",
       inputKind: "string",
       validator: (v: string) => typeof v === "string" && v.length > 0,
+      helpText: "Enter a string",
     },
   ],
   [
@@ -87,6 +93,7 @@ export const inputProperties: types.InputProperties = new Map([
       icon: "pin",
       inputKind: "string",
       validator: (v: string) => Boolean(semver.valid(v)),
+      helpText: "Enter a version using SemVer 2.0.0",
     },
   ],
   [
@@ -96,6 +103,7 @@ export const inputProperties: types.InputProperties = new Map([
       inputKind: "string",
       validator: (v: string) =>
         typeof v === "string" && /^[^/]+\/[^/]+$/.test(v),
+      helpText: "Enter a media type using RFC 2046",
     },
   ],
 ]);
