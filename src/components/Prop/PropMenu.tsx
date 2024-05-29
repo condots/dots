@@ -29,10 +29,8 @@ export default function PropMenu() {
   const classPropertyIcon = (classProperty: types.ClassProperty) => {
     if (classProperty.options) {
       return "list";
-    } else if (classProperty.nodeKind === "Literal") {
-      return inputProperties.get(classProperty.datatype)!.icon;
     } else {
-      return "web-asset";
+      return inputProperties.get(classProperty.datatype)!.icon;
     }
   };
 
