@@ -14,7 +14,7 @@ const ClassMenu = () => {
 
   useEffect(() => {
     const items = [];
-    if (profiles === null) return;
+    if (!profiles) return;
     for (const [profileName, profile] of Object.entries(profiles)) {
       const subitems = [];
       for (const [className, cls] of Object.entries(profile.classes)) {

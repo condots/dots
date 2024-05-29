@@ -1,5 +1,6 @@
 import types from "@/types";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useClickOutside } from "primereact/hooks";
 import { appStore } from "@/store/app";
 import { addNodeProperty, getNode } from "@/store/flow";
 import { getClassPropertyIcon } from "@/scripts/app-utils";
@@ -24,7 +25,9 @@ const badge = (min: number | undefined, max: number | undefined) => {
 export default function PropMenu() {
   const nodeId = appStore.use.selectedNodeId();
   const node = getNode(nodeId);
-  const menu = useRef<TieredMenu>(null);
+  const divRef = useRef(null);
+  const [visible, setVisible] = useState(false);
+  const [items, setItems] = useState<MenuItem[]>([]);
 
   const reachedMaxCount = (path: types.IRI, maxCount: number | undefined) => {
     if (maxCount === undefined) return false;
@@ -36,33 +39,35 @@ export default function PropMenu() {
     return propertyCount >= maxCount;
   };
 
-  const items = () => {
-    const recursiveClassProperties = getRecursiveClassProperties(
-      node?.data.cls.iri
-    );
-    const items: MenuItem[] = [];
-    for (const [
-      propertyClassName,
-      classProperties,
-    ] of recursiveClassProperties || []) {
-      const subitems: MenuItem[] = [];
-      for (const [propertyName, classProperty] of Object.entries(
-        classProperties
-      ).sort()) {
-        if (classProperty.nodeKind !== "BlankNodeOrIRI") {
-          subitems.push({
-            label: propertyName,
-            data: classProperty,
-            template: itemRenderer,
-          });
+  useEffect(() => {
+    if (node) {
+      const recursiveClassProperties = getRecursiveClassProperties(
+        node.data.cls.iri
+      );
+      const items: MenuItem[] = [];
+      for (const [
+        propertyClassName,
+        classProperties,
+      ] of recursiveClassProperties || []) {
+        const subitems: MenuItem[] = [];
+        for (const [propertyName, classProperty] of Object.entries(
+          classProperties
+        ).sort()) {
+          if (classProperty.nodeKind !== "BlankNodeOrIRI") {
+            subitems.push({
+              label: propertyName,
+              data: classProperty,
+              template: itemRenderer,
+            });
+          }
+        }
+        if (subitems.length > 0) {
+          items.push({ label: propertyClassName, items: subitems });
         }
       }
-      if (subitems.length > 0) {
-        items.push({ label: propertyClassName, items: subitems });
-      }
+      setItems(items);
     }
-    return items;
-  };
+  }, [node]);
 
   const itemRenderer = (item: MenuItem) => {
     const classProperty = item.data as types.ClassProperty;
@@ -74,6 +79,8 @@ export default function PropMenu() {
       </span>
     );
 
+    item.disabled = reachedMaxCount(classProperty.path, classProperty.maxCount);
+
     return (
       <Button
         text
@@ -82,22 +89,34 @@ export default function PropMenu() {
         tooltipOptions={{ showDelay: 1000 }}
         icon={itemIcon}
         badge={badge(classProperty.minCount, classProperty.maxCount)}
-        disabled={reachedMaxCount(classProperty.path, classProperty.maxCount)}
         badgeClassName="p-badge-secondary"
         label={item.label}
-        onClick={() => addNodeProperty(nodeId!, classProperty)}
+        onClick={() => {
+          addNodeProperty(nodeId!, classProperty);
+          setVisible(false);
+        }}
       />
     );
   };
 
+  useClickOutside(divRef, () => {
+    setVisible(false);
+  });
+
   return (
-    <>
-      <TieredMenu model={items()} ref={menu} className="w-fit" popup />
+    <div>
       <Button
+        onClick={() => setVisible(!visible)}
         label="Add property"
         icon="pi pi-plus"
-        onClick={(e) => menu.current && menu.current.toggle(e)}
       />
-    </>
+      <div ref={divRef}>
+        <TieredMenu
+          model={items}
+          className="absolute w-fit scalein origin-top"
+          hidden={!visible}
+        />
+      </div>
+    </div>
   );
 }
