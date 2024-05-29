@@ -28,7 +28,7 @@ const CustomHandle = ({ id, position }: CustomHandleProps) => {
 const InstNode = ({ id, data }: NodeProps<types.NodeData>) => {
   const menuButton = (
     <button
-      className="absolute left-0 top-0 m-1.5 flex hover:text-[#b3dbff] nodrag"
+      className="absolute left-0 top-0 m-1 flex hover:text-[#b3dbff] nodrag"
       onClick={() =>
         appStore.setState({ selectedNodeId: id, showPropDialog: true })
       }
@@ -39,7 +39,7 @@ const InstNode = ({ id, data }: NodeProps<types.NodeData>) => {
 
   const deleteButton = (
     <button
-      className="absolute right-0 top-0 m-1.5 flex hover:text-[#b3dbff] nodrag"
+      className="absolute right-0 top-0 m-1 flex hover:text-[#b3dbff] nodrag"
       onClick={() => deleteNode(id)}
     >
       <span className="material-icons-outlined text-sm">
