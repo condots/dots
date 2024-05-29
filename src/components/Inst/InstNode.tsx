@@ -26,6 +26,28 @@ const CustomHandle = ({ id, position }: CustomHandleProps) => {
 };
 
 const InstNode = ({ id, data }: NodeProps<types.NodeData>) => {
+  const menuButton = (
+    <button
+      className="absolute left-0 top-0 m-1.5 flex hover:text-[#b3dbff] nodrag"
+      onClick={() =>
+        appStore.setState({ selectedNodeId: id, showPropDialog: true })
+      }
+    >
+      <span className="material-icons-outlined text-sm">menu</span>
+    </button>
+  );
+
+  const deleteButton = (
+    <button
+      className="absolute right-0 top-0 m-1.5 flex hover:text-[#b3dbff] nodrag"
+      onClick={() => deleteNode(id)}
+    >
+      <span className="material-icons-outlined text-sm">
+        remove_circle_outline
+      </span>
+    </button>
+  );
+
   if (!data.cls) {
     return null;
   }
@@ -57,22 +79,8 @@ const InstNode = ({ id, data }: NodeProps<types.NodeData>) => {
         `}
         >
           {data.cls.name}
-          <button
-            className="absolute left-0 top-0 m-1.5 flex hover:text-[#b3dbff] nodrag"
-            onClick={() =>
-              appStore.setState({ selectedNodeId: id, showPropDialog: true })
-            }
-          >
-            <span className="material-icons-outlined text-sm">menu</span>
-          </button>
-          <button
-            className="absolute right-0 top-0 m-1.5 flex hover:text-[#b3dbff] nodrag"
-            onClick={() => deleteNode(id)}
-          >
-            <span className="material-icons-outlined text-sm">
-              remove_circle_outline
-            </span>
-          </button>
+          {menuButton}
+          {deleteButton}
         </div>
         {data.isNode && (
           <div>

@@ -40,9 +40,7 @@ export default function PropInputString({ nodeId, propertyId }: PropInput) {
       ) : (
         <InputText {...commonProps} />
       )}
-      {inputProperty.helpText && (
-        <small className="font-lato">{inputProperty.helpText}</small>
-      )}
+      <small className="font-lato">{inputProperty.helpText}</small>
     </div>
   );
 }

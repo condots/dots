@@ -26,9 +26,9 @@ export const inputProperties: types.InputProperties = new Map([
     {
       icon: "link",
       inputKind: "string",
+      helpText: "Enter a valid IRI",
       validator: (v: string) =>
         typeof v === "string" && v.length > 0 && isIri(v),
-      helpText: "Enter a valid IRI",
     },
   ],
   [
@@ -36,6 +36,7 @@ export const inputProperties: types.InputProperties = new Map([
     {
       icon: "toggle_off",
       inputKind: "boolean",
+      helpText: "",
       validator: (v: boolean) => typeof v === "boolean",
     },
   ],
@@ -44,11 +45,11 @@ export const inputProperties: types.InputProperties = new Map([
     {
       icon: "schedule",
       inputKind: "string",
+      helpText: "Enter date-time in UTC using ISO-8601",
       validator: (v: string) =>
         moment(v, "YYYY-MM-DDTHH:mm:ssZ", true).isValid(),
       mask: "9999-99-99T99:99:99Z",
       slotChar: "YYYY-MM-DDTHH:mm:ssZ",
-      helpText: "Enter date-time in UTC using ISO-8601",
     },
   ],
   [
@@ -56,8 +57,8 @@ export const inputProperties: types.InputProperties = new Map([
     {
       icon: "numbers",
       inputKind: "number",
-      validator: (v: number) => typeof v === "number",
       helpText: "Enter a number",
+      validator: (v: number) => typeof v === "number",
     },
   ],
   [
@@ -65,8 +66,9 @@ export const inputProperties: types.InputProperties = new Map([
     {
       icon: "numbers",
       inputKind: "number",
-      validator: (v: number) => Number.isInteger(v) && v >= 0,
       helpText: "Enter a positive integer",
+      validator: (v: number) => Number.isInteger(v) && v >= 0,
+      min: 0,
     },
   ],
   [
@@ -74,8 +76,9 @@ export const inputProperties: types.InputProperties = new Map([
     {
       icon: "numbers",
       inputKind: "number",
-      validator: (v: number) => Number.isInteger(v) && v > 0,
       helpText: "Enter zero or a positive integer",
+      validator: (v: number) => Number.isInteger(v) && v > 0,
+      min: 1,
     },
   ],
   [
@@ -83,8 +86,8 @@ export const inputProperties: types.InputProperties = new Map([
     {
       icon: "text_fields",
       inputKind: "string",
+      helpText: "Enter a string",
       validator: (v: string) => typeof v === "string" && v.length > 0,
-      helpText: "Enter any text",
     },
   ],
   [
@@ -92,8 +95,8 @@ export const inputProperties: types.InputProperties = new Map([
     {
       icon: "pin",
       inputKind: "string",
-      validator: (v: string) => Boolean(semver.valid(v)),
       helpText: "Enter version using SemVer 2.0.0",
+      validator: (v: string) => Boolean(semver.valid(v)),
     },
   ],
   [
@@ -101,9 +104,9 @@ export const inputProperties: types.InputProperties = new Map([
     {
       icon: "text_fields",
       inputKind: "string",
+      helpText: "Enter an RFC 2046 media type",
       validator: (v: string) =>
         typeof v === "string" && /^[^/]+\/[^/]+$/.test(v),
-      helpText: "Enter an RFC 2046 media type",
     },
   ],
 ]);
@@ -114,6 +117,14 @@ export const isNodePropertyValid = (nodeProperty: types.NodeProperty) => {
   return cp.nodeKind === "Literal"
     ? inputProperties.get(cp.datatype)!.validator(nodeProperty.value)
     : Boolean(nodeProperty.value);
+};
+
+export const getClassPropertyIcon = (classProperty: types.ClassProperty) => {
+  if (classProperty.options) {
+    return "list";
+  } else if (classProperty.nodeKind === "Literal") {
+    return inputProperties.get(classProperty.datatype)!.icon;
+  }
 };
 
 export async function getMediaTypes() {

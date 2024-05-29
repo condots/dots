@@ -32,6 +32,7 @@ export default function PropInputOptions({ nodeId, propertyId }: PropInput) {
         optionLabel="label"
         placeholder="Select..."
         showClear
+        className="mb-[14px] w-full"
       />
     </div>
   );

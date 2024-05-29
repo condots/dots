@@ -2,7 +2,7 @@ import types from "@/types";
 import { useRef } from "react";
 import { appStore } from "@/store/app";
 import { addNodeProperty, getNode } from "@/store/flow";
-import { inputProperties } from "@/scripts/app-utils";
+import { getClassPropertyIcon } from "@/scripts/app-utils";
 import { TieredMenu } from "primereact/tieredmenu";
 import { MenuItem } from "primereact/menuitem";
 import { Button } from "primereact/button";
@@ -26,15 +26,7 @@ export default function PropMenu() {
   const node = getNode(nodeId);
   const menu = useRef<TieredMenu>(null);
 
-  const classPropertyIcon = (classProperty: types.ClassProperty) => {
-    if (classProperty.options) {
-      return "list";
-    } else {
-      return inputProperties.get(classProperty.datatype)!.icon;
-    }
-  };
-
-  const reachedMaxCount = (path: types.IRI, maxCount: number) => {
+  const reachedMaxCount = (path: types.IRI, maxCount: number | undefined) => {
     if (maxCount === undefined) return false;
     const propertyCount = node
       ? Object.values(node.data.properties).filter(
@@ -75,7 +67,7 @@ export default function PropMenu() {
   const itemRenderer = (item: MenuItem) => {
     const classProperty = item.data as types.ClassProperty;
     const property = getItem(classProperty.path) as types.Property;
-    const propertyIcon = classPropertyIcon(classProperty);
+    const propertyIcon = getClassPropertyIcon(classProperty);
     const itemIcon = (
       <span className="material-icons-outlined mr-2 flex justify-end">
         {propertyIcon}

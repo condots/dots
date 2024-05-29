@@ -25,7 +25,11 @@ export default function PropInputNumber({ nodeId, propertyId }: PropInput) {
   return (
     <div className="flex-auto">
       <PropLabel nodeId={nodeId} propertyId={propertyId} />
-      <ToggleButton {...commonProps} checked={nodeProperty.value as boolean} />
+      <ToggleButton
+        {...commonProps}
+        checked={nodeProperty.value as boolean}
+        className="mb-[14px] w-full"
+      />
     </div>
   );
 }
