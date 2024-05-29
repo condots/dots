@@ -28,12 +28,22 @@ export default function PropMenu() {
 
   const classPropertyIcon = (classProperty: types.ClassProperty) => {
     if (classProperty.options) {
-      return "view_list";
+      return "list";
     } else if (classProperty.nodeKind === "Literal") {
       return inputProperties.get(classProperty.datatype)!.icon;
     } else {
       return "web-asset";
     }
+  };
+
+  const reachedMaxCount = (path: types.IRI, maxCount: number) => {
+    if (maxCount === undefined) return false;
+    const propertyCount = node
+      ? Object.values(node.data.properties).filter(
+          (p) => p.classProperty.path === path
+        ).length
+      : 0;
+    return propertyCount >= maxCount;
   };
 
   const items = () => {
@@ -82,6 +92,7 @@ export default function PropMenu() {
         tooltipOptions={{ showDelay: 1000 }}
         icon={itemIcon}
         badge={badge(classProperty.minCount, classProperty.maxCount)}
+        disabled={reachedMaxCount(classProperty.path, classProperty.maxCount)}
         badgeClassName="p-badge-secondary"
         label={item.label}
         onClick={() => addNodeProperty(nodeId!, classProperty)}

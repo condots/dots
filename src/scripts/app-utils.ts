@@ -84,7 +84,7 @@ export const inputProperties: types.InputProperties = new Map([
       icon: "text_fields",
       inputKind: "string",
       validator: (v: string) => typeof v === "string" && v.length > 0,
-      helpText: "Enter a string",
+      helpText: "Enter any text",
     },
   ],
   [
@@ -93,7 +93,7 @@ export const inputProperties: types.InputProperties = new Map([
       icon: "pin",
       inputKind: "string",
       validator: (v: string) => Boolean(semver.valid(v)),
-      helpText: "Enter a version using SemVer 2.0.0",
+      helpText: "Enter version using SemVer 2.0.0",
     },
   ],
   [
@@ -103,7 +103,7 @@ export const inputProperties: types.InputProperties = new Map([
       inputKind: "string",
       validator: (v: string) =>
         typeof v === "string" && /^[^/]+\/[^/]+$/.test(v),
-      helpText: "Enter a media type using RFC 2046",
+      helpText: "Enter an RFC 2046 media type",
     },
   ],
 ]);
