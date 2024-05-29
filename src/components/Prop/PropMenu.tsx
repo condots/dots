@@ -24,9 +24,6 @@ const badge = (min: number | undefined, max: number | undefined) => {
 export default function PropMenu() {
   const nodeId = appStore.use.selectedNodeId();
   const node = getNode(nodeId);
-  const recursiveClassProperties = getRecursiveClassProperties(
-    node?.data.cls.iri
-  );
   const menu = useRef<TieredMenu>(null);
 
   const classPropertyIcon = (classProperty: types.ClassProperty) => {
@@ -40,6 +37,9 @@ export default function PropMenu() {
   };
 
   const items = () => {
+    const recursiveClassProperties = getRecursiveClassProperties(
+      node?.data.cls.iri
+    );
     const items: MenuItem[] = [];
     for (const [
       propertyClassName,
@@ -49,7 +49,7 @@ export default function PropMenu() {
       for (const [propertyName, classProperty] of Object.entries(
         classProperties
       ).sort()) {
-        if (["Literal", "IRI"].includes(classProperty.nodeKind)) {
+        if (classProperty.nodeKind !== "BlankNodeOrIRI") {
           subitems.push({
             label: propertyName,
             data: classProperty,

@@ -22,6 +22,7 @@ import {
 import type { ReactFlowInstance, OnInit } from "reactflow";
 import { isNodePropertyValid } from "@/scripts/app-utils";
 import { getItem } from "@/store/onto";
+import { getRecursiveClassProperties } from "@/scripts/onto-utils";
 
 type DevtoolsActive = {
   nodeInspector: boolean;
@@ -142,11 +143,25 @@ export const addNode = (
     .getState()
     .reactFlowInstance!.screenToFlowPosition({ x, y });
   const cls = getItem(classiri) as types.Class;
+  const properties = {} as types.NodeProperties;
+  for (const classProperties of getRecursiveClassProperties(
+    classiri
+  ).values()) {
+    for (const classProperty of Object.values(classProperties)) {
+      if (
+        classProperty.required &&
+        classProperty.nodeKind !== "BlankNodeOrIRI"
+      ) {
+        const nodeProperty = generateNodeProperty(classProperty);
+        properties[nodeProperty.id] = nodeProperty;
+      }
+    }
+  }
   const data: types.NodeData = {
     isNode: true,
     active: false,
     cls,
-    properties: {},
+    properties,
   };
 
   const node: types.FlowNode = { id: nodeId, position, data, type };
@@ -162,27 +177,36 @@ export const deleteNode = (nodeId: string) => {
   state.reactFlowInstance!.deleteElements({ nodes: [node!], edges: [] });
 };
 
+export const generateNodeProperty = (
+  classProperty: types.ClassProperty,
+  value: types.NodeProperty["value"] = undefined
+) => {
+  const nodeProperty: types.NodeProperty = {
+    id: nanoid(),
+    classProperty,
+    value,
+    valid: false,
+  };
+  if (classProperty.datatype === "boolean") {
+    nodeProperty.value = Boolean(value);
+    nodeProperty.valid = true;
+  } else {
+    nodeProperty.valid = isNodePropertyValid(nodeProperty);
+  }
+  return nodeProperty;
+};
+
 export const addNodeProperty = (
   nodeId: string,
   classProperty: types.ClassProperty,
   value: types.NodeProperty["value"] = undefined
 ) => {
-  const propertyId = nanoid();
+  const nodeProperty = generateNodeProperty(classProperty, value);
   flowStore.setState((state) => {
-    const nodeProperty: types.NodeProperty = {
-      id: propertyId,
-      classProperty,
-      value,
-      valid: false,
-    };
-    if (classProperty.datatype === "boolean") {
-      nodeProperty.value = Boolean(value);
-    }
-    nodeProperty.valid = isNodePropertyValid(nodeProperty);
     const data = state.nodes.find((n) => n.id === nodeId)!.data;
-    data.properties[propertyId] = nodeProperty;
+    data.properties[nodeProperty.id] = nodeProperty;
   });
-  return propertyId;
+  return nodeProperty.id;
 };
 
 export const setNodeProperty = (
