@@ -1,9 +1,10 @@
-import types from "@/types";
-import { create } from "zustand";
-import { persist, devtools, subscribeWithSelector } from "zustand/middleware";
-import { immer } from "zustand/middleware/immer";
-import createSelectors from "@/scripts/createSelectors";
-import { getMediaTypes } from "@/scripts/app-utils";
+import { create } from 'zustand';
+import { persist, devtools, subscribeWithSelector } from 'zustand/middleware';
+import { immer } from 'zustand/middleware/immer';
+import createSelectors from '@/scripts/createSelectors';
+
+import { PropertyOption } from '@/types';
+import { getMediaTypes } from '@/scripts/app-utils';
 
 type AppState = {
   showClassesMenu: boolean;
@@ -11,7 +12,7 @@ type AppState = {
   showInfoDialog: boolean;
   selectedNodeId: string | undefined;
   selectedInfoIri: string | undefined;
-  mediaTypes: types.PropertyOption[] | undefined;
+  mediaTypes: PropertyOption[] | undefined;
   reset: () => void;
 };
 
@@ -29,14 +30,14 @@ const appStoreBase = create<AppState>()(
     immer(
       devtools(
         persist(
-          (set) => ({
+          set => ({
             ...initialState,
             reset: () => {
               set(initialState);
             },
           }),
           {
-            name: "app",
+            name: 'app',
           }
         )
       )

@@ -1,9 +1,11 @@
-import { getClassPropertyIcon } from "@/scripts/app-utils";
-import { appStore } from "@/store/app";
-import { getNodeProperty, deleteNodeProperty } from "@/store/flow";
-import { getItem } from "@/store/onto";
-import types from "@/types";
-import { Tooltip } from "primereact/tooltip";
+import React from 'react';
+
+import { Tooltip } from 'primereact/tooltip';
+
+import { getClassPropertyIcon } from '@/scripts/app-utils';
+import { appStore } from '@/store/app';
+import { getNodeProperty, deleteNodeProperty } from '@/store/flow';
+import { getItem } from '@/store/onto';
 
 interface PropLabel {
   nodeId: string;

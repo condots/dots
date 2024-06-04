@@ -1,26 +1,49 @@
-import { Parser, Quad, Store, Term } from "n3";
-import jsonld from "jsonld";
-import { QueryEngine } from "@comunica/query-sparql-rdfjs";
-import rdfext from "rdf-ext";
-import { parseIRI } from "@/scripts/app-utils";
-import types from "@/types";
-import { getItem } from "@/store/onto";
+import rdfext from 'rdf-ext';
+import { Parser, Quad, Store, Term } from 'n3';
+import { QueryEngine } from '@comunica/query-sparql-rdfjs';
+import jsonld from 'jsonld';
+
+import {
+  Class,
+  ClassProperties,
+  ClassProperty,
+  Classes,
+  EnrichedProfile,
+  EnrichedProfiles,
+  IRI,
+  Individuals,
+  Item,
+  LiteralPropertyTypes,
+  Name,
+  Profile,
+  Profiles,
+  Properties,
+  PropertyOption,
+  RecursiveClassProperties,
+  Section,
+  SharedFields,
+  Vocabularies,
+  VocabularyEntries,
+  nodeKindTypes,
+} from '@/types';
+import { getItem } from '@/store/onto';
+import { parseIRI } from '@/scripts/app-utils';
 
 const NS = {
-  rdf: rdfext.namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#"),
-  rdfs: rdfext.namespace("http://www.w3.org/2000/01/rdf-schema#"),
-  owl: rdfext.namespace("http://www.w3.org/2002/07/owl#"),
-  sh: rdfext.namespace("http://www.w3.org/ns/shacl#"),
-  xsd: rdfext.namespace("http://www.w3.org/2001/XMLSchema#"),
+  rdf: rdfext.namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#'),
+  rdfs: rdfext.namespace('http://www.w3.org/2000/01/rdf-schema#'),
+  owl: rdfext.namespace('http://www.w3.org/2002/07/owl#'),
+  sh: rdfext.namespace('http://www.w3.org/ns/shacl#'),
+  xsd: rdfext.namespace('http://www.w3.org/2001/XMLSchema#'),
 };
 
-const shaclLists: Map<types.IRI, types.IRI[]> = new Map();
+const shaclLists: Map<IRI, IRI[]> = new Map();
 
 export async function createGraph(source: string | File) {
   const url = source instanceof File ? source.name : source;
-  const ext = url.split(".").pop() || "";
+  const ext = url.split('.').pop() || '';
   let text: string;
-  if (typeof source === "string") {
+  if (typeof source === 'string') {
     text = await (await fetch(source)).text();
   } else if (source instanceof File) {
     text = await new Promise((resolve, reject) => {
@@ -30,18 +53,18 @@ export async function createGraph(source: string | File) {
       reader.readAsText(source);
     });
   } else {
-    throw new Error("Unsupported source type");
+    throw new Error('Unsupported source type');
   }
 
   let quads: Quad[] = [];
-  if (ext === "ttl") {
+  if (ext === 'ttl') {
     const parser = new Parser();
     quads = parser.parse(text);
-  } else if (["jsonld", "json-ld"].includes(ext)) {
+  } else if (['jsonld', 'json-ld'].includes(ext)) {
     const json = await JSON.parse(text);
     quads = (await jsonld.toRDF(json)) as Quad[];
   } else {
-    throw new Error("Unsupported file extension");
+    throw new Error('Unsupported file extension');
   }
   return new Store(quads);
 }
@@ -52,9 +75,9 @@ export function createModel(graph: Store) {
   const properties = getProperties(graph);
   const vocabularies = getVocabularies(graph);
   const individuals = getIndividuals(graph);
-  const profiles: types.Profiles = {};
+  const profiles: Profiles = {};
   for (const profileName in classes) {
-    profiles[profileName] = <types.Profile>{
+    profiles[profileName] = <Profile>{
       classes: classes[profileName] ?? {},
       properties: properties[profileName] ?? {},
       vocabularies: vocabularies[profileName] ?? {},
@@ -64,11 +87,11 @@ export function createModel(graph: Store) {
   return profiles;
 }
 
-export function mapIRIs(profiles: types.Profiles) {
-  const iris: Record<types.IRI, types.Item> = {};
-  for (const profile of Object.values(profiles) as types.Profile[]) {
-    for (const section of Object.values(profile) as types.Section[]) {
-      for (const item of Object.values(section) as types.Item[]) {
+export function mapIRIs(profiles: Profiles) {
+  const iris: Record<IRI, Item> = {};
+  for (const profile of Object.values(profiles) as Profile[]) {
+    for (const section of Object.values(profile) as Section[]) {
+      for (const item of Object.values(section) as Item[]) {
         iris[item.iri] = item;
       }
     }
@@ -77,41 +100,41 @@ export function mapIRIs(profiles: types.Profiles) {
 }
 
 export async function enrichModelFromMarkdown(
-  profiles: types.Profiles,
+  profiles: Profiles,
   source: string
 ) {
   const res = await fetch(source);
   const markdown: Record<string, object> = await res.json();
   const modelProfiles = markdown.namespaces;
-  const enrichedProfiles: types.EnrichedProfiles = {};
+  const enrichedProfiles: EnrichedProfiles = {};
   for (const [profileName, profile] of Object.entries(profiles) as [
-    types.Name,
-    types.Profile,
+    Name,
+    Profile,
   ][]) {
-    const enrichedProfile = profile as types.EnrichedProfile;
+    const enrichedProfile = profile as EnrichedProfile;
     const modelProfile = Object.values(modelProfiles).find(
-      (v) => v.name === profileName
+      v => v.name === profileName
     )!;
     for (const [sectionName, section] of Object.entries(profile) as [
-      keyof types.Profile,
-      types.Section,
+      keyof Profile,
+      Section,
     ][]) {
       const modelSection = modelProfile[sectionName];
       for (const [itemName, item] of Object.entries(section)) {
         if (!(item instanceof Object)) continue;
         const modelItem = Object.values(modelSection).find(
-          (v) => v.name === itemName
+          v => v.name === itemName
         )!;
         item.description = modelItem.description;
-        if (sectionName === "classes") {
-          item.abstract = modelItem.metadata.Instantiability === "Abstract";
+        if (sectionName === 'classes') {
+          item.abstract = modelItem.metadata.Instantiability === 'Abstract';
         }
         section[itemName] = item;
       }
       enrichedProfile[sectionName] = section;
     }
     enrichedProfile.iri = modelProfile.iri;
-    enrichedProfile.name = parseIRI(profile.iri!).name;
+    enrichedProfile.name = parseIRI(modelProfile.iri).name;
     enrichedProfile.summary = modelProfile.summary;
     enrichedProfile.description = modelProfile.description;
     enrichedProfiles[profileName] = enrichedProfile;
@@ -119,10 +142,10 @@ export async function enrichModelFromMarkdown(
   return enrichedProfiles;
 }
 
-export const getRecursiveClassProperties = (iri: types.IRI | undefined) => {
-  const recursiveClassProperties: types.RecursiveClassProperties = new Map();
+export const getRecursiveClassProperties = (iri: IRI | undefined) => {
+  const recursiveClassProperties: RecursiveClassProperties = new Map();
   while (iri) {
-    const cls = getItem(iri) as types.Class;
+    const cls = getItem(iri) as Class;
     recursiveClassProperties.set(cls.name, cls.properties);
     iri = cls.subClassOf;
   }
@@ -131,7 +154,7 @@ export const getRecursiveClassProperties = (iri: types.IRI | undefined) => {
 
 function getSharedFields(node: Term, graph: Store) {
   const iri = node.value;
-  const shared: types.SharedFields = {
+  const shared: SharedFields = {
     iri,
     name: parseIRI(iri).name,
     profileName: parseIRI(iri).profile,
@@ -140,11 +163,11 @@ function getSharedFields(node: Term, graph: Store) {
   return shared;
 }
 
-function groupByProfile(section: types.Section) {
-  const profiles: Record<string, types.Section> = {};
+function groupByProfile(section: Section) {
+  const profiles: Record<string, Section> = {};
   for (const [itemName, item] of Object.entries(section) as [
-    types.Name,
-    types.SharedFields,
+    Name,
+    SharedFields,
   ][]) {
     profiles[item.profileName] = profiles[item.profileName] || {};
     profiles[item.profileName][itemName] = item;
@@ -155,8 +178,8 @@ function groupByProfile(section: types.Section) {
 function getClasses(graph: Store) {
   const nodes = graph
     .getSubjects(NS.rdf.type, NS.owl.Class, null)
-    .filter((o) => !graph.countQuads(null, NS.rdf.type, o, null));
-  const items: types.Classes = {};
+    .filter(o => !graph.countQuads(null, NS.rdf.type, o, null));
+  const items: Classes = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
     items[shared.name] = {
@@ -177,13 +200,13 @@ function getProperties(graph: Store) {
 
 function getDatatypeProperties(graph: Store) {
   const nodes = graph.getSubjects(NS.rdf.type, NS.owl.DatatypeProperty, null);
-  const items: types.Properties = {};
+  const items: Properties = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
     const datatype = graph
       .getObjects(node.value, NS.rdfs.range, null)[0]
-      .value.split("#")
-      .pop() as types.LiteralPropertyTypes;
+      .value.split('#')
+      .pop() as LiteralPropertyTypes;
     items[shared.name] = { ...shared, datatype };
   }
   return items;
@@ -191,7 +214,7 @@ function getDatatypeProperties(graph: Store) {
 
 function getObjectProperties(graph: Store) {
   const nodes = graph.getSubjects(NS.rdf.type, NS.owl.ObjectProperty, null);
-  const items: types.Properties = {};
+  const items: Properties = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
     const range = graph.getObjects(node.value, NS.rdfs.range, null)[0].value;
@@ -203,11 +226,11 @@ function getObjectProperties(graph: Store) {
 function getVocabularies(graph: Store) {
   const nodes = graph
     .getSubjects(NS.rdf.type, NS.owl.Class, null)
-    .filter((o) => graph.countQuads(null, NS.rdf.type, o, null));
-  const items: types.Vocabularies = {};
+    .filter(o => graph.countQuads(null, NS.rdf.type, o, null));
+  const items: Vocabularies = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
-    const entries: types.VocabularyEntries = {};
+    const entries: VocabularyEntries = {};
     for (const o of graph.getSubjects(NS.rdf.type, node.value, null)) {
       entries[o.value] = getSharedFields(o, graph);
     }
@@ -222,8 +245,8 @@ function getVocabularies(graph: Store) {
 function getIndividuals(graph: Store) {
   const nodes = graph
     .getSubjects(NS.rdf.type, NS.owl.NamedIndividual, null)
-    .filter((o) => graph.countQuads(o, NS.rdfs.range, null, null));
-  const items: types.Individuals = {};
+    .filter(o => graph.countQuads(o, NS.rdfs.range, null, null));
+  const items: Individuals = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
     const range = graph.getObjects(node.value, NS.rdfs.range, null)[0].value;
@@ -233,76 +256,76 @@ function getIndividuals(graph: Store) {
 }
 
 function extractNodeShape(graph: Store, node: Term) {
-  const classProperties: types.ClassProperties = {};
+  const classProperties: ClassProperties = {};
   const propertyShapes = graph.getObjects(node, NS.sh.property, null);
   for (const pshape of propertyShapes) {
-    let path: types.IRI;
-    let name: types.Name;
-    let nodeKind: types.nodeKindTypes;
+    let path: IRI;
+    let name: Name;
+    let nodeKind: nodeKindTypes;
     let minCount: number | undefined;
     let maxCount: number | undefined;
-    let datatype: types.LiteralPropertyTypes | undefined;
+    let datatype: LiteralPropertyTypes | undefined;
     let spdxDatatype: string | undefined;
-    let classIRI: types.IRI | undefined;
-    let options: types.PropertyOption[] | undefined;
+    let classIRI: IRI | undefined;
+    let options: PropertyOption[] | undefined;
     for (const o of graph.getQuads(pshape, null, null, null)) {
-      const field = o.predicate.value.split("#").pop()!;
+      const field = o.predicate.value.split('#').pop()!;
       switch (field) {
-        case "path":
+        case 'path':
           path = o.object.value;
           name = parseIRI(o.object.value).name;
           break;
-        case "minCount":
+        case 'minCount':
           minCount = parseInt(o.object.value);
           break;
-        case "maxCount":
+        case 'maxCount':
           maxCount = parseInt(o.object.value);
           break;
-        case "in":
-          options = shaclLists.get(o.object.value)?.map((value: types.IRI) => {
+        case 'in':
+          options = shaclLists.get(o.object.value)?.map((value: IRI) => {
             return { label: parseIRI(value).name, value };
           });
           break;
-        case "nodeKind":
-          nodeKind = o.object.value.split("#").pop() as types.nodeKindTypes;
+        case 'nodeKind':
+          nodeKind = o.object.value.split('#').pop() as nodeKindTypes;
           break;
-        case "datatype":
-          datatype = o.object.value.split("#").pop() as
-            | types.LiteralPropertyTypes
+        case 'datatype':
+          datatype = o.object.value.split('#').pop() as
+            | LiteralPropertyTypes
             | undefined;
           break;
-        case "pattern":
+        case 'pattern':
           switch (o.object.value) {
-            case "^[^\\/]+\\/[^\\/]+$":
-              spdxDatatype = "MediaType";
+            case '^[^\\/]+\\/[^\\/]+$':
+              spdxDatatype = 'MediaType';
               break;
-            case "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*" +
-              "[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?" +
-              "(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$":
-              spdxDatatype = "SemVer";
+            case '^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*' +
+              '[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?' +
+              '(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$':
+              spdxDatatype = 'SemVer';
               break;
-            case "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$":
+            case '^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$':
               break;
 
             default:
-              throw new Error("Unknown pattern: " + o.object.value);
+              throw new Error('Unknown pattern: ' + o.object.value);
           }
           break;
-        case "class":
+        case 'class':
           classIRI = o.object.value;
           break;
 
         default:
-          console.log("Unknown field", field, o.object.value);
+          console.log('Unknown field', field, o.object.value);
           break;
       }
     }
     const required = Boolean(minCount);
-    if (spdxDatatype === "SemVer" || spdxDatatype === "MediaType") {
+    if (spdxDatatype === 'SemVer' || spdxDatatype === 'MediaType') {
       datatype = spdxDatatype;
     }
 
-    const classProperty: types.ClassProperty = {
+    const classProperty: ClassProperty = {
       parentClass: node.value,
       path: path!,
       name: name!,
@@ -311,12 +334,12 @@ function extractNodeShape(graph: Store, node: Term) {
       maxCount,
       nodeKind: nodeKind!,
       datatype:
-        nodeKind! === "Literal"
-          ? (datatype as types.LiteralPropertyTypes)
+        nodeKind! === 'Literal'
+          ? (datatype as LiteralPropertyTypes)
           : undefined,
-      targetClass: nodeKind! === "BlankNodeOrIRI" ? classIRI : undefined,
-      options: nodeKind! === "IRI" ? options : undefined,
-    } as types.ClassProperty;
+      targetClass: nodeKind! === 'BlankNodeOrIRI' ? classIRI : undefined,
+      options: nodeKind! === 'IRI' ? options : undefined,
+    } as ClassProperty;
 
     classProperties[classProperty.name] = classProperty;
   }
@@ -326,7 +349,7 @@ function extractNodeShape(graph: Store, node: Term) {
 function setShaclLists(graph: Store) {
   shaclLists.clear();
   for (const [k, v] of Object.entries(graph.extractLists())) {
-    const list = v.map((v) => v.value);
+    const list = v.map(v => v.value);
     shaclLists.set(k, list);
   }
 }

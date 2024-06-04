@@ -1,7 +1,13 @@
-import { getNodeProperty, setNodeProperty } from "@/store/flow";
-import { InputNumber } from "primereact/inputnumber";
-import { PropLabel } from "@/components/Prop/PropLabel";
-import { inputProperties } from "@/scripts/app-utils";
+import React from 'react';
+
+import {
+  InputNumber,
+  InputNumberValueChangeEvent,
+} from 'primereact/inputnumber';
+
+import { getNodeProperty, setNodeProperty } from '@/store/flow';
+import { inputProperties } from '@/scripts/app-utils';
+import { PropLabel } from '@/components/Prop/PropLabel';
 
 interface PropInput {
   nodeId: string;
@@ -14,8 +20,8 @@ export default function PropInputNumber({ nodeId, propertyId }: PropInput) {
     nodeProperty.classProperty.datatype
   )!;
 
-  const setValue = (event) => {
-    const value = event.target.value;
+  const setValue = (event: InputNumberValueChangeEvent) => {
+    const value = event.target.value as number;
     setNodeProperty(nodeId, propertyId, value);
   };
 
@@ -26,11 +32,11 @@ export default function PropInputNumber({ nodeId, propertyId }: PropInput) {
         id={propertyId}
         invalid={!nodeProperty.valid}
         className="border-2 w-full"
-        onValueChange={(e) => setValue(e)}
+        onValueChange={e => setValue(e)}
         value={nodeProperty.value as number}
         min={inputProperty.min}
       />
-      <small className="font-lato">{inputProperty.helpText ?? ""}</small>
+      <small className="font-lato">{inputProperty.helpText ?? ''}</small>
     </div>
   );
 }

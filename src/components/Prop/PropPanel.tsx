@@ -1,19 +1,22 @@
-import { appStore } from "@/store/app";
-import { getNode } from "@/store/flow";
-import PropMenu from "@/components/Prop/PropMenu";
-import PropInputString from "@/components/Prop/PropInputString";
-import PropInputNumber from "@/components/Prop/PropInputNumber";
-import PropInputBoolean from "@/components/Prop/PropInputBoolean";
-import { Sidebar } from "primereact/sidebar";
-import { inputProperties } from "@/scripts/app-utils";
-import PropInputOptions from "@/components/Prop/PropInputOptions";
+import React from 'react';
+
+import { Sidebar } from 'primereact/sidebar';
+
+import { appStore } from '@/store/app';
+import { inputProperties } from '@/scripts/app-utils';
+import { getNode } from '@/store/flow';
+import PropMenu from '@/components/Prop/PropMenu';
+import PropInputString from '@/components/Prop/PropInputString';
+import PropInputNumber from '@/components/Prop/PropInputNumber';
+import PropInputBoolean from '@/components/Prop/PropInputBoolean';
+import PropInputOptions from '@/components/Prop/PropInputOptions';
 
 export default function PropPanel() {
   const showPropDialog = appStore.use.showPropDialog();
   const nodeId = appStore.use.selectedNodeId();
   const node = getNode(nodeId);
   const cls = node?.data.cls;
-  const nodeProperties = node?.data.properties;
+  const nodeProperties = node?.data.dataProperties;
 
   const propertyFields = nodeProperties
     ? Object.entries(nodeProperties).map(([propertyId, nodeProperty]) => {
@@ -24,7 +27,7 @@ export default function PropPanel() {
           const inputKind = inputProperties.get(
             nodeProperty.classProperty.datatype
           )!.inputKind;
-          if (inputKind === "string") {
+          if (inputKind === 'string') {
             return (
               <PropInputString
                 key={propertyId}
@@ -32,7 +35,7 @@ export default function PropPanel() {
                 propertyId={propertyId}
               />
             );
-          } else if (inputKind === "number") {
+          } else if (inputKind === 'number') {
             return (
               <PropInputNumber
                 key={propertyId}
@@ -40,7 +43,7 @@ export default function PropPanel() {
                 propertyId={propertyId}
               />
             );
-          } else if (inputKind === "boolean") {
+          } else if (inputKind === 'boolean') {
             return (
               <PropInputBoolean
                 key={propertyId}

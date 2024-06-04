@@ -1,113 +1,83 @@
-import { memo, useRef } from "react";
-import types from "@/types";
-import type { NodeProps } from "reactflow";
-import { Position, Handle, useOnSelectionChange } from "reactflow";
-import { appStore } from "@/store/app";
-import { deleteNode } from "@/store/flow";
-import InstMenu from "./InstMenu";
+import React, { memo, useEffect, useRef, useState } from 'react';
+import type { NodeProps } from 'reactflow';
+import { Position, Handle } from 'reactflow';
+import { ChevronDownIcon } from '@radix-ui/react-icons';
+import * as Collapsible from '@radix-ui/react-collapsible';
+import * as Separator from '@radix-ui/react-separator';
 
-type CustomHandleProps = {
-  id: string;
-  position: Position;
-};
+import InstNodeMenu from '@/components/Inst/InstNodeMenu';
+import Tooltip from '@/components/Shared/Tooltip';
+import { NodeData } from '@/types';
 
-const CustomHandle = ({ id, position }: CustomHandleProps) => {
-  return (
-    <Handle
-      id={id}
-      position={position}
-      type="source"
-      className="
-        border-none 
-        ring-1 
-        ring-slate-100/70 
-      "
-    />
-  );
-};
+const InstNode = memo(function InstNode({
+  id,
+  data,
+  selected,
+}: NodeProps<NodeData>) {
+  const [open, setOpen] = useState(false);
+  const [tooltipDisabled, setTooltipDisabled] = useState(false);
+  const textRef = useRef<HTMLSpanElement | null>(null);
 
-const InstNode = ({ id, data, selected }: NodeProps<types.NodeData>) => {
-  const cmRef = useRef(null);
-
-  const menuButton = (
-    <button
-      className="absolute left-0 top-0 m-1 flex hover:text-[#b3dbff] nodrag"
-      onClick={() =>
-        appStore.setState({ selectedNodeId: id, showPropDialog: true })
-      }
-    >
-      <span className="material-icons-outlined text-sm">menu</span>
-    </button>
-  );
-
-  const deleteButton = (
-    <button
-      className="absolute right-0 top-0 m-1 flex hover:text-[#b3dbff] nodrag"
-      onClick={() => deleteNode(id)}
-    >
-      <span className="material-icons-outlined text-sm">
-        remove_circle_outline
-      </span>
-    </button>
-  );
-
-  // useOnSelectionChange({
-  //   onChange: ({ nodes, edges }) => {
-  //     console.log("selected nodes", nodes);
-
-  //     // setSelectedNodes(nodes.map((node) => node.id));
-  //     // setSelectedEdges(edges.map((edge) => edge.id));
-  //   },
-  // });
+  useEffect(() => {
+    if (textRef.current) {
+      const truncated =
+        textRef.current.scrollWidth > textRef.current.clientWidth;
+      setTooltipDisabled(selected || !truncated);
+    }
+  }, [data.cls.name, selected]);
 
   if (!data.cls) {
     return null;
   }
   return (
     <>
-      <InstMenu nodeId={id} ref={cmRef} />
-      <div
-        onContextMenu={(e) => cmRef.current!.show(e)}
+      <Collapsible.Root
+        open={open}
+        onOpenChange={setOpen}
         className={`
-          rounded-md
-          transition-all 
-          delay-0 
-          duration-0 
-          ease-out 
-          shadow-black/55 
-          ${
-            data.active
-              ? "translate-y-[-2px] translate-x-[1px] shadow-lg"
-              : "shadow-md"
-          }
+          cursor-move m-1 p-1 rounded w-64 bg-white shadow-2 outline outline-blue12 outline-1
+          ${selected && 'outline-2'} 
+          ${data.active && 'shadow-4 translate-y-[-1.5px] translate-x-[0.8px]'}
         `}
       >
-        <div
-          className={`
-          ${selected && "ring-2 ring-sky-400"}
-          p-3 w-64 h-22 
-            font-lato rounded-md
-            text-center truncate
-            cursor-move 
-          bg-spdx-dark 
-          text-slate-100 
-        `}
-        >
-          {data.cls.name}
-          {menuButton}
-          {deleteButton}
-        </div>
-        {data.isNode && (
-          <div>
-            <CustomHandle id="a" position={Position.Top} />
-            <CustomHandle id="b" position={Position.Right} />
-            <CustomHandle id="c" position={Position.Bottom} />
-            <CustomHandle id="d" position={Position.Left} />
+        <div className="flex items-center justify-between px-1 py-1 gap-[5px]">
+          {/* <InstNodeMenu nodeId={id} /> */}
+          <div className="nodrag nopan flex">
+            <InstNodeMenu nodeId={id} />
           </div>
-        )}
-      </div>
+          <Tooltip content={data.cls.name} disabled={tooltipDisabled}>
+            <span
+              ref={textRef}
+              className="text-blue12 text-md font-medium w-full text-center truncate"
+            >
+              {data.cls.name}
+            </span>
+          </Tooltip>
+          <Collapsible.Trigger asChild>
+            <button className="nodrag nopan p-1 rounded text-blue12 hover:bg-blue12/5 data-[state=open]:rotate-180">
+              <ChevronDownIcon />
+            </button>
+          </Collapsible.Trigger>
+        </div>
+
+        <Collapsible.Content className="nodrag nopan cursor-auto data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp overflow-hidden">
+          <Separator.Root className="bg-blue12 h-[1px]" decorative />
+          <div className="p-2">
+            <span className="text-blue12 text-sm">Item 1</span>
+          </div>
+          <div className="p-2">
+            <span className="text-blue12 text-sm">Item 2</span>
+          </div>
+        </Collapsible.Content>
+      </Collapsible.Root>
+      {data.isNode && (
+        <div>
+          <Handle type="target" position={Position.Left} className="hidden" />
+          <Handle type="source" position={Position.Right} className="hidden" />
+        </div>
+      )}
     </>
   );
-};
+});
 
-export default memo(InstNode);
+export default InstNode;

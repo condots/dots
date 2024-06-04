@@ -1,10 +1,11 @@
-import parse from "html-react-parser";
-import { advisoryText } from "@/scripts/app-utils";
-import { appStore } from "@/store/app";
-import { getItem } from "@/store/onto";
-import { Card } from "primereact/card";
-import { Dialog } from "primereact/dialog";
-import { Divider } from "primereact/divider";
+import React from 'react';
+import parse from 'html-react-parser';
+import { advisoryText } from '@/scripts/app-utils';
+import { appStore } from '@/store/app';
+import { getItem } from '@/store/onto';
+import { Card } from 'primereact/card';
+import { Dialog } from 'primereact/dialog';
+import { Divider } from 'primereact/divider';
 
 export function InfoDialog() {
   const showInfoDialog = appStore.use.showInfoDialog();
@@ -25,10 +26,10 @@ export function InfoDialog() {
           className="shadow-none max-w-prose bg-[#fcfcfc]"
           pt={{
             title: {
-              className: "font-roboto text-[#00416b] text-3xl my-0",
+              className: 'font-roboto text-[#00416b] text-3xl my-0',
             },
             content: {
-              className: "p-0 m-0",
+              className: 'p-0 m-0',
             },
           }}
         >

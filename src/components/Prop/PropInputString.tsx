@@ -1,8 +1,11 @@
-import { getNodeProperty, setNodeProperty } from "@/store/flow";
-import { InputMask } from "primereact/inputmask";
-import { InputText } from "primereact/inputtext";
-import { PropLabel } from "@/components/Prop/PropLabel";
-import { inputProperties } from "@/scripts/app-utils";
+import React from 'react';
+
+import { InputMask } from 'primereact/inputmask';
+import { InputText } from 'primereact/inputtext';
+
+import { getNodeProperty, setNodeProperty } from '@/store/flow';
+import { inputProperties } from '@/scripts/app-utils';
+import { PropLabel } from '@/components/Prop/PropLabel';
 
 interface PropInput {
   nodeId: string;
@@ -15,7 +18,7 @@ export default function PropInputString({ nodeId, propertyId }: PropInput) {
     nodeProperty.classProperty.datatype
   )!;
 
-  const setValue = (event) => {
+  const setValue = event => {
     const value = event.target.value;
     setNodeProperty(nodeId, propertyId, value);
   };
@@ -23,7 +26,7 @@ export default function PropInputString({ nodeId, propertyId }: PropInput) {
   const commonProps = {
     id: propertyId,
     invalid: !nodeProperty.valid,
-    className: "border-2 w-full",
+    className: 'border-2 w-full',
     onChange: setValue,
   };
 

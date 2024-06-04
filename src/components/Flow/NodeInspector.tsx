@@ -1,12 +1,12 @@
-import { useNodes, EdgeLabelRenderer } from "reactflow";
+import React, { useNodes, EdgeLabelRenderer } from 'reactflow';
 
 export default function NodeInspector() {
-  const nodes = useNodes();
+  const nodes = useNodes([]);
 
   return (
     <EdgeLabelRenderer>
       <div className="react-flow__devtools-nodeinspector">
-        {nodes.map((node) => {
+        {nodes.map(node => {
           const x = node.positionAbsolute?.x - node.width / 2 || 0;
           const y = node.positionAbsolute?.y - node.height / 2 || 0;
           const width = node.width || 0;
@@ -17,7 +17,7 @@ export default function NodeInspector() {
               key={node.id}
               id={node.id}
               selected={node.selected}
-              type={node.type || "default"}
+              type={node.type || 'default'}
               x={x}
               y={y}
               width={width}
@@ -60,14 +60,14 @@ function NodeInfo({
     <div
       className="react-flow__devtools-nodeinfo z-50 text-lg text-yellow-400"
       style={{
-        position: "absolute",
+        position: 'absolute',
         transform: `translate(${x}px, ${y + height}px)`,
         width: width * 2,
       }}
     >
       <div>id: {id}</div>
       <div>type: {type}</div>
-      <div>selected: {selected ? "true" : "false"}</div>
+      <div>selected: {selected ? 'true' : 'false'}</div>
       <div>
         position: {x.toFixed(1)}, {y.toFixed(1)}
       </div>

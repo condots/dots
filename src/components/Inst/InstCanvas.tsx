@@ -1,9 +1,8 @@
-import { useCallback } from "react";
-import { flowStore, addNode, isValidConnection } from "@/store/flow";
+import React, { useCallback } from 'react';
+import { flowStore, addNode, isValidConnection } from '@/store/flow';
 import {
   Background,
   BackgroundVariant,
-  ConnectionLineType,
   ConnectionMode,
   ControlButton,
   Controls,
@@ -13,11 +12,11 @@ import {
   NodeTypes,
   Panel,
   ReactFlow,
-} from "reactflow";
+} from 'reactflow';
 
-import InstNode from "@/components/Inst/InstNode";
-import InstEdge from "@/components/Inst/InstEdge";
-import { appStore } from "@/store/app";
+import InstNode from '@/components/Inst/InstNode';
+import InstEdge from '@/components/Inst/InstEdge';
+import { appStore } from '@/store/app';
 
 const nodeTypes = {
   inst: InstNode,
@@ -28,14 +27,15 @@ const edgeTypes = {
 } satisfies EdgeTypes;
 
 const defaultEdgeOptions = {
-  type: "inst",
+  type: 'inst',
   markerEnd: {
     type: MarkerType.ArrowClosed,
     strokeWidth: 1,
     width: 20,
     height: 20,
-    color: "#00416b",
+    color: '#00416b',
   },
+  style: { stroke: '#00416b' },
   data: {},
 } satisfies DefaultEdgeOptions;
 
@@ -45,45 +45,46 @@ export default function InstCanvas() {
 
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
+    event.dataTransfer.dropEffect = 'move';
   }, []);
 
   const onDrop = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+    console.log('drop');
+
     event.preventDefault();
-    const iri = event.dataTransfer.getData("application/reactflow");
-    if (typeof iri === "undefined" || !iri) {
+    const iri = event.dataTransfer.getData('application/reactflow');
+    if (typeof iri === 'undefined' || !iri) {
       return;
     }
-    addNode("inst", event.clientX, event.clientY, iri);
+    addNode('inst', event.clientX - 128, event.clientY - 28, iri);
   }, []);
 
   return (
     <ReactFlow
       proOptions={{ hideAttribution: true }}
-      nodeOrigin={[0.5, 0.5]}
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
       nodes={nodes}
       edges={edges}
+      defaultEdgeOptions={defaultEdgeOptions}
       onNodesChange={flowStore.getState().onNodesChange}
+      connectionMode={ConnectionMode.Loose}
       onEdgesChange={flowStore.getState().onEdgesChange}
       onNodeDragStart={flowStore.getState().onNodeDragStart}
       onNodeDragStop={flowStore.getState().onNodeDragStop}
       onConnect={flowStore.getState().onConnect}
       onInit={flowStore.getState().onInit}
       isValidConnection={isValidConnection}
-      fitView
+      fitViewOptions={{ padding: 2 }}
+      // fitView
       onDrop={onDrop}
       onDragOver={onDragOver}
-      connectionLineType={ConnectionLineType.SmoothStep}
-      connectionRadius={40}
-      defaultEdgeOptions={defaultEdgeOptions}
-      fitViewOptions={{ padding: 2 }}
-      connectionMode={ConnectionMode.Loose}
+      zoomOnScroll={false}
+      disableKeyboardA11y
     >
       {/* <DevTools /> */}
       <Background color="#00416b" variant={BackgroundVariant.Dots} />
-      <Controls position="bottom-left" showZoom={false} showInteractive={false}>
+      <Controls position="bottom-left" showZoom={true} showInteractive={false}>
         <ControlButton
           onClick={() => flowStore.getState().reset()}
           title="clear"
@@ -95,7 +96,7 @@ export default function InstCanvas() {
       </Controls>
       <Panel position="top-left">
         <button onClick={() => appStore.setState({ showClassesMenu: true })}>
-          {" "}
+          {' '}
           <span className="material-icons-outlined text-black">menu</span>
         </button>
       </Panel>

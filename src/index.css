@@ -1,6 +1,6 @@
 @layer tailwind-base, primereact, tailwind-utilities;
 
-@import "primereact/resources/themes/mira/theme.css" layer(primereact);
+@import 'primereact/resources/themes/mira/theme.css' layer(primereact);
 
 @layer tailwind-base {
   @tailwind base;

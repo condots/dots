@@ -1,14 +1,16 @@
-import types from "@/types";
-import { useEffect, useRef, useState } from "react";
-import { useClickOutside } from "primereact/hooks";
-import { appStore } from "@/store/app";
-import { addNodeProperty, getNode } from "@/store/flow";
-import { getClassPropertyIcon } from "@/scripts/app-utils";
-import { TieredMenu } from "primereact/tieredmenu";
-import { MenuItem } from "primereact/menuitem";
-import { Button } from "primereact/button";
-import { getItem } from "@/store/onto";
-import { getRecursiveClassProperties } from "@/scripts/onto-utils";
+import React, { useEffect, useRef, useState } from 'react';
+
+import { useClickOutside } from 'primereact/hooks';
+import { TieredMenu } from 'primereact/tieredmenu';
+import { MenuItem } from 'primereact/menuitem';
+import { Button } from 'primereact/button';
+
+import { ClassProperty, IRI, Property } from '@/types';
+import { appStore } from '@/store/app';
+import { getClassPropertyIcon } from '@/scripts/app-utils';
+import { getItem } from '@/store/onto';
+import { getRecursiveClassProperties } from '@/scripts/onto-utils';
+import { addNodeProperty, getNode } from '@/store/flow';
 
 const badge = (min: number | undefined, max: number | undefined) => {
   if (min && max) {
@@ -29,17 +31,53 @@ export default function PropMenu() {
   const [visible, setVisible] = useState(false);
   const [items, setItems] = useState<MenuItem[]>([]);
 
-  const reachedMaxCount = (path: types.IRI, maxCount: number | undefined) => {
-    if (maxCount === undefined) return false;
-    const propertyCount = node
-      ? Object.values(node.data.properties).filter(
-          (p) => p.classProperty.path === path
-        ).length
-      : 0;
-    return propertyCount >= maxCount;
-  };
-
   useEffect(() => {
+    const reachedMaxCount = (path: IRI, maxCount: number | undefined) => {
+      if (maxCount === undefined) return false;
+      const propertyCount = node
+        ? Object.values(node.data.dataProperties).filter(
+            p => p.classProperty.path === path
+          ).length
+        : 0;
+      return propertyCount >= maxCount;
+    };
+
+    const itemRenderer = (item: MenuItem) => {
+      const classProperty = item.data as ClassProperty;
+      const property = getItem(classProperty.path) as Property;
+      const propertyIcon = getClassPropertyIcon(classProperty);
+      const itemIcon = (
+        <span className="material-icons-outlined mr-2 flex justify-end">
+          {propertyIcon}
+        </span>
+      );
+
+      item.disabled = reachedMaxCount(
+        classProperty.path,
+        classProperty.maxCount
+      );
+
+      return (
+        <Button
+          text
+          className="p-menuitem-link w-full text-left py-1.5"
+          tooltip={property.summary}
+          tooltipOptions={{
+            showDelay: 1000,
+            className: 'text-md text-balance',
+          }}
+          icon={itemIcon}
+          badge={badge(classProperty.minCount, classProperty.maxCount)}
+          badgeClassName="p-badge-secondary"
+          label={item.label}
+          onClick={() => {
+            addNodeProperty(nodeId!, classProperty);
+            setVisible(false);
+          }}
+        />
+      );
+    };
+
     if (node) {
       const recursiveClassProperties = getRecursiveClassProperties(
         node.data.cls.iri
@@ -53,7 +91,7 @@ export default function PropMenu() {
         for (const [propertyName, classProperty] of Object.entries(
           classProperties
         ).sort()) {
-          if (classProperty.nodeKind !== "BlankNodeOrIRI") {
+          if (classProperty.nodeKind !== 'BlankNodeOrIRI') {
             subitems.push({
               label: propertyName,
               data: classProperty,
@@ -67,40 +105,7 @@ export default function PropMenu() {
       }
       setItems(items);
     }
-  }, [node]);
-
-  const itemRenderer = (item: MenuItem) => {
-    const classProperty = item.data as types.ClassProperty;
-    const property = getItem(classProperty.path) as types.Property;
-    const propertyIcon = getClassPropertyIcon(classProperty);
-    const itemIcon = (
-      <span className="material-icons-outlined mr-2 flex justify-end">
-        {propertyIcon}
-      </span>
-    );
-
-    item.disabled = reachedMaxCount(classProperty.path, classProperty.maxCount);
-
-    return (
-      <Button
-        text
-        className="p-menuitem-link w-full text-left py-1.5"
-        tooltip={property.summary}
-        tooltipOptions={{
-          showDelay: 1000,
-          className: "text-md text-balance",
-        }}
-        icon={itemIcon}
-        badge={badge(classProperty.minCount, classProperty.maxCount)}
-        badgeClassName="p-badge-secondary"
-        label={item.label}
-        onClick={() => {
-          addNodeProperty(nodeId!, classProperty);
-          setVisible(false);
-        }}
-      />
-    );
-  };
+  }, [node, nodeId]);
 
   useClickOutside(divRef, () => {
     setVisible(false);

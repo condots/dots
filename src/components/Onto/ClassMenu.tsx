@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { ontoStore } from "@/store/onto";
-import { Tree, TreeNodeTemplateOptions } from "primereact/tree";
-import { TreeNode } from "primereact/treenode";
-import { Button } from "primereact/button";
-import { Sidebar } from "primereact/sidebar";
-import { appStore } from "@/store/app";
+import React, { useEffect, useState } from 'react';
+
+import { Tree, TreeNodeTemplateOptions } from 'primereact/tree';
+import { TreeNode } from 'primereact/treenode';
+import { Button } from 'primereact/button';
+import { Sidebar } from 'primereact/sidebar';
+
+import { ontoStore } from '@/store/onto';
+import { appStore } from '@/store/app';
 
 const ClassMenu = () => {
   const showClassesMenu = appStore.use.showClassesMenu();
@@ -24,7 +26,7 @@ const ClassMenu = () => {
           label: className,
           draggable: true,
           droppable: false,
-          className: "m-0 p-0 rounded-md",
+          className: 'm-0 p-0 rounded-md',
           data: {
             iri: cls.iri,
             summary: cls.summary,
@@ -37,7 +39,7 @@ const ClassMenu = () => {
           label: profileName,
           draggable: false,
           droppable: false,
-          className: "select-none",
+          className: 'select-none',
           data: {
             iri: profile.iri,
             summary: profile.summary,
@@ -53,8 +55,8 @@ const ClassMenu = () => {
     event: React.DragEvent<HTMLButtonElement>,
     node: TreeNode
   ) => {
-    event.dataTransfer.setData("application/reactflow", node.data.iri);
-    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData('application/reactflow', node.data.iri);
+    event.dataTransfer.effectAllowed = 'move';
   };
 
   const nodeTemplate = (node: TreeNode, options: TreeNodeTemplateOptions) => {
@@ -69,12 +71,12 @@ const ClassMenu = () => {
             text-left hover:bg-[#00416b] text-secondary hover:text-white truncate`}
           tooltip={node.data?.summary}
           tooltipOptions={{
-            position: "right",
-            className: "text-xs",
+            position: 'right',
+            className: 'text-xs',
             showDelay: 2000,
-            at: "right+2 center",
+            at: 'right+2 center',
           }}
-          onDragStart={(event) => onDragStart(event, node)}
+          onDragStart={event => onDragStart(event, node)}
           draggable={node.draggable}
         />
       );
@@ -82,8 +84,6 @@ const ClassMenu = () => {
       return <div>{node.label}</div>;
     }
   };
-
-  // #d5d5d5
 
   const TreeMenu = () => (
     <Tree
@@ -94,7 +94,7 @@ const ClassMenu = () => {
       className="h-full w-full overflow-scroll bg-[#e6e5e6] font-lato border-none rounded-none"
       nodeTemplate={nodeTemplate}
       dragdropScope="reactflow"
-      pt={{ droppoint: { className: "h-0" } }}
+      pt={{ droppoint: { className: 'h-0' } }}
       expandIcon={
         <span className="material-icons-outlined text-sm text-gray-500">
           add_box
@@ -107,7 +107,7 @@ const ClassMenu = () => {
       }
       expandedKeys={expandedKeys}
       onToggle={() => {}}
-      onExpand={(e) => setExpandedKeys(() => ({ [e.node.key]: true }))}
+      onExpand={e => setExpandedKeys(() => ({ [e.node.key as string]: true }))}
       onCollapse={() => setExpandedKeys(() => ({}))}
     />
   );

@@ -1,6 +1,9 @@
-import { getNodeProperty, setNodeProperty } from "@/store/flow";
-import { ToggleButton } from "primereact/togglebutton";
-import { PropLabel } from "@/components/Prop/PropLabel";
+import React from 'react';
+
+import { ToggleButton, ToggleButtonChangeEvent } from 'primereact/togglebutton';
+
+import { getNodeProperty, setNodeProperty } from '@/store/flow';
+import { PropLabel } from '@/components/Prop/PropLabel';
 
 interface PropInput {
   nodeId: string;
@@ -10,7 +13,7 @@ interface PropInput {
 export default function PropInputNumber({ nodeId, propertyId }: PropInput) {
   const nodeProperty = getNodeProperty(nodeId, propertyId)!;
 
-  const setValue = (event) => {
+  const setValue = (event: ToggleButtonChangeEvent) => {
     const value = event.target.value;
     setNodeProperty(nodeId, propertyId, value);
   };
@@ -18,7 +21,7 @@ export default function PropInputNumber({ nodeId, propertyId }: PropInput) {
   const commonProps = {
     id: propertyId,
     invalid: !nodeProperty.valid,
-    className: "border-2 w-full",
+    className: 'border-2 w-full',
     onChange: setValue,
   };
 

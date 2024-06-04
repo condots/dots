@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { NodeChange, OnNodesChange, useStore, useStoreApi } from "reactflow";
+import React, { useEffect, useRef, useState } from 'react';
+import { NodeChange, OnNodesChange, useStore, useStoreApi } from 'reactflow';
 
 type ChangeLoggerProps = {
   color?: string;
@@ -11,24 +11,24 @@ type ChangeInfoProps = {
 };
 
 function ChangeInfo({ change }: ChangeInfoProps) {
-  const id = "id" in change ? change.id : "-";
+  const id = 'id' in change ? change.id : '-';
   const { type } = change;
 
   return (
     <div style={{ marginBottom: 4 }}>
       <div>node id: {id}</div>
       <div>
-        {type === "add" ? JSON.stringify(change.item, null, 2) : null}
-        {type === "dimensions"
+        {type === 'add' ? JSON.stringify(change.item, null, 2) : null}
+        {type === 'dimensions'
           ? `dimensions: ${change.dimensions?.width} × ${change.dimensions?.height}`
           : null}
-        {type === "position"
+        {type === 'position'
           ? `position: ${change.position?.x.toFixed(
               1
             )}, ${change.position?.y.toFixed(1)}`
           : null}
-        {type === "remove" ? "remove" : null}
-        {type === "select" ? (change.selected ? "select" : "unselect") : null}
+        {type === 'remove' ? 'remove' : null}
+        {type === 'select' ? (change.selected ? 'select' : 'unselect') : null}
       </div>
     </div>
   );
@@ -37,7 +37,7 @@ function ChangeInfo({ change }: ChangeInfoProps) {
 export default function ChangeLogger({ limit = 20 }: ChangeLoggerProps) {
   const [changes, setChanges] = useState<NodeChange[]>([]);
   const onNodesChangeIntercepted = useRef(false);
-  const onNodesChange = useStore((s) => s.onNodesChange);
+  const onNodesChange = useStore(s => s.onNodesChange);
   const store = useStoreApi();
 
   useEffect(() => {
@@ -48,14 +48,14 @@ export default function ChangeLogger({ limit = 20 }: ChangeLoggerProps) {
     onNodesChangeIntercepted.current = true;
     const userOnNodesChange = onNodesChange;
 
-    const onNodesChangeLogger: OnNodesChange = (changes) => {
+    const onNodesChangeLogger: OnNodesChange = changes => {
       userOnNodesChange(changes);
 
-      setChanges((oldChanges) => [...changes, ...oldChanges].slice(0, limit));
+      setChanges(oldChanges => [...changes, ...oldChanges].slice(0, limit));
     };
 
     store.setState({ onNodesChange: onNodesChangeLogger });
-  }, [onNodesChange, limit]);
+  }, [onNodesChange, limit, store]);
 
   return (
     <div className="react-flow__devtools-changelogger text-yellow-400">

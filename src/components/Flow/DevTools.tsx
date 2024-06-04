@@ -1,12 +1,12 @@
-import { type ReactNode, HTMLAttributes } from "react";
-import { Panel } from "reactflow";
-import { flowStore } from "@/store/flow";
+import React, { type ReactNode, HTMLAttributes } from 'react';
+import { Panel } from 'reactflow';
+import { flowStore } from '@/store/flow';
 
-import "@/components/Flow/devtools.css";
+import '@/components/Flow/devtools.css';
 
-import NodeInspector from "@/components/Flow/NodeInspector";
-import ChangeLogger from "@/components/Flow/ChangeLogger";
-import ViewportLogger from "@/components/Flow/ViewportLogger";
+import NodeInspector from '@/components/Flow/NodeInspector';
+import ChangeLogger from '@/components/Flow/ChangeLogger';
+import ViewportLogger from '@/components/Flow/ViewportLogger';
 
 export default function DevTools() {
   const active = flowStore.use.devtoolsActive();
@@ -45,7 +45,7 @@ function DevToolButton({
   return (
     <button
       onClick={() => setDevtoolsActive(name)}
-      className={active[name] ? "active" : ""}
+      className={active[name] ? 'active' : ''}
       {...rest}
     >
       {children}

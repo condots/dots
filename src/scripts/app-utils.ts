@@ -1,128 +1,134 @@
-import types from "@/types";
-import DOMPurify from "dompurify";
-import { parse } from "marked";
-import Papa from "papaparse";
-import { isIri } from "@hyperjump/uri";
-import moment from "moment";
-import semver from "semver";
+import DOMPurify from 'dompurify';
+import { parse } from 'marked';
+import Papa from 'papaparse';
+import { isIri } from '@hyperjump/uri';
+import moment from 'moment';
+import semver from 'semver';
+import {
+  ClassProperty,
+  IRI,
+  InputProperties,
+  NodeProperty,
+  PropertyOption,
+} from '@/types';
 
 export const advisoryText = (text: string | undefined) => {
-  if (!text) return "";
-  DOMPurify.addHook("afterSanitizeElements", function (node) {
-    if (node.tagName && node.tagName.toLowerCase() === "a") {
-      node.setAttribute("target", "_blank");
-      node.setAttribute("rel", "noopener noreferrer");
+  if (!text) return '';
+  DOMPurify.addHook('afterSanitizeElements', function (node) {
+    if (node.tagName && node.tagName.toLowerCase() === 'a') {
+      node.setAttribute('target', '_blank');
+      node.setAttribute('rel', 'noopener noreferrer');
     }
   });
   const parsed = parse(text) as string;
   const clean = DOMPurify.sanitize(parsed);
-  DOMPurify.removeHook("afterSanitizeElements");
+  DOMPurify.removeHook('afterSanitizeElements');
   return parse(clean) as string;
 };
 
-export const inputProperties: types.InputProperties = new Map([
+export const inputProperties: InputProperties = new Map([
   [
-    "anyURI",
+    'anyURI',
     {
-      icon: "link",
-      inputKind: "string",
-      helpText: "Enter a valid IRI",
+      icon: 'link',
+      inputKind: 'string',
+      helpText: 'Enter a valid IRI',
       validator: (v: string) =>
-        typeof v === "string" && v.length > 0 && isIri(v),
+        typeof v === 'string' && v.length > 0 && isIri(v),
     },
   ],
   [
-    "boolean",
+    'boolean',
     {
-      icon: "toggle_off",
-      inputKind: "boolean",
-      helpText: "",
-      validator: (v: boolean) => typeof v === "boolean",
+      icon: 'toggle_off',
+      inputKind: 'boolean',
+      helpText: '',
+      validator: (v: boolean) => typeof v === 'boolean',
     },
   ],
   [
-    "dateTimeStamp",
+    'dateTimeStamp',
     {
-      icon: "schedule",
-      inputKind: "string",
-      helpText: "Enter date-time in UTC using ISO-8601",
+      icon: 'schedule',
+      inputKind: 'string',
+      helpText: 'Enter date-time in UTC using ISO-8601',
       validator: (v: string) =>
-        moment(v, "YYYY-MM-DDTHH:mm:ssZ", true).isValid(),
-      mask: "9999-99-99T99:99:99Z",
-      slotChar: "YYYY-MM-DDTHH:mm:ssZ",
+        moment(v, 'YYYY-MM-DDTHH:mm:ssZ', true).isValid(),
+      mask: '9999-99-99T99:99:99Z',
+      slotChar: 'YYYY-MM-DDTHH:mm:ssZ',
     },
   ],
   [
-    "decimal",
+    'decimal',
     {
-      icon: "numbers",
-      inputKind: "number",
-      helpText: "Enter a number",
-      validator: (v: number) => typeof v === "number",
+      icon: 'numbers',
+      inputKind: 'number',
+      helpText: 'Enter a number',
+      validator: (v: number) => typeof v === 'number',
     },
   ],
   [
-    "nonNegativeInteger",
+    'nonNegativeInteger',
     {
-      icon: "numbers",
-      inputKind: "number",
-      helpText: "Enter a positive integer",
+      icon: 'numbers',
+      inputKind: 'number',
+      helpText: 'Enter a positive integer',
       validator: (v: number) => Number.isInteger(v) && v >= 0,
       min: 0,
     },
   ],
   [
-    "positiveInteger",
+    'positiveInteger',
     {
-      icon: "numbers",
-      inputKind: "number",
-      helpText: "Enter zero or a positive integer",
+      icon: 'numbers',
+      inputKind: 'number',
+      helpText: 'Enter zero or a positive integer',
       validator: (v: number) => Number.isInteger(v) && v > 0,
       min: 1,
     },
   ],
   [
-    "string",
+    'string',
     {
-      icon: "text_fields",
-      inputKind: "string",
-      helpText: "Enter a string",
-      validator: (v: string) => typeof v === "string" && v.length > 0,
+      icon: 'text_fields',
+      inputKind: 'string',
+      helpText: 'Enter a string',
+      validator: (v: string) => typeof v === 'string' && v.length > 0,
     },
   ],
   [
-    "SemVer",
+    'SemVer',
     {
-      icon: "pin",
-      inputKind: "string",
-      helpText: "Enter version using SemVer 2.0.0",
+      icon: 'pin',
+      inputKind: 'string',
+      helpText: 'Enter version using SemVer 2.0.0',
       validator: (v: string) => Boolean(semver.valid(v)),
     },
   ],
   [
-    "MediaType",
+    'MediaType',
     {
-      icon: "text_fields",
-      inputKind: "string",
-      helpText: "Enter an RFC 2046 media type",
+      icon: 'text_fields',
+      inputKind: 'string',
+      helpText: 'Enter an RFC 2046 media type',
       validator: (v: string) =>
-        typeof v === "string" && /^[^/]+\/[^/]+$/.test(v),
+        typeof v === 'string' && /^[^/]+\/[^/]+$/.test(v),
     },
   ],
 ]);
 
-export const isNodePropertyValid = (nodeProperty: types.NodeProperty) => {
+export const isNodePropertyValid = (nodeProperty: NodeProperty) => {
   if (nodeProperty.value === undefined) return false;
   const cp = nodeProperty.classProperty;
-  return cp.nodeKind === "Literal"
+  return cp.nodeKind === 'Literal'
     ? inputProperties.get(cp.datatype)!.validator(nodeProperty.value)
     : Boolean(nodeProperty.value);
 };
 
-export const getClassPropertyIcon = (classProperty: types.ClassProperty) => {
+export const getClassPropertyIcon = (classProperty: ClassProperty) => {
   if (classProperty.options) {
-    return "list";
-  } else if (classProperty.nodeKind === "Literal") {
+    return 'list';
+  } else if (classProperty.nodeKind === 'Literal') {
     return inputProperties.get(classProperty.datatype)!.icon;
   }
 };
@@ -130,13 +136,13 @@ export const getClassPropertyIcon = (classProperty: types.ClassProperty) => {
 export async function getMediaTypes() {
   // Using local copy of "Media Types" to avoid CORS issues with:
   // "https://www.iana.org/assignments/media-types/application.csv"
-  const url = "media-types.csv";
-  const csv = (await (await fetch(url)).text()) ?? "";
-  const mediaTypes: types.PropertyOption[] = await new Promise((resolve) =>
+  const url = 'media-csv';
+  const csv = (await (await fetch(url)).text()) ?? '';
+  const mediaTypes: PropertyOption[] = await new Promise(resolve =>
     Papa.parse(csv, {
       complete: function (res) {
         resolve(
-          res.data.slice(1).map((row) => {
+          res.data.slice(1).map(row => {
             const [label, value] = row as [string, string];
             return { label, value };
           })
@@ -147,7 +153,7 @@ export async function getMediaTypes() {
   return mediaTypes;
 }
 
-export function parseIRI(iri: types.IRI) {
-  const [name, profile] = iri.split("/").reverse();
+export function parseIRI(iri: IRI) {
+  const [name, profile] = iri.split('/').reverse();
   return { name, profile };
 }
