@@ -17,6 +17,7 @@ import {
 import InstNode from '@/components/Inst/InstNode';
 import InstEdge from '@/components/Inst/InstEdge';
 import { appStore } from '@/store/app';
+import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 
 const nodeTypes = {
   inst: InstNode,
@@ -55,6 +56,8 @@ export default function InstCanvas() {
       return;
     }
     addNode('inst', event.clientX - 128, event.clientY - 28, iri);
+
+    appStore.setState({ showClassesMenu: false });
   }, []);
 
   return (
@@ -86,17 +89,20 @@ export default function InstCanvas() {
         <ControlButton
           onClick={() => flowStore.getState().reset()}
           title="clear"
-          aria-label="clear"
           className="text-black"
         >
           <div className="pi pi-eraser" />
         </ControlButton>
       </Controls>
-      <Panel position="top-left">
-        <button onClick={() => appStore.setState({ showClassesMenu: true })}>
-          {' '}
-          <span className="material-icons-outlined text-black">menu</span>
-        </button>
+      <Panel position="top-left" className="shadow-sm shadow-gray-300">
+        <ControlButton
+          onClick={() => appStore.setState({ showClassesMenu: true })}
+          title="menu"
+          className="text-black rounded-xs"
+        >
+          <div className="pi pi-bars" />
+          <HamburgerMenuIcon />
+        </ControlButton>
       </Panel>
     </ReactFlow>
   );
