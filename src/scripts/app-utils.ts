@@ -232,3 +232,15 @@ export const targetClsTooltipClass = `
   data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade 
   data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade 
 `;
+
+// items-center h-6 relative p-2 select-none outline-none
+// p-1 bg-mauve1
+export const clsNameTooltipClass = `
+  p-2 bg-mauve2 text-sm text-blue12 rounded border border-mauve6 select-none max-w-[250px] prose 
+  shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]
+  will-change-[opacity,transform]
+  data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade 
+  data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade 
+  data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade 
+  data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade 
+`;

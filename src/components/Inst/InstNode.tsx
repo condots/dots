@@ -6,7 +6,7 @@ import * as Collapsible from '@radix-ui/react-collapsible';
 import * as Separator from '@radix-ui/react-separator';
 
 import InstMenu from '@/components/Inst/InstMenu';
-import Tooltip from '@/components/Shared/Tooltip';
+import ClassNameTooltip from '@/components/Shared/ClassNameTooltip';
 import { NodeData } from '@/types';
 
 const InstNode = memo(function InstNode({
@@ -44,14 +44,14 @@ const InstNode = memo(function InstNode({
           <div className="nodrag nopan flex">
             <InstMenu nodeId={nodeId} />
           </div>
-          <Tooltip content={data.cls.name} disabled={tooltipDisabled}>
+          <ClassNameTooltip content={data.cls.name} disabled={tooltipDisabled}>
             <span
               ref={textRef}
               className="text-blue12 text-md font-medium w-full text-center truncate"
             >
               {data.cls.name}
             </span>
-          </Tooltip>
+          </ClassNameTooltip>
           <Collapsible.Trigger asChild>
             <button className="nodrag nopan selectable p-1 rounded text-blue12 hover:bg-blue12/5 data-[state=open]:rotate-180">
               <ChevronDownIcon />
