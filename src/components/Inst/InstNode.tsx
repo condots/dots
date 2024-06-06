@@ -5,7 +5,7 @@ import { ChevronDownIcon } from '@radix-ui/react-icons';
 import * as Collapsible from '@radix-ui/react-collapsible';
 import * as Separator from '@radix-ui/react-separator';
 
-import InstNodeMenu from '@/components/Inst/InstNodeMenu';
+import InstMenu from '@/components/Inst/InstMenu';
 import Tooltip from '@/components/Shared/Tooltip';
 import { NodeData } from '@/types';
 
@@ -42,7 +42,7 @@ const InstNode = memo(function InstNode({
       >
         <div className="flex items-center justify-between px-1 py-1 gap-[5px]">
           <div className="nodrag nopan flex">
-            <InstNodeMenu nodeId={id} />
+            <InstMenu nodeId={id} />
           </div>
           <Tooltip content={data.cls.name} disabled={tooltipDisabled}>
             <span

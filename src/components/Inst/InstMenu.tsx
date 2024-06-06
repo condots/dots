@@ -8,7 +8,7 @@ import { contentClass, itemClass } from '@/scripts/app-utils';
 import { deleteNode, flowStore, getNode } from '@/store/flow';
 import InstClassMenu from '@/components/Inst/InstClassMenu';
 
-const InstNodeMenu = ({ nodeId }: { nodeId: string }) => {
+const InstMenu = ({ nodeId }: { nodeId: string }) => {
   const node = getNode(nodeId);
 
   const handleOpenChange = (open: boolean) => {
@@ -63,4 +63,4 @@ const InstNodeMenu = ({ nodeId }: { nodeId: string }) => {
   );
 };
 
-export default InstNodeMenu;
+export default InstMenu;
