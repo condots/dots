@@ -1,5 +1,6 @@
 import DOMPurify from 'dompurify';
 import { parse } from 'marked';
+import HTMLReactParser from 'html-react-parser';
 import Papa from 'papaparse';
 import { isIri } from '@hyperjump/uri';
 import moment from 'moment';
@@ -25,9 +26,9 @@ export const advisoryText = (text: string | undefined) => {
     }
   });
   const parsed = parse(text) as string;
-  const clean = DOMPurify.sanitize(parsed);
+  const clean = DOMPurify.sanitize(parsed, { ADD_ATTR: ['target'] });
   DOMPurify.removeHook('afterSanitizeElements');
-  return parse(clean) as string;
+  return HTMLReactParser(clean);
 };
 
 export const inputProperties: InputProperties = new Map([

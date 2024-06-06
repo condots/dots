@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 
-import parse from 'html-react-parser';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
 
@@ -47,34 +46,33 @@ const InfoDialog = () => {
           shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] 
           focus:outline-none
           prose
-          overflow-auto"
+          overflow-auto
+          pt-5 pb-3"
         >
-          <Dialog.Title className="font-roboto text-blue12 mt-2">
-            <span className="text-3xl">{item.name}</span>
+          <Dialog.Title className="font-roboto text-spdx-dark text-3xl">
+            <span>{item.name}</span>
           </Dialog.Title>
           <Dialog.Description asChild>
             <div className="flex flex-col">
               <div>
-                <div className="font-bold font-roboto text-blue12 prose-2xl">
+                <div className="font-bold font-roboto text-spdx-dark text-2xl">
                   Summary
                 </div>
-                <div className="font-lato">
-                  {parse(advisoryText(item.summary))}
-                </div>
+                <div className="font-lato">{advisoryText(item.summary)}</div>
               </div>
               <div>
-                <div className="font-bold font-roboto text-blue12 prose-2xl">
+                <div className="font-bold font-roboto text-spdx-dark text-2xl">
                   Description
                 </div>
                 <div className="font-lato">
-                  {parse(advisoryText(item.description))}
+                  {advisoryText(item.description)}
                 </div>
               </div>
               <div>
-                <div className="font-bold font-roboto text-blue12 prose-2xl">
+                <div className="font-bold font-roboto text-spdx-dark prose-2xl">
                   Metadata
                 </div>
-                <div className="font-mono text-blue12">
+                <div className="font-mono text-spdx-dark">
                   <p className="text-xs border my-4 px-1 py-0.5 flex w-fit">
                     {item.iri}
                   </p>
@@ -95,7 +93,7 @@ const InfoDialog = () => {
                           <td className="px-3 border">SubclassOf</td>
                           <td className="px-3 border">
                             <button
-                              className="text-blue12 underline"
+                              className="text-spdx-dark underline"
                               onClick={() =>
                                 appStore.setState(state => {
                                   state.selectedInfoIri = item.subClassOf;
@@ -115,7 +113,7 @@ const InfoDialog = () => {
             </div>
           </Dialog.Description>
           <Dialog.Close asChild>
-            <button className="absolute top-4 right-4 items-center justify-center rounded text-blue12 hover:bg-blue12/5">
+            <button className="absolute top-4 right-4 items-center justify-center rounded text-spdx-dark hover:bg-spdx-dark/5">
               <Cross2Icon />
             </button>
           </Dialog.Close>

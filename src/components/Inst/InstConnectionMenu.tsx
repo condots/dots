@@ -96,7 +96,7 @@ const InstConnectionMenu = ({ nodeId }: { nodeId: string }) => {
     items().length > 0 && (
       <DropdownMenu.Sub>
         <DropdownMenu.SubTrigger className={itemClass}>
-          <span>Add Node</span>
+          <span>Add Class Instance</span>
           <ChevronRightIcon />
         </DropdownMenu.SubTrigger>
         <DropdownMenu.Portal>
