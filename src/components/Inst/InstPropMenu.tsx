@@ -10,7 +10,7 @@ import { addNode, getNode } from '@/store/flow';
 import { contentClass, itemClass } from '@/scripts/app-utils';
 import { getItem, ontoStore } from '@/store/onto';
 
-const InstPropertyMenu = ({ nodeId }: { nodeId: string }) => {
+const InstPropMenu = ({ nodeId }: { nodeId: string }) => {
   const node = getNode(nodeId);
   const { addEdges } = useReactFlow();
 
@@ -113,4 +113,4 @@ const InstPropertyMenu = ({ nodeId }: { nodeId: string }) => {
   );
 };
 
-export default InstPropertyMenu;
+export default InstPropMenu;
