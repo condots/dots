@@ -6,7 +6,7 @@ import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import { appStore } from '@/store/app';
 import { contentClass, itemClass } from '@/scripts/app-utils';
 import { deleteNode, flowStore, getNode } from '@/store/flow';
-import InstConnectionMenu from '@/components/Inst/InstConnectionMenu';
+import InstClassMenu from '@/components/Inst/InstClassMenu';
 
 const InstNodeMenu = ({ nodeId }: { nodeId: string }) => {
   const node = getNode(nodeId);
@@ -18,16 +18,7 @@ const InstNodeMenu = ({ nodeId }: { nodeId: string }) => {
     });
   };
 
-  const Remove = (
-    <DropdownMenu.Item
-      className={itemClass}
-      onSelect={() => deleteNode(nodeId)}
-    >
-      Remove
-    </DropdownMenu.Item>
-  );
-
-  const Details = (
+  const GetInfo = (
     <DropdownMenu.Item
       className={itemClass}
       onSelect={() => {
@@ -37,7 +28,16 @@ const InstNodeMenu = ({ nodeId }: { nodeId: string }) => {
         });
       }}
     >
-      Details
+      Get Info
+    </DropdownMenu.Item>
+  );
+
+  const Delete = (
+    <DropdownMenu.Item
+      className={itemClass}
+      onSelect={() => deleteNode(nodeId)}
+    >
+      Delete
     </DropdownMenu.Item>
   );
 
@@ -54,9 +54,9 @@ const InstNodeMenu = ({ nodeId }: { nodeId: string }) => {
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content className={contentClass} align="start">
-          <InstConnectionMenu nodeId={nodeId} />
-          {Details}
-          {Remove}
+          <InstClassMenu nodeId={nodeId} />
+          {GetInfo}
+          {Delete}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

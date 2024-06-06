@@ -10,7 +10,7 @@ import { addNode, getNode } from '@/store/flow';
 import { contentClass, itemClass } from '@/scripts/app-utils';
 import { getItem, ontoStore } from '@/store/onto';
 
-const InstConnectionMenu = ({ nodeId }: { nodeId: string }) => {
+const InstClassMenu = ({ nodeId }: { nodeId: string }) => {
   const node = getNode(nodeId);
   const { addEdges } = useReactFlow();
 
@@ -96,7 +96,7 @@ const InstConnectionMenu = ({ nodeId }: { nodeId: string }) => {
     items().length > 0 && (
       <DropdownMenu.Sub>
         <DropdownMenu.SubTrigger className={itemClass}>
-          <span>Add Class Instance</span>
+          <span>Add Class</span>
           <ChevronRightIcon />
         </DropdownMenu.SubTrigger>
         <DropdownMenu.Portal>
@@ -113,4 +113,4 @@ const InstConnectionMenu = ({ nodeId }: { nodeId: string }) => {
   );
 };
 
-export default InstConnectionMenu;
+export default InstClassMenu;
