@@ -14,6 +14,14 @@ export default {
         lato: ['Lato', 'sans-serif'],
         roboto: ['Roboto Slab', 'sans-serif'],
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            'code::before': { content: '' },
+            'code::after': { content: '' },
+          },
+        },
+      },
       colors: {
         spdx: {
           dark: '#00416b',
