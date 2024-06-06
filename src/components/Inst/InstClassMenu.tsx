@@ -29,25 +29,25 @@ const InstClassMenu = ({ nodeId }: { nodeId: string }) => {
 
   const handleMouseDown = useCallback(
     (event: MouseEvent, classProperty: ClassProperty) => {
-      if (event.button !== 0) return;
+      if (!node || event.button !== 0) return;
       const targetNodeId = addNode(
         'inst',
-        event.clientX,
-        event.clientY,
+        node.position.x + 250 + Math.floor(Math.random() * 100),
+        node.position.y + 150 + Math.floor(Math.random() * 100),
         classProperty.targetClass,
         true
       );
       const newEdge = [
         {
           id: nanoid(),
-          source: nodeId,
+          source: node.id,
           target: targetNodeId,
           data: { classProperty },
         },
       ];
       addEdges(newEdge);
     },
-    [addEdges, nodeId]
+    [addEdges, node]
   );
 
   const items = useCallback(() => {
