@@ -12,12 +12,13 @@ import {
   NodeTypes,
   Panel,
   ReactFlow,
+  useReactFlow,
 } from 'reactflow';
 
 import InstNode from '@/components/Inst/InstNode';
 import InstEdge from '@/components/Inst/InstEdge';
 import { appStore } from '@/store/app';
-import { HamburgerMenuIcon } from '@radix-ui/react-icons';
+import { Crosshair1Icon } from '@radix-ui/react-icons';
 
 const nodeTypes = {
   inst: InstNode,
@@ -43,6 +44,7 @@ const defaultEdgeOptions = {
 export default function InstCanvas() {
   const nodes = flowStore.use.nodes();
   const edges = flowStore.use.edges();
+  const { setViewport } = useReactFlow();
 
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -59,6 +61,10 @@ export default function InstCanvas() {
 
     appStore.setState({ showClassesMenu: false });
   }, []);
+
+  const handleTransform = useCallback(() => {
+    setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 200 });
+  }, [setViewport]);
 
   return (
     <ReactFlow
@@ -93,6 +99,13 @@ export default function InstCanvas() {
         >
           <div className="pi pi-eraser" />
         </ControlButton>
+        <ControlButton
+          onClick={() => handleTransform()}
+          title="center"
+          className="text-black"
+        >
+          <Crosshair1Icon />
+        </ControlButton>
       </Controls>
       <Panel position="top-left" className="shadow-sm shadow-gray-300">
         <ControlButton
@@ -101,7 +114,6 @@ export default function InstCanvas() {
           className="text-black rounded-xs"
         >
           <div className="pi pi-bars" />
-          <HamburgerMenuIcon />
         </ControlButton>
       </Panel>
     </ReactFlow>
