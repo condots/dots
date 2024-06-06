@@ -254,3 +254,9 @@ export const isValidConnection = (connection: Connection) => {
   if (target!.id === connection.source) return false;
   return !hasCycle(target!);
 };
+
+export function setNodeMenuState(nodeId: string, open: boolean) {
+  flowStore.setState(state => {
+    state.nodes.find(n => n.id === nodeId)!.data.menuOpen = open;
+  });
+}

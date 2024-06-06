@@ -95,7 +95,7 @@ export const inputProperties: InputProperties = new Map([
   [
     'string',
     {
-      icon: 'text_fields',
+      icon: 'drive_file_rename_outline',
       inputKind: 'string',
       helpText: 'Enter a string',
       validator: (v: string) => typeof v === 'string' && v.length > 0,
@@ -104,7 +104,7 @@ export const inputProperties: InputProperties = new Map([
   [
     'SemVer',
     {
-      icon: 'pin',
+      icon: 'commit',
       inputKind: 'string',
       helpText: 'Enter version using SemVer 2.0.0',
       validator: (v: string) => Boolean(semver.valid(v)),
@@ -113,7 +113,7 @@ export const inputProperties: InputProperties = new Map([
   [
     'MediaType',
     {
-      icon: 'text_fields',
+      icon: 'drive_file_rename_outline',
       inputKind: 'string',
       helpText: 'Enter an RFC 2046 media type',
       validator: (v: string) =>

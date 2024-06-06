@@ -5,18 +5,12 @@ import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 
 import { appStore } from '@/store/app';
 import { contentClass, itemClass } from '@/scripts/app-utils';
-import { deleteNode, flowStore, getNode } from '@/store/flow';
+import { deleteNode, getNode, setNodeMenuState } from '@/store/flow';
 import InstClassMenu from '@/components/Inst/InstClassMenu';
+import InstPropMenu from '@/components/Inst/InstPropMenu';
 
 const InstMenu = ({ nodeId }: { nodeId: string }) => {
   const node = getNode(nodeId);
-
-  const handleOpenChange = (open: boolean) => {
-    flowStore.setState(state => {
-      const node = state.nodes.find(n => n.id === nodeId);
-      node!.data.menuOpen = open;
-    });
-  };
 
   const GetInfo = (
     <DropdownMenu.Item
@@ -44,7 +38,7 @@ const InstMenu = ({ nodeId }: { nodeId: string }) => {
   return (
     <DropdownMenu.Root
       open={node?.data.menuOpen}
-      onOpenChange={handleOpenChange}
+      onOpenChange={open => setNodeMenuState(nodeId, open)}
     >
       <DropdownMenu.Trigger asChild>
         <button className="nodrag nopan outline-none p-1 rounded text-blue12 hover:bg-blue12/5">
@@ -54,6 +48,7 @@ const InstMenu = ({ nodeId }: { nodeId: string }) => {
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content className={contentClass} align="start">
+          <InstPropMenu nodeId={nodeId} />
           <InstClassMenu nodeId={nodeId} />
           {GetInfo}
           {Delete}

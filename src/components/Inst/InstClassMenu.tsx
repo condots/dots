@@ -14,22 +14,22 @@ const InstClassMenu = ({ nodeId }: { nodeId: string }) => {
   const node = getNode(nodeId);
   const { addEdges } = useReactFlow();
 
-  const reachedMaxCount = useCallback(
-    (path: IRI, maxCount: number | undefined) => {
-      if (maxCount === undefined) return false;
-      const propertyCount = node
-        ? Object.values(node.data.nodeProps).filter(
-            p => p.classProperty.path === path
-          ).length
-        : 0;
-      return propertyCount >= maxCount;
-    },
-    [node]
-  );
+  const items = useCallback(() => {
+    if (!node) return [];
 
-  const handleMouseDown = useCallback(
-    (event: MouseEvent, classProperty: ClassProperty) => {
-      if (!node || event.button !== 0) return;
+    const reachedMaxCount = (path: IRI, maxCount: number | undefined) => {
+      if (maxCount === undefined) return false;
+      const propertyCount = Object.values(node.data.nodeProps).filter(
+        p => p.classProperty.path === path
+      ).length;
+      return propertyCount >= maxCount;
+    };
+
+    const handleMouseDown = (
+      event: MouseEvent,
+      classProperty: ClassProperty
+    ) => {
+      if (event.button !== 0) return;
       const targetNodeId = addNode(
         'inst',
         node.position.x + 250 + Math.floor(Math.random() * 100),
@@ -46,12 +46,8 @@ const InstClassMenu = ({ nodeId }: { nodeId: string }) => {
         },
       ];
       addEdges(newEdge);
-    },
-    [addEdges, node]
-  );
+    };
 
-  const items = useCallback(() => {
-    if (!node) return [];
     const recClsProps =
       ontoStore.getState().allRecClsProps![node?.data.cls.iri];
     const classItems = [];
@@ -81,7 +77,7 @@ const InstClassMenu = ({ nodeId }: { nodeId: string }) => {
             <DropdownMenu.SubContent
               className={contentClass}
               sideOffset={-1}
-              alignOffset={-5}
+              alignOffset={-1}
             >
               {propItems}
             </DropdownMenu.SubContent>
@@ -90,27 +86,25 @@ const InstClassMenu = ({ nodeId }: { nodeId: string }) => {
       }
     }
     return classItems;
-  }, [node, handleMouseDown, reachedMaxCount]);
+  }, [node, addEdges]);
 
-  return (
-    items().length > 0 && (
-      <DropdownMenu.Sub>
-        <DropdownMenu.SubTrigger className={itemClass}>
-          <span>Add Class</span>
-          <ChevronRightIcon />
-        </DropdownMenu.SubTrigger>
-        <DropdownMenu.Portal>
-          <DropdownMenu.SubContent
-            className={contentClass}
-            sideOffset={-1}
-            alignOffset={-5}
-          >
-            {items()}
-          </DropdownMenu.SubContent>
-        </DropdownMenu.Portal>
-      </DropdownMenu.Sub>
-    )
-  );
+  return items().length > 0 ? (
+    <DropdownMenu.Sub>
+      <DropdownMenu.SubTrigger className={itemClass}>
+        <span>Add Class</span>
+        <ChevronRightIcon />
+      </DropdownMenu.SubTrigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.SubContent
+          className={contentClass}
+          sideOffset={-1}
+          alignOffset={-1}
+        >
+          {items()}
+        </DropdownMenu.SubContent>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Sub>
+  ) : null;
 };
 
 export default InstClassMenu;
