@@ -8,10 +8,9 @@ import * as Separator from '@radix-ui/react-separator';
 import InstMenu from '@/components/Inst/InstMenu';
 import Tooltip from '@/components/Shared/Tooltip';
 import { NodeData } from '@/types';
-import { setNodeSelected } from '@/store/flow';
 
 const InstNode = memo(function InstNode({
-  id,
+  id: nodeId,
   data,
   selected,
 }: NodeProps<NodeData>) {
@@ -31,7 +30,7 @@ const InstNode = memo(function InstNode({
     return null;
   }
   return (
-    <div onClick={() => setNodeSelected(id, true)}>
+    <div>
       <Collapsible.Root
         open={open}
         onOpenChange={setOpen}
@@ -43,7 +42,7 @@ const InstNode = memo(function InstNode({
       >
         <div className="flex items-center justify-between px-1 py-1 gap-[5px]">
           <div className="nodrag nopan flex">
-            <InstMenu nodeId={id} />
+            <InstMenu nodeId={nodeId} />
           </div>
           <Tooltip content={data.cls.name} disabled={tooltipDisabled}>
             <span
@@ -54,7 +53,7 @@ const InstNode = memo(function InstNode({
             </span>
           </Tooltip>
           <Collapsible.Trigger asChild>
-            <button className="nodrag nopan p-1 rounded text-blue12 hover:bg-blue12/5 data-[state=open]:rotate-180">
+            <button className="nodrag nopan selectable p-1 rounded text-blue12 hover:bg-blue12/5 data-[state=open]:rotate-180">
               <ChevronDownIcon />
             </button>
           </Collapsible.Trigger>
