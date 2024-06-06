@@ -204,15 +204,31 @@ export function initNodeProps(recursive: RecClsProps) {
   return nodeProperties;
 }
 
-export const itemClass = `text-sm text-blue12 rounded flex
-items-center h-6 relative p-2 select-none outline-none
-data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none 
-data-[highlighted]:bg-blue12 data-[highlighted]:text-mauve1`;
+export const itemClass = `
+  text-sm text-blue12 rounded flex
+  items-center h-6 relative p-2 select-none outline-none
+  data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none 
+  data-[highlighted]:bg-blue12 data-[highlighted]:text-mauve1
+`;
 
-export const contentClass = `p-1 bg-mauve1 rounded border border-mauve6
-shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]
-will-change-[opacity,transform] 
-data-[side=top]:animate-slideDownAndFade 
-data-[side=right]:animate-slideLeftAndFade 
-data-[side=bottom]:animate-slideUpAndFade 
-data-[side=left]:animate-slideRightAndFade`;
+export const contentClass = `
+  p-1 bg-mauve1 rounded border border-mauve6 select-none
+  shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]
+  will-change-[opacity,transform] 
+  data-[side=top]:animate-slideDownAndFade 
+  data-[side=right]:animate-slideLeftAndFade 
+  data-[side=bottom]:animate-slideUpAndFade 
+  data-[side=left]:animate-slideRightAndFade
+`;
+
+export const targetClsTooltipClass = `
+  text-sm text-mauve1 rounded flex
+  items-center h-6 relative p-2 select-none outline-none
+  p-1 bg-blue12 
+  shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]
+  will-change-[opacity,transform]
+  data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade 
+  data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade 
+  data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade 
+  data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade 
+`;
