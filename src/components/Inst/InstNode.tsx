@@ -8,6 +8,7 @@ import * as Separator from '@radix-ui/react-separator';
 import InstMenu from '@/components/Inst/InstMenu';
 import Tooltip from '@/components/Shared/Tooltip';
 import { NodeData } from '@/types';
+import { setNodeSelected } from '@/store/flow';
 
 const InstNode = memo(function InstNode({
   id,
@@ -30,7 +31,7 @@ const InstNode = memo(function InstNode({
     return null;
   }
   return (
-    <>
+    <div onClick={() => setNodeSelected(id, true)}>
       <Collapsible.Root
         open={open}
         onOpenChange={setOpen}
@@ -75,7 +76,7 @@ const InstNode = memo(function InstNode({
           <Handle type="source" position={Position.Right} className="hidden" />
         </div>
       )}
-    </>
+    </div>
   );
 });
 

@@ -185,7 +185,7 @@ export function addNode(
     nodeProps: initNodeProps(recClsProps),
   };
 
-  const node: FlowNode = { id: nodeId, position, data, type };
+  const node: FlowNode = { id: nodeId, position, data, type, selected: true };
   flowStore.setState(state => {
     state.nodes.push(node);
   });
@@ -250,3 +250,10 @@ export const isValidConnection = (connection: Connection) => {
   if (target!.id === connection.source) return false;
   return !hasCycle(target!);
 };
+
+export function setNodeSelected(nodeId: string, selected: boolean = true) {
+  flowStore.setState(state => {
+    const node = state.nodes.find(n => n.id === nodeId);
+    if (node) node.selected = selected;
+  });
+}

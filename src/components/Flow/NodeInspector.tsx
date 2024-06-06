@@ -7,8 +7,8 @@ export default function NodeInspector() {
     <EdgeLabelRenderer>
       <div className="react-flow__devtools-nodeinspector">
         {nodes.map(node => {
-          const x = node.positionAbsolute?.x - node.width / 2 || 0;
-          const y = node.positionAbsolute?.y - node.height / 2 || 0;
+          const x = node.positionAbsolute!.x - node.width! / 2 || 0;
+          const y = node.positionAbsolute!.y - node.height! / 2 || 0;
           const width = node.width || 0;
           const height = node.height || 0;
 
@@ -16,7 +16,7 @@ export default function NodeInspector() {
             <NodeInfo
               key={node.id}
               id={node.id}
-              selected={node.selected}
+              selected={Boolean(node.selected)}
               type={node.type || 'default'}
               x={x}
               y={y}
