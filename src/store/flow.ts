@@ -1,8 +1,14 @@
 import { create } from 'zustand';
-import { persist, devtools, subscribeWithSelector } from 'zustand/middleware';
+import {
+  persist,
+  PersistStorage,
+  devtools,
+  subscribeWithSelector,
+} from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
+import superjson from 'superjson';
 import { nanoid } from 'nanoid';
-import createSelectors from '@/scripts/createSelectors';
+import createSelectors from '@/store/createSelectors';
 
 import {
   Connection,
@@ -29,9 +35,12 @@ import {
   NodeData,
   NodeProperty,
 } from '@/types';
-import { getItem } from '@/store/onto';
-import { isNodePropertyValid } from '@/scripts/app-utils';
-import { getRecursiveClassProperties } from '@/scripts/onto-utils';
+import { getItem, ontoStore } from '@/store/onto';
+import {
+  initNodeProps,
+  generateNodeProperty,
+  isNodePropertyValid,
+} from '@/scripts/app-utils';
 
 type DevtoolsActive = {
   nodeInspector: boolean;
@@ -65,6 +74,18 @@ const initialState = {
     changeLogger: false,
     viewportLogger: false,
   },
+};
+
+const storage: PersistStorage<RFState> = {
+  getItem: name => {
+    const str = localStorage.getItem(name);
+    if (!str) return null;
+    return superjson.parse(str);
+  },
+  setItem: (name, value) => {
+    localStorage.setItem(name, superjson.stringify(value));
+  },
+  removeItem: name => localStorage.removeItem(name),
 };
 
 const flowStoreBase = create<RFState>()(
@@ -116,6 +137,7 @@ const flowStoreBase = create<RFState>()(
           }),
           {
             name: 'flow',
+            storage,
           }
         )
       )
@@ -125,54 +147,42 @@ const flowStoreBase = create<RFState>()(
 
 export const flowStore = createSelectors(flowStoreBase);
 
-export const getNode = (nodeId: string | undefined) => {
+export function getNode(nodeId: string | undefined) {
   return flowStore.use.nodes().find(n => n.id === nodeId);
-};
+}
 
-export const getNodeProperties = (nodeId: string | undefined) => {
-  if (nodeId) return getNode(nodeId)?.data.dataProperties;
-};
+export function getNodeProperties(nodeId: string | undefined) {
+  if (nodeId) return getNode(nodeId)?.data.nodeProps;
+}
 
-export const getNodeProperty = (
+export function getNodeProperty(
   nodeId: string | undefined,
   propertyId: string | undefined
-) => {
+) {
   const nodeProperties = getNodeProperties(nodeId);
   if (propertyId) return nodeProperties?.[propertyId];
-};
+}
 
-export const addNode = (
+export function addNode(
   type: string,
   x: number,
   y: number,
-  classiri: IRI,
+  classIRI: IRI,
   startAsDragged: boolean = false
-) => {
+) {
   const nodeId = nanoid();
   const position = flowStore
     .getState()
     .reactFlowInstance!.screenToFlowPosition({ x, y });
-  const cls = getItem(classiri) as Class;
-  const recursiveClassProperties = getRecursiveClassProperties(classiri);
-  const dataProperties = {} as NodeData['dataProperties'];
-  for (const classProperties of recursiveClassProperties.values()) {
-    for (const classProperty of Object.values(classProperties)) {
-      if (
-        classProperty.required &&
-        classProperty.nodeKind !== 'BlankNodeOrIRI'
-      ) {
-        const nodeProperty = generateNodeProperty(classProperty);
-        dataProperties[nodeProperty.id] = nodeProperty;
-      }
-    }
-  }
+  const recClsProps = ontoStore.getState().allRecClsProps![classIRI];
   const data: NodeData = {
     startAsDragged,
     isNode: true,
     active: false,
-    cls,
-    recursiveClassProperties,
-    dataProperties,
+    menuOpen: false,
+    expanded: false,
+    cls: getItem(classIRI) as Class,
+    nodeProps: initNodeProps(recClsProps),
   };
 
   const node: FlowNode = { id: nodeId, position, data, type };
@@ -180,67 +190,49 @@ export const addNode = (
     state.nodes.push(node);
   });
   return nodeId;
-};
+}
 
-export const deleteNode = (nodeId: string) => {
+export function deleteNode(nodeId: string) {
   const state = flowStore.getState();
   const node = state.nodes.find(n => n.id === nodeId);
   state.reactFlowInstance!.deleteElements({ nodes: [node!], edges: [] });
-};
+}
 
-export const generateNodeProperty = (
-  classProperty: ClassProperty,
-  value: NodeProperty['value'] = undefined
-) => {
-  const nodeProperty: NodeProperty = {
-    id: nanoid(),
-    classProperty,
-    value,
-    valid: false,
-  };
-  if (classProperty.datatype === 'boolean') {
-    nodeProperty.value = Boolean(value);
-    nodeProperty.valid = true;
-  } else {
-    nodeProperty.valid = isNodePropertyValid(nodeProperty);
-  }
-  return nodeProperty;
-};
-
-export const addNodeProperty = (
+export function addNodeProperty(
   nodeId: string,
   classProperty: ClassProperty,
   value: NodeProperty['value'] = undefined
-) => {
+) {
   const nodeProperty = generateNodeProperty(classProperty, value);
   flowStore.setState(state => {
     const data = state.nodes.find(n => n.id === nodeId)!.data;
-    data.dataProperties[nodeProperty.id] = nodeProperty;
+    data.nodeProps[nodeProperty.id] = nodeProperty;
   });
   return nodeProperty.id;
-};
+}
 
-export const setNodeProperty = (
+export function setNodeProperty(
   nodeId: string,
   propertyId: string,
   value: NodeProperty['value'] = undefined
-) => {
+) {
   flowStore.setState(state => {
-    const nodeProperty = state.nodes.find(n => n.id === nodeId)!.data
-      .dataProperties[propertyId];
+    const nodeProperty = state.nodes.find(n => n.id === nodeId)!.data.nodeProps[
+      propertyId
+    ];
     if (!nodeProperty) throw new Error('Node property not found');
     nodeProperty.value = value;
     nodeProperty.valid = isNodePropertyValid(nodeProperty);
   });
-};
+}
 
-export const deleteNodeProperty = (nodeId: string, propertyId: string) => {
+export function deleteNodeProperty(nodeId: string, propertyId: string) {
   flowStore.setState(state => {
     const nodeProperties = state.nodes.find(n => n.id === nodeId)!.data
-      .dataProperties;
+      .nodeProps;
     delete nodeProperties[propertyId];
   });
-};
+}
 
 export const isValidConnection = (connection: Connection) => {
   const state = flowStore.getState();

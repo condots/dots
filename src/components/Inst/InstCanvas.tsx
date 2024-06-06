@@ -49,8 +49,6 @@ export default function InstCanvas() {
   }, []);
 
   const onDrop = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-    console.log('drop');
-
     event.preventDefault();
     const iri = event.dataTransfer.getData('application/reactflow');
     if (typeof iri === 'undefined' || !iri) {

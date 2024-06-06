@@ -1,14 +1,29 @@
 import { create } from 'zustand';
-import { persist, devtools, subscribeWithSelector } from 'zustand/middleware';
+import {
+  persist,
+  PersistStorage,
+  devtools,
+  subscribeWithSelector,
+} from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import createSelectors from '@/scripts/createSelectors';
+import superjson from 'superjson';
+import createSelectors from '@/store/createSelectors';
 import { Store } from 'n3';
 
-import { Class, EnrichedProfiles, IRI, Item } from '@/types';
+import {
+  Class,
+  ClassProperties,
+  EnrichedProfiles,
+  IRI,
+  Item,
+  Name,
+  RecClsProps,
+} from '@/types';
 import {
   createGraph,
   createModel,
   enrichModelFromMarkdown,
+  getAllRecClsProps,
   mapIRIs,
 } from '@/scripts/onto-utils';
 
@@ -17,6 +32,7 @@ type OntoState = {
   graph: Store | undefined;
   profiles: EnrichedProfiles | undefined;
   iris: Record<IRI, Item> | undefined;
+  allRecClsProps: Record<Name, RecClsProps> | undefined;
 };
 
 const initialState = {
@@ -24,6 +40,19 @@ const initialState = {
   graph: undefined,
   profiles: undefined,
   iris: undefined,
+  allRecClsProps: undefined,
+};
+
+const storage: PersistStorage<OntoState> = {
+  getItem: name => {
+    const str = localStorage.getItem(name);
+    if (!str) return null;
+    return superjson.parse(str);
+  },
+  setItem: (name, value) => {
+    localStorage.setItem(name, superjson.stringify(value));
+  },
+  removeItem: name => localStorage.removeItem(name),
 };
 
 const ontoStoreBase = create<OntoState>()(
@@ -39,6 +68,7 @@ const ontoStoreBase = create<OntoState>()(
           }),
           {
             name: 'onto',
+            storage,
           }
         )
       )
@@ -51,10 +81,11 @@ export const ontoStore = createSelectors(ontoStoreBase);
 export async function updateOntology(source: string | File) {
   // if (ontoStore.getState().source === source) return;
   const graph = await createGraph(source);
-  const profiles = createModel(graph);
-  const enriched = await enrichModelFromMarkdown(profiles, 'model.json');
+  const graphProfiles = createModel(graph);
+  const profiles = await enrichModelFromMarkdown(graphProfiles, 'model.json');
   const iris = mapIRIs(profiles);
-  ontoStore.setState({ source, graph, profiles: enriched, iris: iris });
+  const allRecClsProps = getAllRecClsProps(profiles, iris);
+  ontoStore.setState({ source, graph, profiles, iris, allRecClsProps });
   console.log('updated ontology');
 }
 

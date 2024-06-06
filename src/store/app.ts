@@ -1,7 +1,13 @@
 import { create } from 'zustand';
-import { persist, devtools, subscribeWithSelector } from 'zustand/middleware';
+import {
+  persist,
+  PersistStorage,
+  devtools,
+  subscribeWithSelector,
+} from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import createSelectors from '@/scripts/createSelectors';
+import superjson from 'superjson';
+import createSelectors from '@/store/createSelectors';
 
 import { PropertyOption } from '@/types';
 import { getMediaTypes } from '@/scripts/app-utils';
@@ -25,6 +31,18 @@ const initialState = {
   mediaTypes: undefined,
 };
 
+const storage: PersistStorage<AppState> = {
+  getItem: name => {
+    const str = localStorage.getItem(name);
+    if (!str) return null;
+    return superjson.parse(str);
+  },
+  setItem: (name, value) => {
+    localStorage.setItem(name, superjson.stringify(value));
+  },
+  removeItem: name => localStorage.removeItem(name),
+};
+
 const appStoreBase = create<AppState>()(
   subscribeWithSelector(
     immer(
@@ -38,6 +56,7 @@ const appStoreBase = create<AppState>()(
           }),
           {
             name: 'app',
+            storage,
           }
         )
       )

@@ -15,18 +15,18 @@ import {
   Item,
   LiteralPropertyTypes,
   Name,
+  NodeData,
   Profile,
   Profiles,
   Properties,
   PropertyOption,
-  RecursiveClassProperties,
+  RecClsProps,
   Section,
   SharedFields,
   Vocabularies,
   VocabularyEntries,
   nodeKindTypes,
 } from '@/types';
-import { getItem } from '@/store/onto';
 import { parseIRI } from '@/scripts/app-utils';
 
 const NS = {
@@ -142,15 +142,31 @@ export async function enrichModelFromMarkdown(
   return enrichedProfiles;
 }
 
-export const getRecursiveClassProperties = (iri: IRI | undefined) => {
-  const recursiveClassProperties: RecursiveClassProperties = new Map();
+export function getAllRecClsProps(profiles: Profiles, iris: Record<IRI, Item>) {
+  const allRecClsProps: Record<Name, RecClsProps> = {};
+  for (const profile of Object.values(profiles)) {
+    for (const cls of Object.values(profile.classes)) {
+      allRecClsProps[cls.iri] = getRecClsProps(iris, cls.iri);
+    }
+  }
+  return allRecClsProps;
+}
+
+function getRecClsProps(iris: Record<IRI, Item>, iri: IRI | undefined) {
+  const recClsProps: RecClsProps = new Map();
   while (iri) {
-    const cls = getItem(iri) as Class;
-    recursiveClassProperties.set(cls.name, cls.properties);
+    const cls = iris[iri] as Class;
+    const classProperties: ClassProperties = {};
+    for (const [propertyName, classProperty] of Object.entries(
+      cls.properties
+    )) {
+      classProperties[propertyName] = classProperty;
+    }
+    recClsProps.set(cls.name, classProperties);
     iri = cls.subClassOf;
   }
-  return recursiveClassProperties;
-};
+  return recClsProps;
+}
 
 function getSharedFields(node: Term, graph: Store) {
   const iri = node.value;
@@ -320,7 +336,6 @@ function extractNodeShape(graph: Store, node: Term) {
           break;
       }
     }
-    const required = Boolean(minCount);
     if (spdxDatatype === 'SemVer' || spdxDatatype === 'MediaType') {
       datatype = spdxDatatype;
     }
@@ -329,7 +344,6 @@ function extractNodeShape(graph: Store, node: Term) {
       parentClass: node.value,
       path: path!,
       name: name!,
-      required,
       minCount,
       maxCount,
       nodeKind: nodeKind!,

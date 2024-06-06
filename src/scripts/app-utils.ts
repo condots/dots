@@ -4,12 +4,16 @@ import Papa from 'papaparse';
 import { isIri } from '@hyperjump/uri';
 import moment from 'moment';
 import semver from 'semver';
+import { nanoid } from 'nanoid';
+
 import {
   ClassProperty,
   IRI,
   InputProperties,
+  NodeData,
   NodeProperty,
   PropertyOption,
+  RecClsProps,
 } from '@/types';
 
 export const advisoryText = (text: string | undefined) => {
@@ -157,3 +161,57 @@ export function parseIRI(iri: IRI) {
   const [name, profile] = iri.split('/').reverse();
   return { name, profile };
 }
+
+export function generateNodeProperty(
+  classProperty: ClassProperty,
+  value: NodeProperty['value'] = undefined
+) {
+  const nodeProperty: NodeProperty = {
+    id: nanoid(),
+    classProperty,
+    value,
+    valid: false,
+  };
+  if (classProperty.datatype === 'boolean') {
+    nodeProperty.value = Boolean(value);
+    nodeProperty.valid = true;
+  } else {
+    nodeProperty.valid = isNodePropertyValid(nodeProperty);
+  }
+  return nodeProperty;
+}
+
+export const getClsDataProps = (recClsProps: RecClsProps, required = false) => {
+  const props: ClassProperty[] = [];
+  for (const clsProps of recClsProps.values()) {
+    for (const clsProp of Object.values(clsProps)) {
+      if (!clsProp.targetClass && (!required || clsProp.minCount)) {
+        props.push(clsProp);
+      }
+    }
+  }
+  return props;
+};
+
+export function initNodeProps(recursive: RecClsProps) {
+  const required = getClsDataProps(recursive, true);
+  const nodeProperties = {} as NodeData['nodeProps'];
+  for (const clsProp of required) {
+    const nodeProp = generateNodeProperty(clsProp);
+    nodeProperties[nodeProp.id] = nodeProp;
+  }
+  return nodeProperties;
+}
+
+export const itemClass = `text-sm text-blue12 rounded flex
+items-center h-6 relative p-2 select-none outline-none
+data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none 
+data-[highlighted]:bg-blue12 data-[highlighted]:text-mauve1`;
+
+export const contentClass = `p-1 bg-mauve1 rounded border border-mauve6
+shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]
+will-change-[opacity,transform] 
+data-[side=top]:animate-slideDownAndFade 
+data-[side=right]:animate-slideLeftAndFade 
+data-[side=bottom]:animate-slideUpAndFade 
+data-[side=left]:animate-slideRightAndFade`;

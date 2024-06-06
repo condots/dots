@@ -35,7 +35,7 @@ export default function PropMenu() {
     const reachedMaxCount = (path: IRI, maxCount: number | undefined) => {
       if (maxCount === undefined) return false;
       const propertyCount = node
-        ? Object.values(node.data.dataProperties).filter(
+        ? Object.values(node.data.nodeProps).filter(
             p => p.classProperty.path === path
           ).length
         : 0;

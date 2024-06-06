@@ -6,7 +6,7 @@ import 'primeflex/primeflex.css';
 
 import { updateOntology } from '@/store/onto';
 import { updateMediaTypes } from '@/store/app';
-import { InfoDialog } from '@/components/Onto/InfoDialog';
+import InfoDialog from '@/components/Onto/InfoDialog';
 import PropPanel from '@/components/Prop/PropPanel';
 import ClassMenu from '@/components/Onto/ClassMenu';
 import InstCanvas from '@/components/Inst/InstCanvas';

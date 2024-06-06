@@ -41,7 +41,6 @@ const InstNode = memo(function InstNode({
         `}
       >
         <div className="flex items-center justify-between px-1 py-1 gap-[5px]">
-          {/* <InstNodeMenu nodeId={id} /> */}
           <div className="nodrag nopan flex">
             <InstNodeMenu nodeId={id} />
           </div>

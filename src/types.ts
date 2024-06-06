@@ -35,7 +35,6 @@ export interface ClassProperty {
   parentClass: Name;
   path: IRI;
   name: Name;
-  required: boolean;
   minCount?: number;
   maxCount?: number;
   nodeKind: nodeKindTypes;
@@ -95,20 +94,17 @@ export type NodeData = {
   startAsDragged: boolean;
   isNode: boolean;
   active: boolean;
+  menuOpen: boolean;
+  expanded: boolean;
   cls: Class;
-  recursiveClassProperties: RecursiveClassProperties;
-  dataProperties: Record<string, NodeProperty>;
+  nodeProps: Record<string, NodeProperty>;
 };
 
 export type FlowNode = Node<NodeData>;
 
-export type NodeProperties = Record<string, NodeProperty>;
-
 export type InputProperties = Map<LiteralPropertyTypes, InputProperty>;
 
-export type RecursiveClassProperties = Map<string, ClassProperties>;
-
-export type RecursiveNodeProperties = Map<string, ClassProperties>;
+export type RecClsProps = Map<string, ClassProperties>;
 
 export interface InputProperty {
   icon: string;
