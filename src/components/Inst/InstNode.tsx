@@ -8,6 +8,7 @@ import * as Separator from '@radix-ui/react-separator';
 import InstMenu from '@/components/Inst/InstMenu';
 import ClassNameTooltip from '@/components/Shared/ClassNameTooltip';
 import { NodeData } from '@/types';
+import InstPropFields from '@/components/Inst/InstPropFields';
 
 const InstNode = memo(function InstNode({
   id: nodeId,
@@ -59,14 +60,17 @@ const InstNode = memo(function InstNode({
           </Collapsible.Trigger>
         </div>
 
-        <Collapsible.Content className="nodrag nopan cursor-auto data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp overflow-hidden">
+        <Collapsible.Content className="nodrag nopan cursor-auto data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp">
           <Separator.Root className="bg-blue12 h-[1px]" decorative />
           <div className="p-2">
+            <InstPropFields nodeId={nodeId} />
+          </div>
+          {/* <div className="p-2">
             <span className="text-blue12 text-sm">Item 1</span>
           </div>
           <div className="p-2">
             <span className="text-blue12 text-sm">Item 2</span>
-          </div>
+          </div> */}
         </Collapsible.Content>
       </Collapsible.Root>
       {data.isNode && (

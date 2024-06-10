@@ -17,18 +17,18 @@ export function PropLabel({ nodeId, propertyId }: PropLabel) {
   const property = getItem(propertyData.classProperty.path) as types.Property;
   const propertyIcon = getClassPropertyIcon(propertyData.classProperty);
   const itemIcon = (
-    <span className="material-icons-outlined mr-2 flex justify-end">
+    <span className="material-icons-outlined mr-1 flex items-center justify-end text-sm">
       {propertyIcon}
     </span>
   );
 
   return (
     <div className="flex items-center justify-between my-1">
-      <Tooltip target=".prop-label" showDelay={1000} position="top" />
+      {/* <Tooltip target=".prop-label" showDelay={1000} position="top" /> */}
       <div className="flex">
         {itemIcon}
         <label
-          className="font-bold prop-label"
+          className="text-sm prop-label"
           data-pr-tooltip={property.summary}
         >
           {property.name}
@@ -44,15 +44,13 @@ export function PropLabel({ nodeId, propertyId }: PropLabel) {
             })
           }
         >
-          <span className="material-icons-outlined text-base">
-            help_outline
-          </span>
+          <span className="material-icons-outlined text-sm">help_outline</span>
         </button>
         <button
           className="flex p-1 rounded text-spdx-dark hover:bg-spdx-dark/15"
           onClick={() => deleteNodeProperty(nodeId, propertyId)}
         >
-          <span className="material-icons-outlined text-base">
+          <span className="material-icons-outlined text-sm">
             remove_circle_outline
           </span>
         </button>
