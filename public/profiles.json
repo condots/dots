@@ -27,16 +27,14 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/AIPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/AI/autonomyType",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/AI/autonomyType"
           },
           "domain": {
             "datatype": "string",
             "name": "domain",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/AIPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/AI/domain",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/AI/domain"
           },
           "energyConsumption": {
             "maxCount": 1,
@@ -44,7 +42,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/AIPackage",
             "path": "https://spdx.org/rdf/3.0.0/terms/AI/energyConsumption",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/AI/EnergyConsumption"
           },
           "hyperparameter": {
@@ -52,7 +49,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/AIPackage",
             "path": "https://spdx.org/rdf/3.0.0/terms/AI/hyperparameter",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/DictionaryEntry"
           },
           "informationAboutApplication": {
@@ -61,8 +57,7 @@
             "name": "informationAboutApplication",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/AIPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/AI/informationAboutApplication",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/AI/informationAboutApplication"
           },
           "informationAboutTraining": {
             "datatype": "string",
@@ -70,8 +65,7 @@
             "name": "informationAboutTraining",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/AIPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/AI/informationAboutTraining",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/AI/informationAboutTraining"
           },
           "limitation": {
             "datatype": "string",
@@ -79,15 +73,13 @@
             "name": "limitation",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/AIPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/AI/limitation",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/AI/limitation"
           },
           "metric": {
             "name": "metric",
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/AIPackage",
             "path": "https://spdx.org/rdf/3.0.0/terms/AI/metric",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/DictionaryEntry"
           },
           "metricDecisionThreshold": {
@@ -95,7 +87,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/AIPackage",
             "path": "https://spdx.org/rdf/3.0.0/terms/AI/metricDecisionThreshold",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/DictionaryEntry"
           },
           "modelDataPreprocessing": {
@@ -103,16 +94,14 @@
             "name": "modelDataPreprocessing",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/AIPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/AI/modelDataPreprocessing",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/AI/modelDataPreprocessing"
           },
           "modelExplainability": {
             "datatype": "string",
             "name": "modelExplainability",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/AIPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/AI/modelExplainability",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/AI/modelExplainability"
           },
           "safetyRiskAssessment": {
             "maxCount": 1,
@@ -137,24 +126,21 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/AIPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/AI/safetyRiskAssessment",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/AI/safetyRiskAssessment"
           },
           "standardCompliance": {
             "datatype": "string",
             "name": "standardCompliance",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/AIPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/AI/standardCompliance",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/AI/standardCompliance"
           },
           "typeOfModel": {
             "datatype": "string",
             "name": "typeOfModel",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/AIPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/AI/typeOfModel",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/AI/typeOfModel"
           },
           "useSensitivePersonalInformation": {
             "maxCount": 1,
@@ -175,8 +161,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/AIPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/AI/useSensitivePersonalInformation",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/AI/useSensitivePersonalInformation"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Software/Package",
@@ -194,7 +179,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/EnergyConsumption",
             "path": "https://spdx.org/rdf/3.0.0/terms/AI/finetuningEnergyConsumption",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/AI/EnergyConsumptionDescription"
           },
           "inferenceEnergyConsumption": {
@@ -202,7 +186,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/EnergyConsumption",
             "path": "https://spdx.org/rdf/3.0.0/terms/AI/inferenceEnergyConsumption",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/AI/EnergyConsumptionDescription"
           },
           "trainingEnergyConsumption": {
@@ -210,7 +193,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/EnergyConsumption",
             "path": "https://spdx.org/rdf/3.0.0/terms/AI/trainingEnergyConsumption",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/AI/EnergyConsumptionDescription"
           }
         },
@@ -230,8 +212,7 @@
             "name": "energyQuantity",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/EnergyConsumptionDescription",
-            "path": "https://spdx.org/rdf/3.0.0/terms/AI/energyQuantity",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/AI/energyQuantity"
           },
           "energyUnit": {
             "maxCount": 1,
@@ -253,8 +234,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/AI/EnergyConsumptionDescription",
-            "path": "https://spdx.org/rdf/3.0.0/terms/AI/energyUnit",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/AI/energyUnit"
           }
         },
         "summary": "The class that helps note down the quantity of energy consumption and the unit\nused for measurement."
@@ -505,8 +485,7 @@
             "name": "buildEndTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Build/Build",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Build/buildEndTime",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Build/buildEndTime"
           },
           "buildId": {
             "datatype": "string",
@@ -514,8 +493,7 @@
             "name": "buildId",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Build/Build",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Build/buildId",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Build/buildId"
           },
           "buildStartTime": {
             "datatype": "dateTimeStamp",
@@ -523,8 +501,7 @@
             "name": "buildStartTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Build/Build",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Build/buildStartTime",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Build/buildStartTime"
           },
           "buildType": {
             "datatype": "anyURI",
@@ -533,15 +510,13 @@
             "name": "buildType",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Build/Build",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Build/buildType",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Build/buildType"
           },
           "configSourceDigest": {
             "name": "configSourceDigest",
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Build/Build",
             "path": "https://spdx.org/rdf/3.0.0/terms/Build/configSourceDigest",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/Hash"
           },
           "configSourceEntrypoint": {
@@ -549,23 +524,20 @@
             "name": "configSourceEntrypoint",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Build/Build",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Build/configSourceEntrypoint",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Build/configSourceEntrypoint"
           },
           "configSourceUri": {
             "datatype": "anyURI",
             "name": "configSourceUri",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Build/Build",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Build/configSourceUri",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Build/configSourceUri"
           },
           "environment": {
             "name": "environment",
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Build/Build",
             "path": "https://spdx.org/rdf/3.0.0/terms/Build/environment",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/DictionaryEntry"
           },
           "parameters": {
@@ -573,7 +545,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Build/Build",
             "path": "https://spdx.org/rdf/3.0.0/terms/Build/parameters",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/DictionaryEntry"
           }
         },
@@ -697,8 +668,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Annotation",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/annotationType",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/annotationType"
           },
           "contentType": {
             "datatype": "MediaType",
@@ -706,8 +676,7 @@
             "name": "contentType",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Annotation",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/contentType",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/contentType"
           },
           "statement": {
             "datatype": "string",
@@ -715,8 +684,7 @@
             "name": "statement",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Annotation",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/statement",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/statement"
           },
           "subject": {
             "maxCount": 1,
@@ -725,7 +693,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Annotation",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/subject",
-            "required": true,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/Element"
           }
         },
@@ -745,15 +712,13 @@
             "name": "builtTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Artifact",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/builtTime",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/builtTime"
           },
           "originatedBy": {
             "name": "originatedBy",
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Artifact",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/originatedBy",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/Agent"
           },
           "releaseTime": {
@@ -762,16 +727,14 @@
             "name": "releaseTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Artifact",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/releaseTime",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/releaseTime"
           },
           "standardName": {
             "datatype": "string",
             "name": "standardName",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Artifact",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/standardName",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/standardName"
           },
           "suppliedBy": {
             "maxCount": 1,
@@ -779,7 +742,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Artifact",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/suppliedBy",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/Agent"
           },
           "supportLevel": {
@@ -816,8 +778,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Artifact",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/supportLevel",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/supportLevel"
           },
           "validUntilTime": {
             "datatype": "dateTimeStamp",
@@ -825,8 +786,7 @@
             "name": "validUntilTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Artifact",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/validUntilTime",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/validUntilTime"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Core/Element",
@@ -855,8 +815,7 @@
             "name": "context",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Bundle",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/context",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/context"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Core/ElementCollection",
@@ -875,8 +834,7 @@
             "name": "comment",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/CreationInfo",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/comment",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/comment"
           },
           "created": {
             "datatype": "dateTimeStamp",
@@ -885,8 +843,7 @@
             "name": "created",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/CreationInfo",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/created",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/created"
           },
           "createdBy": {
             "minCount": 1,
@@ -894,7 +851,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/CreationInfo",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/createdBy",
-            "required": true,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/Agent"
           },
           "createdUsing": {
@@ -902,7 +858,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/CreationInfo",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/createdUsing",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/Tool"
           },
           "specVersion": {
@@ -912,8 +867,7 @@
             "name": "specVersion",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/CreationInfo",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/specVersion",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/specVersion"
           }
         },
         "summary": "Provides information about the creation of the Element."
@@ -932,8 +886,7 @@
             "name": "key",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/DictionaryEntry",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/key",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/key"
           },
           "value": {
             "datatype": "string",
@@ -941,8 +894,7 @@
             "name": "value",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/DictionaryEntry",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/value",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/value"
           }
         },
         "summary": "A key with an associated value."
@@ -960,8 +912,7 @@
             "name": "comment",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Element",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/comment",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/comment"
           },
           "creationInfo": {
             "maxCount": 1,
@@ -970,7 +921,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Element",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/creationInfo",
-            "required": true,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/CreationInfo"
           },
           "description": {
@@ -979,15 +929,13 @@
             "name": "description",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Element",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/description",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/description"
           },
           "extension": {
             "name": "extension",
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Element",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/extension",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Extension/Extension"
           },
           "externalIdentifier": {
@@ -995,7 +943,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Element",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/externalIdentifier",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifier"
           },
           "externalRef": {
@@ -1003,7 +950,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Element",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/externalRef",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRef"
           },
           "name": {
@@ -1012,8 +958,7 @@
             "name": "name",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Element",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/name",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/name"
           },
           "summary": {
             "datatype": "string",
@@ -1021,15 +966,13 @@
             "name": "summary",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Element",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/summary",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/summary"
           },
           "verifiedUsing": {
             "name": "verifiedUsing",
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Element",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/verifiedUsing",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/IntegrityMethod"
           }
         },
@@ -1047,7 +990,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/ElementCollection",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/element",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/Element"
           },
           "profileConformance": {
@@ -1096,15 +1038,13 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/ElementCollection",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/profileConformance",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/profileConformance"
           },
           "rootElement": {
             "name": "rootElement",
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/ElementCollection",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/rootElement",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/Element"
           }
         },
@@ -1124,8 +1064,7 @@
             "name": "comment",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifier",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/comment",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/comment"
           },
           "externalIdentifierType": {
             "maxCount": 1,
@@ -1179,8 +1118,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifier",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/externalIdentifierType",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/externalIdentifierType"
           },
           "identifier": {
             "datatype": "string",
@@ -1189,16 +1127,14 @@
             "name": "identifier",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifier",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/identifier",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/identifier"
           },
           "identifierLocator": {
             "datatype": "anyURI",
             "name": "identifierLocator",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifier",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/identifierLocator",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/identifierLocator"
           },
           "issuingAuthority": {
             "datatype": "string",
@@ -1206,8 +1142,7 @@
             "name": "issuingAuthority",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifier",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/issuingAuthority",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/issuingAuthority"
           }
         },
         "summary": "A reference to a resource identifier defined outside the scope of SPDX-3.0 content that uniquely identifies an Element."
@@ -1225,7 +1160,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalMap",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/definingArtifact",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/Artifact"
           },
           "externalSpdxId": {
@@ -1235,8 +1169,7 @@
             "name": "externalSpdxId",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalMap",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/externalSpdxId",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/externalSpdxId"
           },
           "locationHint": {
             "datatype": "anyURI",
@@ -1244,15 +1177,13 @@
             "name": "locationHint",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalMap",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/locationHint",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/locationHint"
           },
           "verifiedUsing": {
             "name": "verifiedUsing",
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalMap",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/verifiedUsing",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/IntegrityMethod"
           }
         },
@@ -1271,8 +1202,7 @@
             "name": "comment",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRef",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/comment",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/comment"
           },
           "contentType": {
             "datatype": "MediaType",
@@ -1280,8 +1210,7 @@
             "name": "contentType",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRef",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/contentType",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/contentType"
           },
           "externalRefType": {
             "maxCount": 1,
@@ -1474,16 +1403,14 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRef",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/externalRefType",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/externalRefType"
           },
           "locator": {
             "datatype": "string",
             "name": "locator",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRef",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/locator",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/locator"
           }
         },
         "summary": "A reference to a resource outside the scope of SPDX-3.0 content related to an Element."
@@ -1587,8 +1514,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Hash",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/algorithm",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/algorithm"
           },
           "hashValue": {
             "datatype": "string",
@@ -1597,8 +1523,7 @@
             "name": "hashValue",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Hash",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/hashValue",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/hashValue"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Core/IntegrityMethod",
@@ -1617,8 +1542,7 @@
             "name": "comment",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/IntegrityMethod",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/comment",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/comment"
           }
         },
         "summary": "Provides an independently reproducible mechanism that permits verification of a specific Element."
@@ -1661,8 +1585,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopedRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/scope",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/scope"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Core/Relationship",
@@ -1682,8 +1605,7 @@
             "name": "namespace",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/NamespaceMap",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/namespace",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/namespace"
           },
           "prefix": {
             "datatype": "string",
@@ -1692,8 +1614,7 @@
             "name": "prefix",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/NamespaceMap",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/prefix",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/prefix"
           }
         },
         "summary": "A mapping between prefixes and namespace partial URIs."
@@ -1807,8 +1728,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/PackageVerificationCode",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/algorithm",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/algorithm"
           },
           "hashValue": {
             "datatype": "string",
@@ -1817,16 +1737,14 @@
             "name": "hashValue",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/PackageVerificationCode",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/hashValue",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/hashValue"
           },
           "packageVerificationCodeExcludedFile": {
             "datatype": "string",
             "name": "packageVerificationCodeExcludedFile",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/PackageVerificationCode",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/packageVerificationCodeExcludedFile",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/packageVerificationCodeExcludedFile"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Core/IntegrityMethod",
@@ -1856,8 +1774,7 @@
             "name": "beginIntegerRange",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/PositiveIntegerRange",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/beginIntegerRange",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/beginIntegerRange"
           },
           "endIntegerRange": {
             "datatype": "positiveInteger",
@@ -1866,8 +1783,7 @@
             "name": "endIntegerRange",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/PositiveIntegerRange",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/endIntegerRange",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/endIntegerRange"
           }
         },
         "summary": "A tuple of two positive integers that define a range."
@@ -1898,8 +1814,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Relationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/completeness",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/completeness"
           },
           "endTime": {
             "datatype": "dateTimeStamp",
@@ -1907,8 +1822,7 @@
             "name": "endTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Relationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/endTime",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/endTime"
           },
           "from": {
             "maxCount": 1,
@@ -1917,7 +1831,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Relationship",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/from",
-            "required": true,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/Element"
           },
           "relationshipType": {
@@ -2164,8 +2077,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Relationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/relationshipType",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/relationshipType"
           },
           "startTime": {
             "datatype": "dateTimeStamp",
@@ -2173,8 +2085,7 @@
             "name": "startTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Relationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/startTime",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/startTime"
           },
           "to": {
             "minCount": 1,
@@ -2182,7 +2093,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Relationship",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/to",
-            "required": true,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/Element"
           }
         },
@@ -2212,7 +2122,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/SpdxDocument",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/dataLicense",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/AnyLicenseInfo"
           },
           "imports": {
@@ -2220,7 +2129,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/SpdxDocument",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/imports",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalMap"
           },
           "namespaceMap": {
@@ -2228,7 +2136,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/SpdxDocument",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/namespaceMap",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/NamespaceMap"
           }
         },
@@ -3825,8 +3732,7 @@
             "name": "anonymizationMethodUsed",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/anonymizationMethodUsed",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/anonymizationMethodUsed"
           },
           "confidentialityLevel": {
             "maxCount": 1,
@@ -3851,8 +3757,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/confidentialityLevel",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/confidentialityLevel"
           },
           "dataCollectionProcess": {
             "datatype": "string",
@@ -3860,16 +3765,14 @@
             "name": "dataCollectionProcess",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/dataCollectionProcess",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/dataCollectionProcess"
           },
           "dataPreprocessing": {
             "datatype": "string",
             "name": "dataPreprocessing",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/dataPreprocessing",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/dataPreprocessing"
           },
           "datasetAvailability": {
             "maxCount": 1,
@@ -3898,8 +3801,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/datasetAvailability",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/datasetAvailability"
           },
           "datasetNoise": {
             "datatype": "string",
@@ -3907,8 +3809,7 @@
             "name": "datasetNoise",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/datasetNoise",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/datasetNoise"
           },
           "datasetSize": {
             "datatype": "nonNegativeInteger",
@@ -3916,8 +3817,7 @@
             "name": "datasetSize",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/datasetSize",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/datasetSize"
           },
           "datasetType": {
             "minCount": 1,
@@ -3982,8 +3882,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/datasetType",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/datasetType"
           },
           "datasetUpdateMechanism": {
             "datatype": "string",
@@ -3991,8 +3890,7 @@
             "name": "datasetUpdateMechanism",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/datasetUpdateMechanism",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/datasetUpdateMechanism"
           },
           "hasSensitivePersonalInformation": {
             "maxCount": 1,
@@ -4013,8 +3911,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/hasSensitivePersonalInformation",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/hasSensitivePersonalInformation"
           },
           "intendedUse": {
             "datatype": "string",
@@ -4022,23 +3919,20 @@
             "name": "intendedUse",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/intendedUse",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/intendedUse"
           },
           "knownBias": {
             "datatype": "string",
             "name": "knownBias",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetPackage",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/knownBias",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/knownBias"
           },
           "sensor": {
             "name": "sensor",
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetPackage",
             "path": "https://spdx.org/rdf/3.0.0/terms/Dataset/sensor",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/DictionaryEntry"
           }
         },
@@ -4340,7 +4234,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/ConjunctiveLicenseSet",
             "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/member",
-            "required": true,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/AnyLicenseInfo"
           }
         },
@@ -4380,7 +4273,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/DisjunctiveLicenseSet",
             "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/member",
-            "required": true,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/AnyLicenseInfo"
           }
         },
@@ -4420,8 +4312,7 @@
             "name": "isDeprecatedLicenseId",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/License",
-            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/isDeprecatedLicenseId",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/isDeprecatedLicenseId"
           },
           "isFsfLibre": {
             "datatype": "boolean",
@@ -4429,8 +4320,7 @@
             "name": "isFsfLibre",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/License",
-            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/isFsfLibre",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/isFsfLibre"
           },
           "isOsiApproved": {
             "datatype": "boolean",
@@ -4438,8 +4328,7 @@
             "name": "isOsiApproved",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/License",
-            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/isOsiApproved",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/isOsiApproved"
           },
           "licenseText": {
             "datatype": "string",
@@ -4448,8 +4337,7 @@
             "name": "licenseText",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/License",
-            "path": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/licenseText",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/licenseText"
           },
           "licenseXml": {
             "datatype": "string",
@@ -4457,8 +4345,7 @@
             "name": "licenseXml",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/License",
-            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/licenseXml",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/licenseXml"
           },
           "obsoletedBy": {
             "datatype": "string",
@@ -4466,16 +4353,14 @@
             "name": "obsoletedBy",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/License",
-            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/obsoletedBy",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/obsoletedBy"
           },
           "seeAlso": {
             "datatype": "anyURI",
             "name": "seeAlso",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/License",
-            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/seeAlso",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/seeAlso"
           },
           "standardLicenseHeader": {
             "datatype": "string",
@@ -4483,8 +4368,7 @@
             "name": "standardLicenseHeader",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/License",
-            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/standardLicenseHeader",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/standardLicenseHeader"
           },
           "standardLicenseTemplate": {
             "datatype": "string",
@@ -4492,8 +4376,7 @@
             "name": "standardLicenseTemplate",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/License",
-            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/standardLicenseTemplate",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/standardLicenseTemplate"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/ExtendableLicense",
@@ -4513,8 +4396,7 @@
             "name": "additionText",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/LicenseAddition",
-            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/additionText",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/additionText"
           },
           "isDeprecatedAdditionId": {
             "datatype": "boolean",
@@ -4522,8 +4404,7 @@
             "name": "isDeprecatedAdditionId",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/LicenseAddition",
-            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/isDeprecatedAdditionId",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/isDeprecatedAdditionId"
           },
           "licenseXml": {
             "datatype": "string",
@@ -4531,8 +4412,7 @@
             "name": "licenseXml",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/LicenseAddition",
-            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/licenseXml",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/licenseXml"
           },
           "obsoletedBy": {
             "datatype": "string",
@@ -4540,16 +4420,14 @@
             "name": "obsoletedBy",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/LicenseAddition",
-            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/obsoletedBy",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/obsoletedBy"
           },
           "seeAlso": {
             "datatype": "anyURI",
             "name": "seeAlso",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/LicenseAddition",
-            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/seeAlso",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/seeAlso"
           },
           "standardAdditionTemplate": {
             "datatype": "string",
@@ -4557,8 +4435,7 @@
             "name": "standardAdditionTemplate",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/LicenseAddition",
-            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/standardAdditionTemplate",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/standardAdditionTemplate"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Core/Element",
@@ -4577,8 +4454,7 @@
             "name": "deprecatedVersion",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/ListedLicense",
-            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/deprecatedVersion",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/deprecatedVersion"
           },
           "listVersionAdded": {
             "datatype": "string",
@@ -4586,8 +4462,7 @@
             "name": "listVersionAdded",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/ListedLicense",
-            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/listVersionAdded",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/listVersionAdded"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/License",
@@ -4606,8 +4481,7 @@
             "name": "deprecatedVersion",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/ListedLicenseException",
-            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/deprecatedVersion",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/deprecatedVersion"
           },
           "listVersionAdded": {
             "datatype": "string",
@@ -4615,8 +4489,7 @@
             "name": "listVersionAdded",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/ListedLicenseException",
-            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/listVersionAdded",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/listVersionAdded"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/LicenseAddition",
@@ -4636,7 +4509,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/OrLaterOperator",
             "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/subjectLicense",
-            "required": true,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/License"
           }
         },
@@ -4657,7 +4529,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/WithAdditionOperator",
             "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/subjectAddition",
-            "required": true,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/LicenseAddition"
           },
           "subjectExtendableLicense": {
@@ -4667,7 +4538,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/WithAdditionOperator",
             "path": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/subjectExtendableLicense",
-            "required": true,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/ExtendableLicense"
           }
         },
@@ -4852,7 +4722,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Extension/CdxPropertiesExtension",
             "path": "https://spdx.org/rdf/3.0.0/terms/Extension/cdxProperty",
-            "required": true,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Extension/CdxPropertyEntry"
           }
         },
@@ -4873,8 +4742,7 @@
             "name": "cdxPropName",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Extension/CdxPropertyEntry",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Extension/cdxPropName",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Extension/cdxPropName"
           },
           "cdxPropValue": {
             "datatype": "string",
@@ -4882,8 +4750,7 @@
             "name": "cdxPropValue",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Extension/CdxPropertyEntry",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Extension/cdxPropValue",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Extension/cdxPropValue"
           }
         },
         "summary": "A property name with an associated value."
@@ -4947,8 +4814,7 @@
             "name": "score",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/CvssV2VulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/score",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/score"
           },
           "vectorString": {
             "datatype": "string",
@@ -4957,8 +4823,7 @@
             "name": "vectorString",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/CvssV2VulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/vectorString",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/vectorString"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Security/VulnAssessmentRelationship",
@@ -4978,8 +4843,7 @@
             "name": "score",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/CvssV3VulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/score",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/score"
           },
           "severity": {
             "maxCount": 1,
@@ -5009,8 +4873,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/CvssV3VulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/severity",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/severity"
           },
           "vectorString": {
             "datatype": "string",
@@ -5019,8 +4882,7 @@
             "name": "vectorString",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/CvssV3VulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/vectorString",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/vectorString"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Security/VulnAssessmentRelationship",
@@ -5040,8 +4902,7 @@
             "name": "score",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/CvssV4VulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/score",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/score"
           },
           "severity": {
             "maxCount": 1,
@@ -5071,8 +4932,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/CvssV4VulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/severity",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/severity"
           },
           "vectorString": {
             "datatype": "string",
@@ -5081,8 +4941,7 @@
             "name": "vectorString",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/CvssV4VulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/vectorString",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/vectorString"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Security/VulnAssessmentRelationship",
@@ -5102,8 +4961,7 @@
             "name": "percentile",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/EpssVulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/percentile",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/percentile"
           },
           "probability": {
             "datatype": "decimal",
@@ -5112,8 +4970,7 @@
             "name": "probability",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/EpssVulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/probability",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/probability"
           },
           "publishedTime": {
             "datatype": "dateTimeStamp",
@@ -5122,8 +4979,7 @@
             "name": "publishedTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/EpssVulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/publishedTime",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/publishedTime"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Security/VulnAssessmentRelationship",
@@ -5152,8 +5008,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/ExploitCatalogVulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/catalogType",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/catalogType"
           },
           "exploited": {
             "datatype": "boolean",
@@ -5162,8 +5017,7 @@
             "name": "exploited",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/ExploitCatalogVulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/exploited",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/exploited"
           },
           "locator": {
             "datatype": "anyURI",
@@ -5172,8 +5026,7 @@
             "name": "locator",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/ExploitCatalogVulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/locator",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/locator"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Security/VulnAssessmentRelationship",
@@ -5210,8 +5063,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/SsvcVulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/decisionType",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/decisionType"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Security/VulnAssessmentRelationship",
@@ -5230,16 +5082,14 @@
             "name": "actionStatement",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/VexAffectedVulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/actionStatement",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/actionStatement"
           },
           "actionStatementTime": {
             "datatype": "dateTimeStamp",
             "name": "actionStatementTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/VexAffectedVulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/actionStatementTime",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/actionStatementTime"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Security/VexVulnAssessmentRelationship",
@@ -5268,8 +5118,7 @@
             "name": "impactStatement",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/VexNotAffectedVulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/impactStatement",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/impactStatement"
           },
           "impactStatementTime": {
             "datatype": "dateTimeStamp",
@@ -5277,8 +5126,7 @@
             "name": "impactStatementTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/VexNotAffectedVulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/impactStatementTime",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/impactStatementTime"
           },
           "justificationType": {
             "maxCount": 1,
@@ -5307,8 +5155,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/VexNotAffectedVulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/justificationType",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/justificationType"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Security/VexVulnAssessmentRelationship",
@@ -5337,8 +5184,7 @@
             "name": "statusNotes",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/VexVulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/statusNotes",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/statusNotes"
           },
           "vexVersion": {
             "datatype": "string",
@@ -5346,8 +5192,7 @@
             "name": "vexVersion",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/VexVulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/vexVersion",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/vexVersion"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Security/VulnAssessmentRelationship",
@@ -5366,7 +5211,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/VulnAssessmentRelationship",
             "path": "https://spdx.org/rdf/3.0.0/terms/Security/assessedElement",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/Element"
           },
           "modifiedTime": {
@@ -5375,8 +5219,7 @@
             "name": "modifiedTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/VulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/modifiedTime",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/modifiedTime"
           },
           "publishedTime": {
             "datatype": "dateTimeStamp",
@@ -5384,8 +5227,7 @@
             "name": "publishedTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/VulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/publishedTime",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/publishedTime"
           },
           "suppliedBy": {
             "maxCount": 1,
@@ -5393,7 +5235,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/VulnAssessmentRelationship",
             "path": "https://spdx.org/rdf/3.0.0/terms/Core/suppliedBy",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/Agent"
           },
           "withdrawnTime": {
@@ -5402,8 +5243,7 @@
             "name": "withdrawnTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/VulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/withdrawnTime",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/withdrawnTime"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Core/Relationship",
@@ -5422,8 +5262,7 @@
             "name": "modifiedTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/Vulnerability",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/modifiedTime",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/modifiedTime"
           },
           "publishedTime": {
             "datatype": "dateTimeStamp",
@@ -5431,8 +5270,7 @@
             "name": "publishedTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/Vulnerability",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/publishedTime",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/publishedTime"
           },
           "withdrawnTime": {
             "datatype": "dateTimeStamp",
@@ -5440,8 +5278,7 @@
             "name": "withdrawnTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/Vulnerability",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/withdrawnTime",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/withdrawnTime"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Core/Artifact",
@@ -5766,7 +5603,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/LicenseExpression",
             "path": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/customIdToUri",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/DictionaryEntry"
           },
           "licenseExpression": {
@@ -5776,8 +5612,7 @@
             "name": "licenseExpression",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/LicenseExpression",
-            "path": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/licenseExpression",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/licenseExpression"
           },
           "licenseListVersion": {
             "datatype": "SemVer",
@@ -5785,8 +5620,7 @@
             "name": "licenseListVersion",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/LicenseExpression",
-            "path": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/licenseListVersion",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/licenseListVersion"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/AnyLicenseInfo",
@@ -5806,8 +5640,7 @@
             "name": "licenseText",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/SimpleLicensingText",
-            "path": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/licenseText",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/licenseText"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Core/Element",
@@ -5880,8 +5713,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Software/ContentIdentifier",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Software/contentIdentifierType",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Software/contentIdentifierType"
           },
           "contentIdentifierValue": {
             "datatype": "anyURI",
@@ -5890,8 +5722,7 @@
             "name": "contentIdentifierValue",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Software/ContentIdentifier",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Software/contentIdentifierValue",
-            "required": true
+            "path": "https://spdx.org/rdf/3.0.0/terms/Software/contentIdentifierValue"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Core/IntegrityMethod",
@@ -5910,8 +5741,7 @@
             "name": "contentType",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Software/File",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Software/contentType",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Software/contentType"
           },
           "fileKind": {
             "maxCount": 1,
@@ -5928,8 +5758,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Software/File",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Software/fileKind",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Software/fileKind"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwareArtifact",
@@ -5948,8 +5777,7 @@
             "name": "downloadLocation",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Software/Package",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Software/downloadLocation",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Software/downloadLocation"
           },
           "homePage": {
             "datatype": "anyURI",
@@ -5957,8 +5785,7 @@
             "name": "homePage",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Software/Package",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Software/homePage",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Software/homePage"
           },
           "packageUrl": {
             "datatype": "anyURI",
@@ -5966,8 +5793,7 @@
             "name": "packageUrl",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Software/Package",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Software/packageUrl",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Software/packageUrl"
           },
           "packageVersion": {
             "datatype": "string",
@@ -5975,8 +5801,7 @@
             "name": "packageVersion",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Software/Package",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Software/packageVersion",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Software/packageVersion"
           },
           "sourceInfo": {
             "datatype": "string",
@@ -5984,8 +5809,7 @@
             "name": "sourceInfo",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Software/Package",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Software/sourceInfo",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Software/sourceInfo"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwareArtifact",
@@ -6028,8 +5852,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Software/Sbom",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Software/sbomType",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Software/sbomType"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Core/Bom",
@@ -6048,7 +5871,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Software/Snippet",
             "path": "https://spdx.org/rdf/3.0.0/terms/Software/byteRange",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/PositiveIntegerRange"
           },
           "lineRange": {
@@ -6057,7 +5879,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Software/Snippet",
             "path": "https://spdx.org/rdf/3.0.0/terms/Software/lineRange",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Core/PositiveIntegerRange"
           },
           "snippetFromFile": {
@@ -6067,7 +5888,6 @@
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Software/Snippet",
             "path": "https://spdx.org/rdf/3.0.0/terms/Software/snippetFromFile",
-            "required": true,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Software/File"
           }
         },
@@ -6203,23 +6023,20 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwareArtifact",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Software/additionalPurpose",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Software/additionalPurpose"
           },
           "attributionText": {
             "datatype": "string",
             "name": "attributionText",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwareArtifact",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Software/attributionText",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Software/attributionText"
           },
           "contentIdentifier": {
             "name": "contentIdentifier",
             "nodeKind": "BlankNodeOrIRI",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwareArtifact",
             "path": "https://spdx.org/rdf/3.0.0/terms/Software/contentIdentifier",
-            "required": false,
             "targetClass": "https://spdx.org/rdf/3.0.0/terms/Software/ContentIdentifier"
           },
           "copyrightText": {
@@ -6228,8 +6045,7 @@
             "name": "copyrightText",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwareArtifact",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Software/copyrightText",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Software/copyrightText"
           },
           "primaryPurpose": {
             "maxCount": 1,
@@ -6354,8 +6170,7 @@
               }
             ],
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwareArtifact",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Software/primaryPurpose",
-            "required": false
+            "path": "https://spdx.org/rdf/3.0.0/terms/Software/primaryPurpose"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Core/Artifact",

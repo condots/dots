@@ -14,7 +14,8 @@ import InstCanvas from '@/components/Inst/InstCanvas';
 export default function App() {
   useEffect(() => {
     const source = 'spdx-model.ttl';
-    updateOntology(source);
+    const model = 'model.json';
+    updateOntology(source, model);
     updateMediaTypes();
   }, []);
 

@@ -39,12 +39,22 @@ const NS = {
 
 const shaclLists: Map<IRI, IRI[]> = new Map();
 
+const isNode =
+  typeof process !== 'undefined' &&
+  process.versions != null &&
+  process.versions.node != null;
+
 export async function createGraph(source: string | File) {
   const url = source instanceof File ? source.name : source;
   const ext = url.split('.').pop() || '';
   let text: string;
   if (typeof source === 'string') {
-    text = await (await fetch(source)).text();
+    if (isNode) {
+      const { promises: fs } = await import('fs');
+      text = await fs.readFile(source, 'utf8');
+    } else {
+      text = await (await fetch(source)).text();
+    }
   } else if (source instanceof File) {
     text = await new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -101,10 +111,15 @@ export function mapIRIs(profiles: Profiles) {
 
 export async function enrichModelFromMarkdown(
   profiles: Profiles,
-  source: string
+  model: string
 ) {
-  const res = await fetch(source);
-  const markdown: Record<string, object> = await res.json();
+  let markdown: Record<string, object>;
+  if (isNode) {
+    const { promises: fs } = await import('fs');
+    markdown = JSON.parse(await fs.readFile(model, 'utf8'));
+  } else {
+    markdown = await (await fetch(model)).json();
+  }
   const modelProfiles = markdown.namespaces;
   const enrichedProfiles: EnrichedProfiles = {};
   for (const [profileName, profile] of Object.entries(profiles) as [

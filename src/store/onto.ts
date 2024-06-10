@@ -10,15 +10,7 @@ import superjson from 'superjson';
 import createSelectors from '@/store/createSelectors';
 import { Store } from 'n3';
 
-import {
-  Class,
-  ClassProperties,
-  EnrichedProfiles,
-  IRI,
-  Item,
-  Name,
-  RecClsProps,
-} from '@/types';
+import { Class, EnrichedProfiles, IRI, Item, Name, RecClsProps } from '@/types';
 import {
   createGraph,
   createModel,
@@ -78,11 +70,11 @@ const ontoStoreBase = create<OntoState>()(
 
 export const ontoStore = createSelectors(ontoStoreBase);
 
-export async function updateOntology(source: string | File) {
+export async function updateOntology(source: string | File, model: string) {
   // if (ontoStore.getState().source === source) return;
   const graph = await createGraph(source);
   const graphProfiles = createModel(graph);
-  const profiles = await enrichModelFromMarkdown(graphProfiles, 'model.json');
+  const profiles = await enrichModelFromMarkdown(graphProfiles, model);
   const iris = mapIRIs(profiles);
   const allRecClsProps = getAllRecClsProps(profiles, iris);
   ontoStore.setState({ source, graph, profiles, iris, allRecClsProps });
