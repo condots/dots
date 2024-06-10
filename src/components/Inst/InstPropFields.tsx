@@ -17,10 +17,8 @@ const InstPropFields = ({ nodeId }: { nodeId: string }) => {
           nodeProperty.classProperty.datatype &&
           inputProperties.has(nodeProperty.classProperty.datatype)
         ) {
-          const inputKind = inputProperties.get(
-            nodeProperty.classProperty.datatype
-          )!.inputKind;
-          if (inputKind === 'string') {
+          const p = inputProperties.get(nodeProperty.classProperty.datatype)!;
+          if (p.inputType === 'string') {
             return (
               <PropInputString
                 key={propertyId}
@@ -28,7 +26,7 @@ const InstPropFields = ({ nodeId }: { nodeId: string }) => {
                 propertyId={propertyId}
               />
             );
-          } else if (inputKind === 'number') {
+          } else if (p.inputType === 'number') {
             return (
               <PropInputNumber
                 key={propertyId}
@@ -36,7 +34,7 @@ const InstPropFields = ({ nodeId }: { nodeId: string }) => {
                 propertyId={propertyId}
               />
             );
-          } else if (inputKind === 'boolean') {
+          } else if (p.inputType === 'boolean') {
             return (
               <PropInputBoolean
                 key={propertyId}

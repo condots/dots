@@ -36,7 +36,7 @@ export const inputProperties: InputProperties = new Map([
     'anyURI',
     {
       icon: 'link',
-      inputKind: 'string',
+      inputType: 'string',
       helpText: 'Enter a valid IRI',
       validator: (v: string) =>
         typeof v === 'string' && v.length > 0 && isIri(v),
@@ -46,7 +46,7 @@ export const inputProperties: InputProperties = new Map([
     'boolean',
     {
       icon: 'toggle_off',
-      inputKind: 'boolean',
+      inputType: 'boolean',
       helpText: '',
       validator: (v: boolean) => typeof v === 'boolean',
     },
@@ -55,7 +55,7 @@ export const inputProperties: InputProperties = new Map([
     'dateTimeStamp',
     {
       icon: 'schedule',
-      inputKind: 'string',
+      inputType: 'string',
       helpText: 'Enter date-time in UTC using ISO-8601',
       validator: (v: string) =>
         moment(v, 'YYYY-MM-DDTHH:mm:ssZ', true).isValid(),
@@ -67,7 +67,7 @@ export const inputProperties: InputProperties = new Map([
     'decimal',
     {
       icon: 'numbers',
-      inputKind: 'number',
+      inputType: 'number',
       helpText: 'Enter a number',
       validator: (v: number) => typeof v === 'number',
     },
@@ -76,7 +76,7 @@ export const inputProperties: InputProperties = new Map([
     'nonNegativeInteger',
     {
       icon: 'numbers',
-      inputKind: 'number',
+      inputType: 'number',
       helpText: 'Enter a positive integer',
       validator: (v: number) => Number.isInteger(v) && v >= 0,
       min: 0,
@@ -86,7 +86,7 @@ export const inputProperties: InputProperties = new Map([
     'positiveInteger',
     {
       icon: 'numbers',
-      inputKind: 'number',
+      inputType: 'number',
       helpText: 'Enter zero or a positive integer',
       validator: (v: number) => Number.isInteger(v) && v > 0,
       min: 1,
@@ -96,7 +96,7 @@ export const inputProperties: InputProperties = new Map([
     'string',
     {
       icon: 'drive_file_rename_outline',
-      inputKind: 'string',
+      inputType: 'string',
       helpText: 'Enter a string',
       validator: (v: string) => typeof v === 'string' && v.length > 0,
     },
@@ -105,7 +105,7 @@ export const inputProperties: InputProperties = new Map([
     'SemVer',
     {
       icon: 'commit',
-      inputKind: 'string',
+      inputType: 'string',
       helpText: 'Enter version using SemVer 2.0.0',
       validator: (v: string) => Boolean(semver.valid(v)),
     },
@@ -114,7 +114,7 @@ export const inputProperties: InputProperties = new Map([
     'MediaType',
     {
       icon: 'drive_file_rename_outline',
-      inputKind: 'string',
+      inputType: 'string',
       helpText: 'Enter an RFC 2046 media type',
       validator: (v: string) =>
         typeof v === 'string' && /^[^/]+\/[^/]+$/.test(v),
@@ -173,12 +173,7 @@ export function generateNodeProperty(
     value,
     valid: false,
   };
-  if (classProperty.datatype === 'boolean') {
-    nodeProperty.value = Boolean(value);
-    nodeProperty.valid = true;
-  } else {
-    nodeProperty.valid = isNodePropertyValid(nodeProperty);
-  }
+  nodeProperty.valid = isNodePropertyValid(nodeProperty);
   return nodeProperty;
 }
 

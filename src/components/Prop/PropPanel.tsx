@@ -24,10 +24,10 @@ export default function PropPanel() {
           nodeProperty.classProperty.datatype &&
           inputProperties.has(nodeProperty.classProperty.datatype)
         ) {
-          const inputKind = inputProperties.get(
+          const inputType = inputProperties.get(
             nodeProperty.classProperty.datatype
-          )!.inputKind;
-          if (inputKind === 'string') {
+          )!.inputType;
+          if (inputType === 'string') {
             return (
               <PropInputString
                 key={propertyId}
@@ -35,7 +35,7 @@ export default function PropPanel() {
                 propertyId={propertyId}
               />
             );
-          } else if (inputKind === 'number') {
+          } else if (inputType === 'number') {
             return (
               <PropInputNumber
                 key={propertyId}
@@ -43,7 +43,7 @@ export default function PropPanel() {
                 propertyId={propertyId}
               />
             );
-          } else if (inputKind === 'boolean') {
+          } else if (inputType === 'boolean') {
             return (
               <PropInputBoolean
                 key={propertyId}
