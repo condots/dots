@@ -7,7 +7,6 @@ import 'primeflex/primeflex.css';
 import { updateOntology } from '@/store/onto';
 import { updateMediaTypes } from '@/store/app';
 import InfoDialog from '@/components/Onto/InfoDialog';
-import PropPanel from '@/components/Prop/PropPanel';
 import ClassMenu from '@/components/Onto/ClassMenu';
 import InstCanvas from '@/components/Inst/InstCanvas';
 
@@ -20,9 +19,8 @@ export default function App() {
   }, []);
 
   return (
-    <div className="h-screen w-screen bg-[#fafafa]">
+    <div className="fixed h-screen w-screen bg-[#fafafa]">
       <InfoDialog />
-      <PropPanel />
       <ClassMenu />
       <InstCanvas />
     </div>
