@@ -18,7 +18,6 @@ import {
 import InstNode from '@/components/Inst/InstNode';
 import InstEdge from '@/components/Inst/InstEdge';
 import { appStore } from '@/store/app';
-import { Crosshair1Icon } from '@radix-ui/react-icons';
 
 const nodeTypes = {
   inst: InstNode,
@@ -87,24 +86,30 @@ export default function InstCanvas() {
       onDrop={onDrop}
       onDragOver={onDragOver}
       zoomOnScroll={false}
+      zoomOnPinch={false}
+      zoomOnDoubleClick={false}
+      zoomActivationKeyCode={null}
       disableKeyboardA11y
+      preventScrolling={false}
     >
       {/* <DevTools /> */}
       <Background color="#00416b" variant={BackgroundVariant.Dots} />
       <Controls position="bottom-left" showZoom={true} showInteractive={false}>
         <ControlButton
+          onClick={() => handleTransform()}
+          title="recenter"
+          className="text-black"
+        >
+          <span className="material-symbols-outlined text-base">recenter</span>
+        </ControlButton>
+        <ControlButton
           onClick={() => flowStore.getState().reset()}
           title="clear"
           className="text-black"
         >
-          <div className="pi pi-eraser" />
-        </ControlButton>
-        <ControlButton
-          onClick={() => handleTransform()}
-          title="center"
-          className="text-black"
-        >
-          <Crosshair1Icon />
+          <span className="material-symbols-outlined text-base">
+            ink_eraser
+          </span>
         </ControlButton>
       </Controls>
       <Panel position="top-left" className="shadow-sm shadow-gray-300">
