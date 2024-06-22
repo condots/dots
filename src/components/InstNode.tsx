@@ -32,16 +32,16 @@ const InstNode = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
   }, [showExpandButton, data.expanded, nodeId]);
 
   const menuButton = (
-    <div className="w-[24px] h-[24px] flex items-center justify-center nodrag nopan">
+    <div className="min-w-[23px] h-[24px] flex items-center justify-center nodrag nopan">
       <NodeMenu nodeId={nodeId} />
     </div>
   );
 
   const expandButton = (
-    <div className="w-[24px] h-[24px] flex items-center justify-center">
+    <div className="min-w-[23px] h-[24px] flex items-center justify-center">
       {showExpandButton && (
         <Collapsible.Trigger asChild>
-          <button className="nodrag nopan selectable rounded text-spdx-dark hover:bg-spdx-dark/5 data-[state=open]:rotate-180 max-h-[23px]">
+          <button className="nodrag nopan outline-none p-1 rounded text-spdx-dark hover:bg-spdx-dark/5 data-[state=open]:rotate-180 max-h-[23px]">
             <ChevronDownIcon />
           </button>
         </Collapsible.Trigger>

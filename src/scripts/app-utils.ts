@@ -170,6 +170,7 @@ export function generateNodeProperty(
     classProperty,
     value,
     valid: false,
+    required: false,
   };
   nodeProperty.valid = isNodePropertyValid(nodeProperty);
   return nodeProperty;
@@ -192,6 +193,7 @@ export function initNodeProps(recursive: RecClsProps) {
   const nodeProperties = {} as NodeData['nodeProps'];
   for (const clsProp of required) {
     const nodeProp = generateNodeProperty(clsProp);
+    nodeProp.required = true;
     nodeProperties[nodeProp.id] = nodeProp;
   }
   return nodeProperties;

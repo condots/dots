@@ -88,6 +88,7 @@ export type NodeProperty = {
   classProperty: ClassProperty;
   value: string | number | boolean | undefined;
   valid: boolean;
+  required: boolean;
 };
 
 export type NodeData = {

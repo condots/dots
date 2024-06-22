@@ -67,10 +67,13 @@ const PropLabel = ({
           data-pr-tooltip={property.summary}
         >
           {property.name}
+          {propertyData.required && '*'}
         </label>
         {infoButton}
       </div>
-      <div className="flex items-center gap-x-0.5">{deleteButton}</div>
+      {!propertyData.required && (
+        <div className="flex items-center gap-x-0.5">{deleteButton}</div>
+      )}
     </div>
   );
 };
