@@ -73,7 +73,7 @@ const PropSelectField = ({
           text-sm 
           leading-none 
           h-7 
-          hover:bg-blue12/5 
+          hover:bg-spdx-dark/5 
         `}
       >
         <Select.Value placeholder="Select..." />

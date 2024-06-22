@@ -198,10 +198,10 @@ export function initNodeProps(recursive: RecClsProps) {
 }
 
 export const itemClass = `
-  text-sm text-blue12 rounded flex
+  text-sm text-spdx-dark rounded flex
   items-center h-6 relative p-2 select-none outline-none
   data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none 
-  data-[highlighted]:bg-blue12 data-[highlighted]:text-mauve1
+  data-[highlighted]:bg-spdx-dark data-[highlighted]:text-mauve1
 `;
 
 export const contentClass = `
@@ -217,7 +217,7 @@ export const contentClass = `
 export const targetClsTooltipClass = `
   text-sm text-mauve1 rounded flex
   items-center h-6 relative p-2 select-none outline-none
-  p-1 bg-blue12 
+  p-1 bg-spdx-dark 
   shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]
   will-change-[opacity,transform]
   data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade 
@@ -226,14 +226,12 @@ export const targetClsTooltipClass = `
   data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade 
 `;
 
-// items-center h-6 relative p-2 select-none outline-none
-// p-1 bg-mauve1
-export const clsNameTooltipClass = `
-  p-2 bg-mauve2 text-sm text-blue12 rounded border border-mauve6 select-none max-w-[250px] prose 
-  shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]
+export const tooltipClass = `
+  rounded select-none p-2 
+  bg-gray-500 text-mauve1 shadow shadow-blackA4 
   will-change-[opacity,transform]
   data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade 
   data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade 
   data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade 
-  data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade 
+  data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade
 `;

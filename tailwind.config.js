@@ -29,8 +29,6 @@ export default {
         },
         ...blackA,
         ...mauve,
-        ...violet,
-        ...blue,
       },
       keyframes: {
         slideDown: {

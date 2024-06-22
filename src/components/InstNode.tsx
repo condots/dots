@@ -8,7 +8,7 @@ import { Separator } from '@radix-ui/react-separator';
 
 import type { NodeData } from '@/types';
 import NodeMenu from '@/components/node/menu/NodeMenu';
-import ClassNameTooltip from '@/components/tooltip/ClassNameTooltip';
+import Tooltip from '@/components/tooltip/Tooltip';
 import PropFields from '@/components/node/prop/PropFields';
 
 const InstNode = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
@@ -42,14 +42,20 @@ const InstNode = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
           <div className="nodrag nopan flex">
             <NodeMenu nodeId={nodeId} />
           </div>
-          <ClassNameTooltip content={data.cls.name} disabled={tooltipDisabled}>
+          <Tooltip
+            content={data.cls.name}
+            disabled={tooltipDisabled}
+            delayDuration={1000}
+            sideOffset={9}
+            className="text-sm"
+          >
             <span
               ref={textRef}
               className="text-spdx-dark text-md font-medium w-full text-center truncate"
             >
               {data.cls.name}
             </span>
-          </ClassNameTooltip>
+          </Tooltip>
           <Collapsible.Trigger asChild>
             <button className="nodrag nopan selectable p-1 rounded text-spdx-dark hover:bg-spdx-dark/5 data-[state=open]:rotate-180">
               <ChevronDownIcon />

@@ -29,7 +29,7 @@ const InfoDialog = () => {
   return item ? (
     <Dialog.Root open={showInfoDialog} onOpenChange={handleOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="bg-blackA6 data-[state=open]:animate-overlayShow fixed inset-0 DialogOverlay" />
+        <Dialog.Overlay className="bg-blackA7 data-[state=open]:animate-overlayShow fixed inset-0 DialogOverlay" />
         <Dialog.Content
           className="
           data-[state=open]:animate-contentShow 

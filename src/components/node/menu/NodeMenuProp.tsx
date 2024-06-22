@@ -10,8 +10,7 @@ import {
   getClassPropertyIcon,
   itemClass,
 } from '@/scripts/app-utils';
-import { getItem, ontoStore } from '@/store/onto';
-import SummaryTooltip from '@/components/tooltip/SummaryTooltip';
+import { ontoStore } from '@/store/onto';
 
 const NodeMenuProp = ({ nodeId }: { nodeId: string }) => {
   const node = getNode(nodeId);
@@ -44,22 +43,17 @@ const NodeMenuProp = ({ nodeId }: { nodeId: string }) => {
       for (const [propName, clsProp] of Object.entries(clsProps).sort()) {
         if (!clsProp.targetClass) {
           propItems.push(
-            <SummaryTooltip
+            <DropdownMenu.Item
               key={clsProp.path}
-              content={getItem(clsProp.path)!.summary}
-              delay={2000}
+              onMouseDown={e => handleMouseDown(e, clsProp)}
+              disabled={reachedMaxCount(clsProp.path, clsProp.maxCount)}
+              className={itemClass}
             >
-              <DropdownMenu.Item
-                onMouseDown={e => handleMouseDown(e, clsProp)}
-                disabled={reachedMaxCount(clsProp.path, clsProp.maxCount)}
-                className={itemClass}
-              >
-                <span className="mr-2">{propName}</span>
-                <span className="material-symbols-outlined text-sm ml-auto">
-                  {getClassPropertyIcon(clsProp)}
-                </span>
-              </DropdownMenu.Item>
-            </SummaryTooltip>
+              <span className="mr-2">{propName}</span>
+              <span className="material-symbols-outlined text-sm ml-auto">
+                {getClassPropertyIcon(clsProp)}
+              </span>
+            </DropdownMenu.Item>
           );
         }
       }
