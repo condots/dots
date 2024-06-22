@@ -8,7 +8,7 @@ import { Sidebar } from 'primereact/sidebar';
 import { ontoStore } from '@/store/onto';
 import { appStore } from '@/store/app';
 
-const ClassMenu = () => {
+const ProfileMenu = () => {
   const showClassesMenu = appStore.use.showClassesMenu();
   const profiles = ontoStore.use.profiles();
   const [expandedKeys, setExpandedKeys] = useState({});
@@ -125,4 +125,4 @@ const ClassMenu = () => {
   );
 };
 
-export default ClassMenu;
+export default ProfileMenu;

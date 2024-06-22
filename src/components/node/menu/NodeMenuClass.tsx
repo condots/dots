@@ -16,7 +16,7 @@ import {
 } from '@/scripts/app-utils';
 import { getItem, ontoStore } from '@/store/onto';
 
-const InstClassMenu = ({ nodeId }: { nodeId: string }) => {
+const NodeMenuClass = ({ nodeId }: { nodeId: string }) => {
   const node = getNode(nodeId);
   const { addEdges } = useReactFlow();
 
@@ -130,4 +130,4 @@ const InstClassMenu = ({ nodeId }: { nodeId: string }) => {
   ) : null;
 };
 
-export default InstClassMenu;
+export default NodeMenuClass;

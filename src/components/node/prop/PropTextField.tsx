@@ -4,7 +4,7 @@ import { NodeProperty } from '@/types';
 import { inputProperties } from '@/scripts/app-utils';
 import { getNodeProperty, setNodeProperty } from '@/store/flow';
 
-const InstPropTextField = ({
+const PropTextField = ({
   nodeId,
   propertyId,
 }: {
@@ -40,4 +40,4 @@ const InstPropTextField = ({
   );
 };
 
-export default InstPropTextField;
+export default PropTextField;

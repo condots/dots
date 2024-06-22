@@ -5,13 +5,13 @@ import { appStore } from '@/store/app';
 import { getNodeProperty, deleteNodeProperty } from '@/store/flow';
 import { getItem } from '@/store/onto';
 
-export default function InstPropLabel({
+const PropLabel = ({
   nodeId,
   propertyId,
 }: {
   nodeId: string;
   propertyId: string;
-}) {
+}) => {
   const propertyData = getNodeProperty(nodeId, propertyId)!;
   const property = getItem(propertyData.classProperty.path) as Property;
   const [infoHovered, setInfoHovered] = useState(false);
@@ -73,4 +73,6 @@ export default function InstPropLabel({
       <div className="flex items-center gap-x-0.5">{deleteButton}</div>
     </div>
   );
-}
+};
+
+export default PropLabel;

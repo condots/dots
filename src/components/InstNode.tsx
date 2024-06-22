@@ -1,16 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
+
 import type { NodeProps } from 'reactflow';
 import { Position, Handle } from 'reactflow';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import * as Collapsible from '@radix-ui/react-collapsible';
-
-import InstMenu from '@/components/Inst/InstMenu';
-import ClassNameTooltip from '@/components/Shared/ClassNameTooltip';
-import { NodeData } from '@/types';
 import { Separator } from '@radix-ui/react-separator';
-import InstPropFields from '@/components/Inst/InstPropFields';
 
-function InstNode({ id: nodeId, data, selected }: NodeProps<NodeData>) {
+import type { NodeData } from '@/types';
+import NodeMenu from '@/components/node/menu/NodeMenu';
+import ClassNameTooltip from '@/components/tooltip/ClassNameTooltip';
+import PropFields from '@/components/node/prop/PropFields';
+
+const InstNode = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
   const [open, setOpen] = useState(false);
   const [tooltipDisabled, setTooltipDisabled] = useState(false);
   const textRef = useRef<HTMLSpanElement | null>(null);
@@ -39,7 +40,7 @@ function InstNode({ id: nodeId, data, selected }: NodeProps<NodeData>) {
       >
         <div className="flex items-center justify-between p-2 gap-[5px]">
           <div className="nodrag nopan flex">
-            <InstMenu nodeId={nodeId} />
+            <NodeMenu nodeId={nodeId} />
           </div>
           <ClassNameTooltip content={data.cls.name} disabled={tooltipDisabled}>
             <span
@@ -66,7 +67,7 @@ function InstNode({ id: nodeId, data, selected }: NodeProps<NodeData>) {
             h-full
           "
           >
-            <InstPropFields nodeId={nodeId} />
+            <PropFields nodeId={nodeId} />
           </div>
         </Collapsible.Content>
       </Collapsible.Root>
@@ -78,6 +79,6 @@ function InstNode({ id: nodeId, data, selected }: NodeProps<NodeData>) {
       )}
     </div>
   );
-}
+};
 
 export default InstNode;

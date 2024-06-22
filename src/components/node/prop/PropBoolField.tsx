@@ -2,7 +2,7 @@ import React, { memo, useState } from 'react';
 
 import { getNodeProperty, setNodeProperty } from '@/store/flow';
 
-const InstPropBoolField = ({
+const PropBoolField = ({
   nodeId,
   propertyId,
 }: {
@@ -35,4 +35,4 @@ const InstPropBoolField = ({
   );
 };
 
-export default InstPropBoolField;
+export default PropBoolField;

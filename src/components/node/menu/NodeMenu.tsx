@@ -6,10 +6,10 @@ import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import { appStore } from '@/store/app';
 import { contentClass, itemClass } from '@/scripts/app-utils';
 import { deleteNode, getNode, setNodeMenuState } from '@/store/flow';
-import InstClassMenu from '@/components/Inst/InstClassMenu';
-import InstPropMenu from '@/components/Inst/InstPropMenu';
+import NodeMenuClass from '@/components/node/menu/NodeMenuClass';
+import NodeMenuProp from '@/components/node/menu/NodeMenuProp';
 
-const InstMenu = ({ nodeId }: { nodeId: string }) => {
+const NodeMenu = ({ nodeId }: { nodeId: string }) => {
   const node = getNode(nodeId);
 
   const GetInfo = (
@@ -48,8 +48,8 @@ const InstMenu = ({ nodeId }: { nodeId: string }) => {
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content className={contentClass} align="start">
-          <InstPropMenu nodeId={nodeId} />
-          <InstClassMenu nodeId={nodeId} />
+          <NodeMenuProp nodeId={nodeId} />
+          <NodeMenuClass nodeId={nodeId} />
           {GetInfo}
           {Delete}
         </DropdownMenu.Content>
@@ -58,4 +58,4 @@ const InstMenu = ({ nodeId }: { nodeId: string }) => {
   );
 };
 
-export default InstMenu;
+export default NodeMenu;

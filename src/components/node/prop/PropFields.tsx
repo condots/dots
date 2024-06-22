@@ -2,12 +2,12 @@ import React from 'react';
 
 import { getNode } from '@/store/flow';
 import { inputProperties } from '@/scripts/app-utils';
-import InstPropSelectField from '@/components/Inst/InstPropSelectField';
-import InstPropLabel from '@/components/Inst/InstPropLabel';
-import InstPropTextField from '@/components/Inst/InstPropTextField';
-import InstPropBoolField from '@/components/Inst/InstPropBoolField';
+import PropSelectField from '@/components/node/prop/PropSelectField';
+import PropLabel from '@/components/node/prop/PropLabel';
+import PropTextField from '@/components/node/prop/PropTextField';
+import PropBoolField from '@/components/node/prop/PropBoolField';
 
-const InstPropFields = ({ nodeId }: { nodeId: string }) => {
+const PropFields = ({ nodeId }: { nodeId: string }) => {
   const node = getNode(nodeId);
   const nodeProperties = node?.data.nodeProps;
 
@@ -25,8 +25,8 @@ const InstPropFields = ({ nodeId }: { nodeId: string }) => {
                 className={`flex-auto w-full ${borderColor}`}
                 key={propertyId}
               >
-                <InstPropLabel nodeId={nodeId} propertyId={propertyId} />
-                <InstPropTextField nodeId={nodeId} propertyId={propertyId} />
+                <PropLabel nodeId={nodeId} propertyId={propertyId} />
+                <PropTextField nodeId={nodeId} propertyId={propertyId} />
               </div>
             );
           } else if (nodeProperty.classProperty.datatype === 'boolean') {
@@ -41,16 +41,16 @@ const InstPropFields = ({ nodeId }: { nodeId: string }) => {
                 `}
                 key={propertyId}
               >
-                <InstPropBoolField nodeId={nodeId} propertyId={propertyId} />
-                <InstPropLabel nodeId={nodeId} propertyId={propertyId} />
+                <PropBoolField nodeId={nodeId} propertyId={propertyId} />
+                <PropLabel nodeId={nodeId} propertyId={propertyId} />
               </div>
             );
           }
         } else if (nodeProperty.classProperty.options) {
           return (
             <div className={`flex-auto w-full ${borderColor}`} key={propertyId}>
-              <InstPropLabel nodeId={nodeId} propertyId={propertyId} />
-              <InstPropSelectField nodeId={nodeId} propertyId={propertyId} />
+              <PropLabel nodeId={nodeId} propertyId={propertyId} />
+              <PropSelectField nodeId={nodeId} propertyId={propertyId} />
             </div>
           );
         }
@@ -64,4 +64,4 @@ const InstPropFields = ({ nodeId }: { nodeId: string }) => {
   );
 };
 
-export default InstPropFields;
+export default PropFields;

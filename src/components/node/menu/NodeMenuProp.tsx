@@ -11,9 +11,9 @@ import {
   itemClass,
 } from '@/scripts/app-utils';
 import { getItem, ontoStore } from '@/store/onto';
-import SummaryTooltip from '@/components/Shared/SummaryTooltip';
+import SummaryTooltip from '@/components/tooltip/SummaryTooltip';
 
-const InstPropMenu = ({ nodeId }: { nodeId: string }) => {
+const NodeMenuProp = ({ nodeId }: { nodeId: string }) => {
   const node = getNode(nodeId);
 
   const items = useCallback(() => {
@@ -103,4 +103,4 @@ const InstPropMenu = ({ nodeId }: { nodeId: string }) => {
   ) : null;
 };
 
-export default InstPropMenu;
+export default NodeMenuProp;

@@ -43,7 +43,7 @@ const SelectItem = React.forwardRef(({ children, ...props }, forwardedRef) => {
 
 SelectItem.displayName = 'SelectItem';
 
-const InstPropSelectField = ({
+const PropSelectField = ({
   nodeId,
   propertyId,
 }: {
@@ -104,4 +104,4 @@ const InstPropSelectField = ({
   );
 };
 
-export default InstPropSelectField;
+export default PropSelectField;

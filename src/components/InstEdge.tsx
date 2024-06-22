@@ -1,22 +1,24 @@
-import React, { memo, useCallback } from 'react';
+import React, { useCallback } from 'react';
+
 import {
   useStore,
   BaseEdge,
   getSmoothStepPath,
   EdgeLabelRenderer,
-  EdgeProps,
 } from 'reactflow';
+
+import type { EdgeProps } from 'reactflow';
 
 import { getEdgeParams } from '@/scripts/flow-utils.js';
 
-const InstEdge = memo(function InstEdge({
+const InstEdge = ({
   id,
   source,
   target,
   markerEnd,
   style,
   data,
-}: EdgeProps) {
+}: EdgeProps) => {
   const sourceNode = useStore(
     useCallback(store => store.nodeInternals.get(source), [source])
   );
@@ -59,6 +61,6 @@ const InstEdge = memo(function InstEdge({
       </EdgeLabelRenderer>
     </>
   );
-});
+};
 
 export default InstEdge;

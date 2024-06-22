@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { flowStore, addNode, isValidConnection } from '@/store/flow';
+
 import {
   Background,
   BackgroundVariant,
@@ -15,9 +15,10 @@ import {
   useReactFlow,
 } from 'reactflow';
 
-import InstNode from '@/components/Inst/InstNode';
-import InstEdge from '@/components/Inst/InstEdge';
 import { appStore } from '@/store/app';
+import { flowStore, addNode, isValidConnection } from '@/store/flow';
+import InstNode from '@/components/InstNode';
+import InstEdge from '@/components/InstEdge';
 
 const nodeTypes = {
   inst: InstNode,
@@ -40,7 +41,7 @@ const defaultEdgeOptions = {
   data: {},
 } satisfies DefaultEdgeOptions;
 
-export default function InstCanvas() {
+const Canvas = () => {
   const nodes = flowStore.use.nodes();
   const edges = flowStore.use.edges();
   const { setViewport } = useReactFlow();
@@ -123,4 +124,6 @@ export default function InstCanvas() {
       </Panel>
     </ReactFlow>
   );
-}
+};
+
+export default Canvas;
