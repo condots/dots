@@ -15,6 +15,7 @@ import PropFields from '@/components/node/prop/PropFields';
 const InstNode = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
   const [tooltipDisabled, setTooltipDisabled] = useState(false);
   const textRef = useRef<HTMLSpanElement | null>(null);
+  const showExpandButton = Object.entries(data.nodeProps).length > 0;
 
   useEffect(() => {
     if (textRef.current) {
@@ -23,6 +24,30 @@ const InstNode = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
       setTooltipDisabled(selected || !truncated);
     }
   }, [data.cls.name, selected]);
+
+  useEffect(() => {
+    if (!showExpandButton && data.expanded) {
+      setNodeExpanded(nodeId, false);
+    }
+  }, [showExpandButton, data.expanded, nodeId]);
+
+  const menuButton = (
+    <div className="w-[24px] h-[24px] flex items-center justify-center nodrag nopan">
+      <NodeMenu nodeId={nodeId} />
+    </div>
+  );
+
+  const expandButton = (
+    <div className="w-[24px] h-[24px] flex items-center justify-center">
+      {showExpandButton && (
+        <Collapsible.Trigger asChild>
+          <button className="nodrag nopan selectable rounded text-spdx-dark hover:bg-spdx-dark/5 data-[state=open]:rotate-180 max-h-[23px]">
+            <ChevronDownIcon />
+          </button>
+        </Collapsible.Trigger>
+      )}
+    </div>
+  );
 
   if (!data.cls) {
     return null;
@@ -39,9 +64,7 @@ const InstNode = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
         `}
       >
         <div className="flex items-center justify-between p-2 gap-[5px]">
-          <div className="nodrag nopan flex">
-            <NodeMenu nodeId={nodeId} />
-          </div>
+          {menuButton}
           <Tooltip
             content={data.cls.name}
             disabled={tooltipDisabled}
@@ -56,11 +79,7 @@ const InstNode = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
               {data.cls.name}
             </span>
           </Tooltip>
-          <Collapsible.Trigger asChild>
-            <button className="nodrag nopan selectable p-1 rounded text-spdx-dark hover:bg-spdx-dark/5 data-[state=open]:rotate-180">
-              <ChevronDownIcon />
-            </button>
-          </Collapsible.Trigger>
+          {expandButton}
         </div>
         <Collapsible.Content className="nodrag nopan cursor-auto overflow-hidden data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp">
           <Separator className="bg-spdx-dark h-[1px]" decorative />
