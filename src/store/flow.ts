@@ -260,3 +260,9 @@ export function setNodeMenuState(nodeId: string, open: boolean) {
     state.nodes.find(n => n.id === nodeId)!.data.menuOpen = open;
   });
 }
+
+export function setNodeExpanded(nodeId: string, open: boolean) {
+  flowStore.setState(state => {
+    state.nodes.find(n => n.id === nodeId)!.data.expanded = open;
+  });
+}

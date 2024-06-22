@@ -4,7 +4,12 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 
 import { ClassProperty, IRI } from '@/types';
-import { addNodeProperty, getNode, setNodeMenuState } from '@/store/flow';
+import {
+  addNodeProperty,
+  getNode,
+  setNodeExpanded,
+  setNodeMenuState,
+} from '@/store/flow';
 import {
   contentClass,
   getClassPropertyIcon,
@@ -33,6 +38,7 @@ const NodeMenuProp = ({ nodeId }: { nodeId: string }) => {
       if (event.button !== 0) return;
       addNodeProperty(node.id, classProperty);
       setNodeMenuState(node.id, event.metaKey);
+      setNodeExpanded(nodeId, true);
     };
 
     const recClsProps =

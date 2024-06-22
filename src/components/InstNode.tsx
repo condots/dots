@@ -7,12 +7,12 @@ import * as Collapsible from '@radix-ui/react-collapsible';
 import { Separator } from '@radix-ui/react-separator';
 
 import type { NodeData } from '@/types';
+import { setNodeExpanded } from '@/store/flow';
 import NodeMenu from '@/components/node/menu/NodeMenu';
 import Tooltip from '@/components/tooltip/Tooltip';
 import PropFields from '@/components/node/prop/PropFields';
 
 const InstNode = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
-  const [open, setOpen] = useState(false);
   const [tooltipDisabled, setTooltipDisabled] = useState(false);
   const textRef = useRef<HTMLSpanElement | null>(null);
 
@@ -30,8 +30,8 @@ const InstNode = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
   return (
     <div>
       <Collapsible.Root
-        open={open}
-        onOpenChange={setOpen}
+        open={data.expanded}
+        onOpenChange={open => setNodeExpanded(nodeId, open)}
         className={`
           cursor-move m-1 rounded w-64 bg-white shadow-2 outline outline-spdx-dark outline-1
           ${selected && 'outline-2'} 
