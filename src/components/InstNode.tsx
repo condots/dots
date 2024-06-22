@@ -82,7 +82,7 @@ const InstNode = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
           {expandButton}
         </div>
         <Collapsible.Content className="nodrag nopan cursor-auto overflow-hidden data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp">
-          <Separator className="bg-spdx-dark h-[1px]" decorative />
+          <Separator className="bg-spdx-dark pt-[1px] h-[1px]" decorative />
           <div
             className="
             text-spdx-dark 
