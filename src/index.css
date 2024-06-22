@@ -21,3 +21,12 @@ body,
 .htmlContent a {
   @apply text-blue-500 underline;
 }
+
+input[type='datetime-local']::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+
+input[type='datetime-local']:hover::-webkit-calendar-picker-indicator,
+input[type='datetime-local']:focus::-webkit-calendar-picker-indicator {
+  opacity: 1;
+}
