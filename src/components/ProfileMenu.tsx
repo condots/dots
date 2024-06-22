@@ -17,9 +17,9 @@ const ProfileMenu = () => {
   useEffect(() => {
     const items = [];
     if (!profiles) return;
-    for (const [profileName, profile] of Object.entries(profiles)) {
+    for (const [profileName, profile] of Object.entries(profiles).sort()) {
       const subitems = [];
-      for (const [className, cls] of Object.entries(profile.classes)) {
+      for (const [className, cls] of Object.entries(profile.classes).sort()) {
         if (cls.abstract) continue;
         subitems.push({
           key: className,
