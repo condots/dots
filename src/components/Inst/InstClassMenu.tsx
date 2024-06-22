@@ -100,7 +100,7 @@ const InstClassMenu = ({ nodeId }: { nodeId: string }) => {
             <DropdownMenu.SubContent
               className={contentClass}
               sideOffset={-1}
-              alignOffset={-1}
+              alignOffset={-5}
             >
               {propItems}
             </DropdownMenu.SubContent>
@@ -114,14 +114,14 @@ const InstClassMenu = ({ nodeId }: { nodeId: string }) => {
   return items().length > 0 ? (
     <DropdownMenu.Sub>
       <DropdownMenu.SubTrigger className={itemClass}>
-        <span>Add Class</span>
+        <span className="p-1">Add Class</span>
         <ChevronRightIcon />
       </DropdownMenu.SubTrigger>
       <DropdownMenu.Portal>
         <DropdownMenu.SubContent
           className={contentClass}
           sideOffset={-1}
-          alignOffset={-1}
+          alignOffset={-5}
         >
           {items()}
         </DropdownMenu.SubContent>

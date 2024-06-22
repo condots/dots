@@ -55,7 +55,7 @@ const InstPropMenu = ({ nodeId }: { nodeId: string }) => {
                 className={itemClass}
               >
                 <span className="mr-2">{propName}</span>
-                <span className="material-icons-outlined text-sm ml-auto">
+                <span className="material-symbols-outlined text-sm ml-auto">
                   {getClassPropertyIcon(clsProp)}
                 </span>
               </DropdownMenu.Item>
@@ -73,7 +73,7 @@ const InstPropMenu = ({ nodeId }: { nodeId: string }) => {
             <DropdownMenu.SubContent
               className={contentClass}
               sideOffset={-1}
-              alignOffset={-1}
+              alignOffset={-5}
             >
               {propItems}
             </DropdownMenu.SubContent>
@@ -87,14 +87,14 @@ const InstPropMenu = ({ nodeId }: { nodeId: string }) => {
   return items().length > 0 ? (
     <DropdownMenu.Sub>
       <DropdownMenu.SubTrigger className={itemClass}>
-        <span>Add Property</span>
+        <span className="p-1">Add Property</span>
         <ChevronRightIcon />
       </DropdownMenu.SubTrigger>
       <DropdownMenu.Portal>
         <DropdownMenu.SubContent
           className={contentClass}
           sideOffset={-1}
-          alignOffset={-1}
+          alignOffset={-5}
         >
           {items()}
         </DropdownMenu.SubContent>

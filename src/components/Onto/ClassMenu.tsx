@@ -96,12 +96,12 @@ const ClassMenu = () => {
       dragdropScope="reactflow"
       pt={{ droppoint: { className: 'h-0' } }}
       expandIcon={
-        <span className="material-icons-outlined text-sm text-gray-500">
+        <span className="material-symbols-outlined text-sm text-gray-500">
           add_box
         </span>
       }
       collapseIcon={
-        <span className="material-icons-outlined text-sm text-gray-500">
+        <span className="material-symbols-outlined text-sm text-gray-500">
           indeterminate_check_box
         </span>
       }
