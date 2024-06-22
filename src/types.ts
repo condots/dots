@@ -108,11 +108,15 @@ export type RecClsProps = Map<string, ClassProperties>;
 
 export interface InputProperty {
   icon: string;
-  inputType: 'string' | 'number' | 'boolean';
-  helpText: string;
-  validator: (v) => boolean;
+  helpText?: string;
+  validator?: (v) => boolean;
+  inputType?: 'text' | 'number';
   mask?: string;
   slotChar?: string;
   min?: number;
   max?: number;
+  step?: number;
+  minLength?: number;
+  maxLength?: number;
+  pattern?: string;
 }

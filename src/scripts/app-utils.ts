@@ -36,8 +36,8 @@ export const inputProperties: InputProperties = new Map([
     'anyURI',
     {
       icon: 'link',
-      inputType: 'string',
-      helpText: 'Enter a valid IRI',
+      inputType: 'url',
+      helpText: 'Enter a valid IRI...',
       validator: (v: string) =>
         typeof v === 'string' && v.length > 0 && isIri(v),
     },
@@ -46,21 +46,17 @@ export const inputProperties: InputProperties = new Map([
     'boolean',
     {
       icon: 'toggle_off',
-      inputType: 'boolean',
-      helpText: '',
       validator: (v: boolean) => typeof v === 'boolean',
     },
   ],
   [
     'dateTimeStamp',
     {
-      icon: 'schedule',
-      inputType: 'string',
-      helpText: 'Enter date-time in UTC using ISO-8601',
+      icon: 'calendar_today',
+      inputType: 'datetime-local',
       validator: (v: string) =>
-        moment(v, 'YYYY-MM-DDTHH:mm:ssZ', true).isValid(),
-      mask: '9999-99-99T99:99:99Z',
-      slotChar: 'YYYY-MM-DDTHH:mm:ssZ',
+        moment(v, 'YYYY-MM-DDTHH:mm:ss', true).isValid(),
+      step: 1,
     },
   ],
   [
@@ -68,7 +64,7 @@ export const inputProperties: InputProperties = new Map([
     {
       icon: 'numbers',
       inputType: 'number',
-      helpText: 'Enter a number',
+      helpText: 'Enter a number...',
       validator: (v: number) => typeof v === 'number',
     },
   ],
@@ -77,9 +73,10 @@ export const inputProperties: InputProperties = new Map([
     {
       icon: 'numbers',
       inputType: 'number',
-      helpText: 'Enter a positive integer',
+      helpText: 'Enter a positive integer...',
       validator: (v: number) => Number.isInteger(v) && v >= 0,
       min: 0,
+      step: 1,
     },
   ],
   [
@@ -87,17 +84,18 @@ export const inputProperties: InputProperties = new Map([
     {
       icon: 'numbers',
       inputType: 'number',
-      helpText: 'Enter zero or a positive integer',
+      helpText: 'Enter zero or positive integer...',
       validator: (v: number) => Number.isInteger(v) && v > 0,
       min: 1,
+      step: 1,
     },
   ],
   [
     'string',
     {
       icon: 'drive_file_rename_outline',
-      inputType: 'string',
-      helpText: 'Enter a string',
+      inputType: 'text',
+      helpText: 'Enter text...',
       validator: (v: string) => typeof v === 'string' && v.length > 0,
     },
   ],
@@ -105,8 +103,8 @@ export const inputProperties: InputProperties = new Map([
     'SemVer',
     {
       icon: 'commit',
-      inputType: 'string',
-      helpText: 'Enter version using SemVer 2.0.0',
+      inputType: 'text',
+      helpText: 'Enter version using SemVer...',
       validator: (v: string) => Boolean(semver.valid(v)),
     },
   ],
@@ -114,8 +112,8 @@ export const inputProperties: InputProperties = new Map([
     'MediaType',
     {
       icon: 'drive_file_rename_outline',
-      inputType: 'string',
-      helpText: 'Enter an RFC 2046 media type',
+      inputType: 'text',
+      helpText: 'Enter media type using RFC 2046',
       validator: (v: string) =>
         typeof v === 'string' && /^[^/]+\/[^/]+$/.test(v),
     },
