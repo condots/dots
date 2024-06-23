@@ -139,10 +139,13 @@ export const getClassPropertyIcon = (classProperty: ClassProperty) => {
 export async function getMediaTypes() {
   // Using local copy of "Media Types" to avoid CORS issues with:
   // "https://www.iana.org/assignments/media-types/application.csv"
-  const url = 'media-csv';
+  const url = 'media-types.csv';
   const csv = (await (await fetch(url)).text()) ?? '';
   const mediaTypes: PropertyOption[] = await new Promise(resolve =>
     Papa.parse(csv, {
+      config: {
+        skipEmptyLines: true,
+      },
       complete: function (res) {
         resolve(
           res.data.slice(1).map(row => {
@@ -207,7 +210,7 @@ export const itemClass = `
 `;
 
 export const contentClass = `
-  p-1 bg-mauve1 rounded border border-mauve6 select-none
+  p-1 bg-mauve1 rounded border border-mauve6 select-none 
   shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]
   will-change-[opacity,transform] 
   data-[side=top]:animate-slideDownAndFade 

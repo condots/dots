@@ -12,10 +12,11 @@ import Canvas from '@/components/Canvas';
 
 export default function App() {
   useEffect(() => {
-    const source = 'spdx-model.ttl';
-    const model = 'model.json';
-    updateOntology(source, model);
-    updateMediaTypes();
+    updateMediaTypes().then(() => {
+      const source = 'spdx-model.ttl';
+      const model = 'model.json';
+      updateOntology(source, model);
+    });
   }, []);
 
   return (

@@ -71,7 +71,7 @@ const ontoStoreBase = create<OntoState>()(
 export const ontoStore = createSelectors(ontoStoreBase);
 
 export async function updateOntology(source: string | File, model: string) {
-  // if (ontoStore.getState().source === source) return;
+  if (ontoStore.getState().source === source) return;
   const graph = await createGraph(source);
   const graphProfiles = createModel(graph);
   const profiles = await enrichModelFromMarkdown(graphProfiles, model);
