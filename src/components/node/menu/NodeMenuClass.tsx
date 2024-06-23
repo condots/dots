@@ -7,7 +7,7 @@ import * as Tooltip from '@radix-ui/react-tooltip';
 import { ArrowRightIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 
 import { ClassProperty, IRI } from '@/types';
-import { addNode, getNode } from '@/store/flow';
+import { addNode, outEdgeCount, getNode } from '@/store/flow';
 import {
   contentClass,
   itemClass,
@@ -27,11 +27,7 @@ const NodeMenuClass = ({ nodeId }: { nodeId: string }) => {
       path: IRI,
       maxCount: number | undefined | null
     ) => {
-      if (maxCount == null) return false;
-      const propertyCount = Object.values(node.data.nodeProps).filter(
-        p => p.classProperty.path === path
-      ).length;
-      return propertyCount >= maxCount;
+      return maxCount == null ? false : outEdgeCount(nodeId, path) >= maxCount;
     };
 
     const handleMouseDown = (

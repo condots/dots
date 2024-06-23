@@ -238,7 +238,7 @@ export function deleteNodeProperty(nodeId: string, propertyId: string) {
   });
 }
 
-export const isValidConnection = (connection: Connection) => {
+export function isValidConnection(connection: Connection) {
   const state = flowStore.getState();
   const nodes = state.nodes;
   const edges = state.edges;
@@ -253,7 +253,7 @@ export const isValidConnection = (connection: Connection) => {
   };
   if (target!.id === connection.source) return false;
   return !hasCycle(target!);
-};
+}
 
 export function setNodeMenuState(nodeId: string, open: boolean) {
   flowStore.setState(state => {
@@ -265,4 +265,21 @@ export function setNodeExpanded(nodeId: string, open: boolean) {
   flowStore.setState(state => {
     state.nodes.find(n => n.id === nodeId)!.data.expanded = open;
   });
+}
+
+export function getNodeOutgoers(nodeId: string) {
+  const state = flowStore.getState();
+  const nodes = state.nodes;
+  const edges = state.edges;
+  const node = nodes.find(node => node.id === nodeId);
+  return node ? getOutgoers(node, nodes, edges) : undefined;
+}
+
+export function outEdgeCount(nodeId: string, path: IRI) {
+  const edges = flowStore
+    .getState()
+    .edges?.filter(
+      edge => edge.data.classProperty.path === path && edge.source === nodeId
+    );
+  return edges?.length || 0;
 }
