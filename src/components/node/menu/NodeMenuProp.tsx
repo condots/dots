@@ -23,8 +23,11 @@ const NodeMenuProp = ({ nodeId }: { nodeId: string }) => {
   const items = useCallback(() => {
     if (!node) return [];
 
-    const reachedMaxCount = (path: IRI, maxCount: number | undefined) => {
-      if (maxCount === undefined) return false;
+    const reachedMaxCount = (
+      path: IRI,
+      maxCount: number | undefined | null
+    ) => {
+      if (maxCount == null) return false;
       const propertyCount = Object.values(node.data.nodeProps).filter(
         p => p.classProperty.path === path
       ).length;
