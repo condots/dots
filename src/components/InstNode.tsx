@@ -32,7 +32,7 @@ const InstNode = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
   }, [showExpandButton, data.expanded, nodeId]);
 
   const menuButton = (
-    <div className="min-w-[23px] h-[24px] flex items-center justify-center nodrag nopan">
+    <div className="min-w-[23px] h-[24px] flex items-center justify-center nodrag nopan nowheel">
       <NodeMenu nodeId={nodeId} />
     </div>
   );
@@ -41,7 +41,7 @@ const InstNode = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
     <div className="min-w-[23px] h-[24px] flex items-center justify-center">
       {showExpandButton && (
         <Collapsible.Trigger asChild>
-          <button className="nodrag nopan outline-none p-1 rounded text-spdx-dark hover:bg-spdx-dark/5 data-[state=open]:rotate-180 max-h-[23px]">
+          <button className="nodrag nopan nowheel outline-none p-1 rounded text-spdx-dark hover:bg-spdx-dark/5 data-[state=open]:rotate-180 max-h-[23px]">
             <ChevronDownIcon />
           </button>
         </Collapsible.Trigger>
@@ -81,7 +81,7 @@ const InstNode = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
           </Tooltip>
           {expandButton}
         </div>
-        <Collapsible.Content className="nodrag nopan cursor-auto overflow-hidden data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp">
+        <Collapsible.Content className="nodrag nopan nowheel cursor-auto overflow-hidden data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp">
           <Separator className="bg-spdx-dark pt-[1px] h-[1px]" decorative />
           <div
             className="

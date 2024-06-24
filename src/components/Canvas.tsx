@@ -54,7 +54,7 @@ const Canvas = () => {
   const onDrop = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     const iri = event.dataTransfer.getData('application/reactflow');
-    if (typeof iri === 'undefined' || !iri) {
+    if (!iri) {
       return;
     }
     addNode('inst', event.clientX - 128, event.clientY - 28, iri);
