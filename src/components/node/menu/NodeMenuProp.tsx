@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
@@ -20,30 +20,29 @@ import { ontoStore } from '@/store/onto';
 const NodeMenuProp = ({ nodeId }: { nodeId: string }) => {
   const node = getNode(nodeId);
 
-  const items = useCallback(() => {
-    if (!node) return [];
-
-    const reachedMaxCount = (
-      path: IRI,
-      maxCount: number | undefined | null
-    ) => {
+  const reachedMaxCount = useCallback(
+    (path: IRI, maxCount: number | undefined | null) => {
       if (maxCount == null) return false;
-      const propertyCount = Object.values(node.data.nodeProps).filter(
+      const propertyCount = Object.values(node!.data.nodeProps).filter(
         p => p.classProperty.path === path
       ).length;
       return propertyCount >= maxCount;
-    };
+    },
+    [node]
+  );
 
-    const handleMouseDown = (
-      event: MouseEvent,
-      classProperty: ClassProperty
-    ) => {
+  const handleMouseDown = useCallback(
+    (event: React.MouseEvent, classProperty: ClassProperty) => {
       if (event.button !== 0) return;
-      addNodeProperty(node.id, classProperty);
-      setNodeMenuState(node.id, event.metaKey);
+      addNodeProperty(nodeId, classProperty);
+      setNodeMenuState(nodeId, event.metaKey);
       setNodeExpanded(nodeId, true);
-    };
+    },
+    [nodeId]
+  );
 
+  const items = useMemo(() => {
+    if (!node) return [];
     const recClsProps =
       ontoStore.getState().allRecClsProps![node?.data.cls.iri];
     const classItems = [];
@@ -85,9 +84,9 @@ const NodeMenuProp = ({ nodeId }: { nodeId: string }) => {
       }
     }
     return classItems;
-  }, [node]);
+  }, [node, handleMouseDown, reachedMaxCount]);
 
-  return items().length > 0 ? (
+  return items.length > 0 ? (
     <DropdownMenu.Sub>
       <DropdownMenu.SubTrigger className={itemClass}>
         <span className="p-1">Add Property</span>
@@ -99,7 +98,7 @@ const NodeMenuProp = ({ nodeId }: { nodeId: string }) => {
           sideOffset={-1}
           alignOffset={-5}
         >
-          {items()}
+          {items}
         </DropdownMenu.SubContent>
       </DropdownMenu.Portal>
     </DropdownMenu.Sub>

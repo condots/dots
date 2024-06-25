@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Tooltip from '@radix-ui/react-tooltip';
@@ -18,32 +18,31 @@ import { appStore } from '@/store/app';
 const NodeMenuClass = ({ nodeId }: { nodeId: string }) => {
   const node = getNode(nodeId);
 
-  const items = useMemo(() => {
-    if (!node) return [];
+  const reachedMaxCount = useCallback(
+    (path: IRI, maxCount: number | undefined | null) =>
+      maxCount == null ? false : outEdgeCount(nodeId, path) >= maxCount,
+    [nodeId]
+  );
 
-    const handleMouseDown = (
-      event: React.MouseEvent,
-      classProperty: ClassProperty
-    ) => {
+  const handleMouseDown = useCallback(
+    (event: React.MouseEvent, classProperty: ClassProperty) => {
+      if (event.button !== 0) return;
       appStore.setState(state => {
         state.draggedCls = {
           clientX: event.clientX,
           clientY: event.clientY,
           targetClass: classProperty.targetClass,
-          sourceNodeId: node.id,
+          sourceNodeId: nodeId,
           classProperty,
         };
       });
-      setNodeMenuState(node.id, false);
-    };
+      setNodeMenuState(nodeId, false);
+    },
+    [nodeId]
+  );
 
-    const reachedMaxCount = (
-      path: IRI,
-      maxCount: number | undefined | null
-    ) => {
-      return maxCount == null ? false : outEdgeCount(node.id, path) >= maxCount;
-    };
-
+  const items = useMemo(() => {
+    if (!node) return [];
     const recClsProps =
       ontoStore.getState().allRecClsProps![node?.data.cls.iri];
     const classItems = [];
@@ -99,7 +98,7 @@ const NodeMenuClass = ({ nodeId }: { nodeId: string }) => {
       }
     }
     return classItems;
-  }, [node]);
+  }, [node, handleMouseDown, reachedMaxCount]);
 
   return items.length > 0 ? (
     <DropdownMenu.Sub>
