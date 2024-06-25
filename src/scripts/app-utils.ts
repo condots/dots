@@ -65,7 +65,10 @@ export const inputProperties: InputProperties = new Map([
       icon: 'numbers',
       inputType: 'number',
       helpText: 'Enter a number...',
-      validator: (v: number) => typeof v === 'number',
+      validator: (v: string) => {
+        const num = Number(v);
+        return !isNaN(num) && num.toString() === v.trim();
+      },
     },
   ],
   [
@@ -73,8 +76,11 @@ export const inputProperties: InputProperties = new Map([
     {
       icon: 'numbers',
       inputType: 'number',
-      helpText: 'Enter a positive integer...',
-      validator: (v: number) => Number.isInteger(v) && v >= 0,
+      helpText: 'Enter zero or a positive integer...',
+      validator: (v: string) => {
+        const num = Number(v);
+        return Number.isInteger(num) && num >= 0 && num.toString() === v.trim();
+      },
       min: 0,
       step: 1,
     },
@@ -84,8 +90,11 @@ export const inputProperties: InputProperties = new Map([
     {
       icon: 'numbers',
       inputType: 'number',
-      helpText: 'Enter zero or positive integer...',
-      validator: (v: number) => Number.isInteger(v) && v > 0,
+      helpText: 'Enter a positive integer...',
+      validator: (v: number) => {
+        const num = Number(v);
+        return Number.isInteger(num) && num > 0 && num.toString() === v.trim();
+      },
       min: 1,
       step: 1,
     },
