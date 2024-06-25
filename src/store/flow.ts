@@ -163,20 +163,13 @@ export function getNodeProperty(
   if (propertyId) return nodeProperties?.[propertyId];
 }
 
-export function addNode(
-  type: string,
-  x: number,
-  y: number,
-  classIRI: IRI,
-  startAsDragged: boolean = false
-) {
+export function addNode(type: string, x: number, y: number, classIRI: IRI) {
   const nodeId = nanoid();
   const position = flowStore
     .getState()
     .reactFlowInstance!.screenToFlowPosition({ x, y });
   const recClsProps = ontoStore.getState().allRecClsProps![classIRI];
   const data: NodeData = {
-    startAsDragged,
     isNode: true,
     active: false,
     menuOpen: false,

@@ -16,7 +16,7 @@ import {
 } from 'reactflow';
 
 import { appStore } from '@/store/app';
-import { flowStore, addNode, isValidConnection } from '@/store/flow';
+import { flowStore, isValidConnection } from '@/store/flow';
 import InstNode from '@/components/InstNode';
 import InstEdge from '@/components/InstEdge';
 
@@ -46,22 +46,6 @@ const Canvas = () => {
   const edges = flowStore.use.edges();
   const { setViewport } = useReactFlow();
 
-  const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
-  }, []);
-
-  const onDrop = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    const iri = event.dataTransfer.getData('application/reactflow');
-    if (!iri) {
-      return;
-    }
-    addNode('inst', event.clientX - 128, event.clientY - 28, iri);
-
-    appStore.setState({ showClassesMenu: false });
-  }, []);
-
   const handleTransform = useCallback(() => {
     setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 200 });
   }, [setViewport]);
@@ -84,8 +68,6 @@ const Canvas = () => {
       isValidConnection={isValidConnection}
       fitViewOptions={{ padding: 2 }}
       // fitView
-      onDrop={onDrop}
-      onDragOver={onDragOver}
       zoomOnScroll={false}
       zoomOnPinch={false}
       zoomOnDoubleClick={false}

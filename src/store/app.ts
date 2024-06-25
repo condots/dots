@@ -31,7 +31,15 @@ const initialState = {
   mediaTypes: undefined,
 };
 
-const storage: PersistStorage<AppState> = {
+const storage: PersistStorage<{
+  [k: string]:
+    | string
+    | boolean
+    | DraggedCls
+    | PropertyOption[]
+    | (() => void)
+    | undefined;
+}> = {
   getItem: name => {
     const str = localStorage.getItem(name);
     if (!str) return null;
@@ -79,7 +87,7 @@ const appStoreBase = create<AppState>()(
 export const appStore = createSelectors(appStoreBase);
 
 export async function updateMediaTypes() {
-  if (appStore.getState().mediaTypes) return;
+  // if (appStore.getState().mediaTypes) return;
   const mediaTypes = await getMediaTypes();
   appStore.setState({ mediaTypes });
   console.log('updated MediaTypes');

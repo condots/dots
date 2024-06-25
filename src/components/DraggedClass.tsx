@@ -16,6 +16,8 @@ const DraggedClass = () => {
   const draggableRef = useRef(null);
 
   useEffect(() => {
+    if (!data) return;
+
     const handleMouseMove = e => {
       if (dragging) {
         setPosition({

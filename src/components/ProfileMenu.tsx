@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import { Tree, TreeNodeTemplateOptions } from 'primereact/tree';
 import { TreeNode } from 'primereact/treenode';
@@ -12,9 +12,8 @@ const ProfileMenu = () => {
   const showClassesMenu = appStore.use.showClassesMenu();
   const profiles = ontoStore.use.profiles();
   const [expandedKeys, setExpandedKeys] = useState({});
-  const [items, setItems] = useState<TreeNode[]>([]);
 
-  useEffect(() => {
+  const items = useMemo(() => {
     const items = [];
     if (!profiles) return;
     for (const [profileName, profile] of Object.entries(profiles).sort()) {
@@ -24,12 +23,11 @@ const ProfileMenu = () => {
         subitems.push({
           key: className,
           label: className,
-          draggable: true,
-          droppable: false,
           className: 'm-0 p-0 rounded-md',
           data: {
             iri: cls.iri,
             summary: cls.summary,
+            type: 'class',
           },
         });
       }
@@ -37,30 +35,35 @@ const ProfileMenu = () => {
         items.push({
           key: profileName,
           label: profileName,
-          draggable: false,
-          droppable: false,
           className: 'select-none',
           data: {
             iri: profile.iri,
             summary: profile.summary,
+            type: 'profile',
           },
           children: subitems,
         });
       }
     }
-    setItems(items);
+    return items;
   }, [profiles]);
 
-  const onDragStart = (
-    event: React.DragEvent<HTMLButtonElement>,
-    node: TreeNode
-  ) => {
-    event.dataTransfer.setData('application/reactflow', node.data.iri);
-    event.dataTransfer.effectAllowed = 'move';
-  };
+  const handleMouseDown = useCallback(
+    (event: React.MouseEvent, targetClass: string) => {
+      appStore.setState(state => {
+        state.draggedCls = {
+          clientX: event.clientX,
+          clientY: event.clientY,
+          targetClass: targetClass,
+        };
+      });
+      appStore.setState({ showClassesMenu: false });
+    },
+    []
+  );
 
   const nodeTemplate = (node: TreeNode, options: TreeNodeTemplateOptions) => {
-    if (node.draggable) {
+    if (node.data.type === 'class') {
       return (
         <Button
           label={node.label}
@@ -76,8 +79,7 @@ const ProfileMenu = () => {
             showDelay: 2000,
             at: 'right+2 center',
           }}
-          onDragStart={event => onDragStart(event, node)}
-          draggable={node.draggable}
+          onMouseDown={e => handleMouseDown(e, node.data.iri)}
         />
       );
     } else {
@@ -93,7 +95,6 @@ const ProfileMenu = () => {
       filterPlaceholder="Search..."
       className="h-full w-full overflow-scroll bg-[#e6e5e6] font-lato border-none rounded-none"
       nodeTemplate={nodeTemplate}
-      dragdropScope="reactflow"
       pt={{ droppoint: { className: 'h-0' } }}
       expandIcon={
         <span className="material-symbols-outlined text-sm text-gray-500">

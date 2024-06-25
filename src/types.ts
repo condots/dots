@@ -92,7 +92,6 @@ export type NodeProperty = {
 };
 
 export type NodeData = {
-  startAsDragged: boolean;
   isNode: boolean;
   active: boolean;
   menuOpen: boolean;
