@@ -93,7 +93,7 @@ const InfoDialog = () => {
                           <td className="px-3 border">SubclassOf</td>
                           <td className="px-3 border">
                             <button
-                              className="text-spdx-dark underline"
+                              className="text-spdx-dark underline outline-none"
                               onClick={() =>
                                 appStore.setState(state => {
                                   state.selectedInfoIri = item.subClassOf;

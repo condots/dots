@@ -121,3 +121,11 @@ export interface InputProperty {
   maxLength?: number;
   pattern?: string;
 }
+
+export interface DraggedCls {
+  clientX: number;
+  clientY: number;
+  targetClass: IRI;
+  sourceNodeId?: string;
+  classProperty?: ClassProperty;
+}

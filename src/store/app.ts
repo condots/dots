@@ -9,25 +9,25 @@ import { immer } from 'zustand/middleware/immer';
 import superjson from 'superjson';
 import createSelectors from '@/store/createSelectors';
 
-import { PropertyOption } from '@/types';
+import { DraggedCls, PropertyOption } from '@/types';
 import { getMediaTypes } from '@/scripts/app-utils';
 
 type AppState = {
   showClassesMenu: boolean;
-  showPropDialog: boolean;
   showInfoDialog: boolean;
   selectedNodeId: string | undefined;
   selectedInfoIri: string | undefined;
+  draggedCls: DraggedCls | undefined;
   mediaTypes: PropertyOption[] | undefined;
   reset: () => void;
 };
 
 const initialState = {
-  showClassesMenu: true,
-  showPropDialog: false,
+  showClassesMenu: false,
   showInfoDialog: false,
   selectedNodeId: undefined,
   selectedInfoIri: undefined,
+  draggedCls: undefined,
   mediaTypes: undefined,
 };
 
@@ -57,6 +57,18 @@ const appStoreBase = create<AppState>()(
           {
             name: 'app',
             storage,
+            partialize: state =>
+              Object.fromEntries(
+                Object.entries(state).filter(
+                  ([key]) =>
+                    ![
+                      'showClassesMenu',
+                      'showInfoDialog',
+                      'selectedInfoIri',
+                      'draggedCls',
+                    ].includes(key)
+                )
+              ),
           }
         )
       )

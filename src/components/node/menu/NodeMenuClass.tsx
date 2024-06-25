@@ -1,13 +1,11 @@
-import React, { useCallback } from 'react';
+import React, { useMemo } from 'react';
 
-import { nanoid } from 'nanoid';
-import { useReactFlow } from 'reactflow';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { ArrowRightIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 
 import { ClassProperty, IRI } from '@/types';
-import { addNode, outEdgeCount, getNode } from '@/store/flow';
+import { outEdgeCount, getNode, setNodeMenuState } from '@/store/flow';
 import {
   contentClass,
   itemClass,
@@ -15,42 +13,35 @@ import {
   targetClsTooltipClass,
 } from '@/scripts/app-utils';
 import { getItem, ontoStore } from '@/store/onto';
+import { appStore } from '@/store/app';
 
 const NodeMenuClass = ({ nodeId }: { nodeId: string }) => {
   const node = getNode(nodeId);
-  const { addEdges } = useReactFlow();
 
-  const items = useCallback(() => {
+  const items = useMemo(() => {
     if (!node) return [];
+
+    const handleMouseDown = (
+      event: React.MouseEvent,
+      classProperty: ClassProperty
+    ) => {
+      appStore.setState(state => {
+        state.draggedCls = {
+          clientX: event.clientX,
+          clientY: event.clientY,
+          targetClass: classProperty.targetClass,
+          sourceNodeId: node.id,
+          classProperty,
+        };
+      });
+      setNodeMenuState(node.id, false);
+    };
 
     const reachedMaxCount = (
       path: IRI,
       maxCount: number | undefined | null
     ) => {
-      return maxCount == null ? false : outEdgeCount(nodeId, path) >= maxCount;
-    };
-
-    const handleMouseDown = (
-      event: MouseEvent,
-      classProperty: ClassProperty
-    ) => {
-      if (event.button !== 0) return;
-      const targetNodeId = addNode(
-        'inst',
-        node.position.x + 250 + Math.floor(Math.random() * 100),
-        node.position.y + 150 + Math.floor(Math.random() * 100),
-        classProperty.targetClass,
-        true
-      );
-      const newEdge = [
-        {
-          id: nanoid(),
-          source: node.id,
-          target: targetNodeId,
-          data: { classProperty },
-        },
-      ];
-      addEdges(newEdge);
+      return maxCount == null ? false : outEdgeCount(node.id, path) >= maxCount;
     };
 
     const recClsProps =
@@ -108,9 +99,9 @@ const NodeMenuClass = ({ nodeId }: { nodeId: string }) => {
       }
     }
     return classItems;
-  }, [node, addEdges]);
+  }, [node]);
 
-  return items().length > 0 ? (
+  return items.length > 0 ? (
     <DropdownMenu.Sub>
       <DropdownMenu.SubTrigger className={itemClass}>
         <span className="p-1">Add Class</span>
@@ -122,7 +113,7 @@ const NodeMenuClass = ({ nodeId }: { nodeId: string }) => {
           sideOffset={-1}
           alignOffset={-5}
         >
-          {items()}
+          {items}
         </DropdownMenu.SubContent>
       </DropdownMenu.Portal>
     </DropdownMenu.Sub>
