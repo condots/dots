@@ -105,7 +105,7 @@ export const inputProperties: InputProperties = new Map([
       icon: 'commit',
       inputType: 'text',
       helpText: 'Enter version using SemVer...',
-      validator: (v: string) => Boolean(semver.valid(v)),
+      validator: (v: string) => !!semver.valid(v),
     },
   ],
   [
@@ -125,7 +125,7 @@ export const isNodePropertyValid = (nodeProperty: NodeProperty) => {
   const cp = nodeProperty.classProperty;
   return cp.nodeKind === 'Literal'
     ? inputProperties.get(cp.datatype)!.validator(nodeProperty.value)
-    : Boolean(nodeProperty.value);
+    : !!nodeProperty.value;
 };
 
 export const getClassPropertyIcon = (classProperty: ClassProperty) => {
