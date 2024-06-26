@@ -9,10 +9,10 @@ import { Separator } from '@radix-ui/react-separator';
 import type { NodeData } from '@/types';
 import { setNodeExpanded } from '@/store/flow';
 import NodeMenu from '@/components/node/menu/NodeMenu';
-import Tooltip from '@/components/tooltip/Tooltip';
+import Tooltip from '@/components/Tooltip';
 import PropFields from '@/components/node/prop/PropFields';
 
-const InstNode = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
+const NodeInst = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
   const [tooltipDisabled, setTooltipDisabled] = useState(false);
   const textRef = useRef<HTMLSpanElement | null>(null);
   const showExpandButton = Object.entries(data.nodeProps).length > 0;
@@ -32,7 +32,7 @@ const InstNode = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
   }, [showExpandButton, data.expanded, nodeId]);
 
   const menuButton = (
-    <div className="min-w-[23px] h-[24px] flex items-center justify-center nodrag nopan nowheel">
+    <div className="min-w-[23px] h-[24px] flex items-center justify-center nodrag nopan">
       <NodeMenu nodeId={nodeId} />
     </div>
   );
@@ -41,7 +41,10 @@ const InstNode = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
     <div className="min-w-[23px] h-[24px] flex items-center justify-center">
       {showExpandButton && (
         <Collapsible.Trigger asChild>
-          <button className="nodrag nopan nowheel outline-none p-1 rounded text-spdx-dark hover:bg-spdx-dark/5 data-[state=open]:rotate-180 max-h-[23px]">
+          <button
+            className="nodrag nopan outline-none p-1 rounded text-spdx-dark 
+                     hover:bg-spdx-dark/5 data-[state=open]:rotate-180 max-h-[23px]"
+          >
             <ChevronDownIcon />
           </button>
         </Collapsible.Trigger>
@@ -53,7 +56,7 @@ const InstNode = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
     return null;
   }
   return (
-    <div>
+    <div className="relative nowheel">
       <Collapsible.Root
         open={data.expanded}
         onOpenChange={open => setNodeExpanded(nodeId, open)}
@@ -81,29 +84,21 @@ const InstNode = ({ id: nodeId, data, selected }: NodeProps<NodeData>) => {
           </Tooltip>
           {expandButton}
         </div>
-        <Collapsible.Content className="nodrag nopan nowheel cursor-auto overflow-hidden data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp">
+        <Collapsible.Content
+          className="nodrag nopan cursor-auto overflow-hidden 
+                     data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp"
+        >
           <Separator className="bg-spdx-dark pt-[1px] h-[1px]" decorative />
-          <div
-            className="
-            text-spdx-dark 
-            max-h-64 
-            overflow-y-scroll 
-            scroll-smooth 
-            h-full
-          "
-          >
+          <div className="text-spdx-dark max-h-64 overflow-y-scroll scroll-smooth h-full">
             <PropFields nodeId={nodeId} />
           </div>
         </Collapsible.Content>
       </Collapsible.Root>
-      {data.isNode && (
-        <div>
-          <Handle type="target" position={Position.Left} className="hidden" />
-          <Handle type="source" position={Position.Right} className="hidden" />
-        </div>
-      )}
+      <div>
+        <Handle type="source" position={Position.Right} hidden />
+      </div>
     </div>
   );
 };
 
-export default InstNode;
+export default NodeInst;

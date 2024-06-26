@@ -17,15 +17,17 @@ import {
 
 import { appStore } from '@/store/app';
 import { flowStore, isValidConnection } from '@/store/flow';
-import InstNode from '@/components/InstNode';
-import InstEdge from '@/components/InstEdge';
+import NodeInst from '@/components/NodeInst';
+import EdgeInst from '@/components/EdgeInst';
+import DraggedClass from '@/components/DraggedClass';
+import ConnectionLine from '@/components/ConnectionLine';
 
 const nodeTypes = {
-  inst: InstNode,
+  inst: NodeInst,
 } satisfies NodeTypes;
 
 const edgeTypes = {
-  inst: InstEdge,
+  inst: EdgeInst,
 } satisfies EdgeTypes;
 
 const defaultEdgeOptions = {
@@ -41,6 +43,11 @@ const defaultEdgeOptions = {
   data: {},
 } satisfies DefaultEdgeOptions;
 
+const connectionLineStyle = {
+  strokeWidth: 1,
+  stroke: '#00416b',
+};
+
 const Canvas = () => {
   const nodes = flowStore.use.nodes();
   const edges = flowStore.use.edges();
@@ -50,6 +57,18 @@ const Canvas = () => {
     setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 200 });
   }, [setViewport]);
 
+  const onNodeMouseEnter = useCallback((_, node) => {
+    appStore.setState(state => {
+      state.mouseOverNodeId = node.id;
+    });
+  }, []);
+
+  const onNodeMouseLeave = useCallback((_, node) => {
+    appStore.setState(state => {
+      state.mouseOverNodeId = undefined;
+    });
+  }, []);
+
   return (
     <ReactFlow
       proOptions={{ hideAttribution: true }}
@@ -58,6 +77,8 @@ const Canvas = () => {
       nodes={nodes}
       edges={edges}
       defaultEdgeOptions={defaultEdgeOptions}
+      connectionLineComponent={ConnectionLine}
+      connectionLineStyle={connectionLineStyle}
       onNodesChange={flowStore.getState().onNodesChange}
       connectionMode={ConnectionMode.Loose}
       onEdgesChange={flowStore.getState().onEdgesChange}
@@ -67,17 +88,18 @@ const Canvas = () => {
       onInit={flowStore.getState().onInit}
       isValidConnection={isValidConnection}
       fitViewOptions={{ padding: 2 }}
-      // fitView
-      zoomOnScroll={false}
       zoomOnPinch={false}
       zoomOnDoubleClick={false}
       zoomActivationKeyCode={null}
       disableKeyboardA11y
-      preventScrolling={false}
+      onNodeMouseEnter={onNodeMouseEnter}
+      onNodeMouseLeave={onNodeMouseLeave}
+      onConnectStart={() => console.log('+ onConnectStart')}
+      onConnectEnd={() => console.log('- onConnectEnd')}
     >
       {/* <DevTools /> */}
       <Background color="#00416b" variant={BackgroundVariant.Dots} />
-      <Controls position="bottom-left" showZoom={true} showInteractive={false}>
+      <Controls position="bottom-left" showZoom={false} showInteractive={false}>
         <ControlButton
           onClick={() => handleTransform()}
           title="recenter"
@@ -103,7 +125,13 @@ const Canvas = () => {
         >
           <div className="pi pi-bars" />
         </ControlButton>
+        {/* {mouseOverNodeId && (
+          <p className="bg-yellow-200 m-3 p-3 text-red text-sm">
+            {mouseOverNodeId}
+          </p>
+        )} */}
       </Panel>
+      <DraggedClass />
     </ReactFlow>
   );
 };

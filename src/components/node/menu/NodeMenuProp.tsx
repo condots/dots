@@ -57,8 +57,8 @@ const NodeMenuProp = ({ nodeId }: { nodeId: string }) => {
               disabled={reachedMaxCount(clsProp.path, clsProp.maxCount)}
               className={itemClass}
             >
-              <span className="mr-2">{propName}</span>
-              <span className="material-symbols-outlined text-sm ml-auto">
+              <span>{propName}</span>
+              <span className="material-symbols-outlined text-sm">
                 {getClassPropertyIcon(clsProp)}
               </span>
             </DropdownMenu.Item>
@@ -89,7 +89,7 @@ const NodeMenuProp = ({ nodeId }: { nodeId: string }) => {
   return items.length > 0 ? (
     <DropdownMenu.Sub>
       <DropdownMenu.SubTrigger className={itemClass}>
-        <span className="p-1">Add Property</span>
+        <span>Add Property</span>
         <ChevronRightIcon />
       </DropdownMenu.SubTrigger>
       <DropdownMenu.Portal>

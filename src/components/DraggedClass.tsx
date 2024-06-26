@@ -8,7 +8,8 @@ import { useReactFlow } from 'reactflow';
 
 const DraggedClass = () => {
   const data = appStore.use.draggedCls();
-  const { addEdges } = useReactFlow();
+  const { addEdges, getNode } = useReactFlow();
+  const mouseOverNodeId = appStore.use.mouseOverNodeId();
 
   const [dragging, setDragging] = useState(false);
   const [position, setPosition] = useState({});
@@ -29,12 +30,21 @@ const DraggedClass = () => {
 
     const handleMouseUp = e => {
       if (dragging) {
-        const targetNodeId = addNode(
-          'inst',
-          e.clientX - 128,
-          e.clientY - 26,
-          data!.targetClass
-        );
+        let targetNodeId;
+        if (
+          mouseOverNodeId &&
+          data?.sourceNodeId &&
+          getNode(mouseOverNodeId)?.data.cls.iri === data.targetClass
+        ) {
+          targetNodeId = mouseOverNodeId;
+        } else {
+          targetNodeId = addNode(
+            'inst',
+            e.clientX - 128,
+            e.clientY - 26,
+            data!.targetClass
+          );
+        }
 
         if (data?.sourceNodeId) {
           const newEdge = [
@@ -62,7 +72,7 @@ const DraggedClass = () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [dragging, data, offset, position, addEdges]);
+  }, [dragging, data, offset, position, addEdges, getNode, mouseOverNodeId]);
 
   useEffect(() => {
     if (draggableRef.current && data) {

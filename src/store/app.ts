@@ -18,6 +18,7 @@ type AppState = {
   selectedNodeId: string | undefined;
   selectedInfoIri: string | undefined;
   draggedCls: DraggedCls | undefined;
+  mouseOverNodeId: string | undefined;
   mediaTypes: PropertyOption[] | undefined;
   reset: () => void;
 };
@@ -28,6 +29,7 @@ const initialState = {
   selectedNodeId: undefined,
   selectedInfoIri: undefined,
   draggedCls: undefined,
+  mouseOverNodeId: undefined,
   mediaTypes: undefined,
 };
 
@@ -74,6 +76,7 @@ const appStoreBase = create<AppState>()(
                       'showInfoDialog',
                       'selectedInfoIri',
                       'draggedCls',
+                      'mouseOverNodeId',
                     ].includes(key)
                 )
               ),

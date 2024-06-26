@@ -212,7 +212,7 @@ export function initNodeProps(recursive: RecClsProps) {
 }
 
 export const itemClass = `
-  text-sm text-spdx-dark rounded flex justify-between 
+  text-sm text-spdx-dark rounded flex justify-between space-x-2
   items-center h-6 relative p-2 select-none outline-none
   data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none 
   data-[highlighted]:bg-spdx-dark data-[highlighted]:text-mauve1

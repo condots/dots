@@ -11,7 +11,7 @@ import type { EdgeProps } from 'reactflow';
 
 import { getEdgeParams } from '@/scripts/flow-utils.js';
 
-const InstEdge = ({
+const EdgeInst = ({
   id,
   source,
   target,
@@ -56,11 +56,11 @@ const InstEdge = ({
           }}
           className="nodrag nopan font-lato font-semibold surface-card px-2 py-1 text-xs text-spdx-dark border border-spdx-dark rounded-md"
         >
-          {data.classProperty.name}
+          {data.classProperty && data.classProperty.name}
         </div>
       </EdgeLabelRenderer>
     </>
   );
 };
 
-export default InstEdge;
+export default EdgeInst;

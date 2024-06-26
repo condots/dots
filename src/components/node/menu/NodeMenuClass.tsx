@@ -14,6 +14,7 @@ import {
 } from '@/scripts/app-utils';
 import { getItem, ontoStore } from '@/store/onto';
 import { appStore } from '@/store/app';
+import { Handle, Position } from 'reactflow';
 
 const NodeMenuClass = ({ nodeId }: { nodeId: string }) => {
   const node = getNode(nodeId);
@@ -51,31 +52,43 @@ const NodeMenuClass = ({ nodeId }: { nodeId: string }) => {
       for (const [propName, clsProp] of Object.entries(clsProps).sort()) {
         if (clsProp.targetClass && !getItem(clsProp.targetClass)!.abstract) {
           propItems.push(
-            <Tooltip.Provider key={clsProp.path}>
-              <Tooltip.Root>
-                <Tooltip.Trigger asChild>
-                  <DropdownMenu.Item
-                    onMouseDown={e => handleMouseDown(e, clsProp)}
-                    disabled={reachedMaxCount(clsProp.path, clsProp.maxCount)}
-                    className={itemClass}
-                  >
-                    {propName}
-                  </DropdownMenu.Item>
-                </Tooltip.Trigger>
-                <Tooltip.Portal>
-                  <Tooltip.Content
-                    className={targetClsTooltipClass}
-                    sideOffset={-5}
-                    side="right"
-                  >
-                    <ArrowRightIcon />
-                    <div className="ml-2">
-                      {parseIRI(clsProp.targetClass).name}
-                    </div>
-                  </Tooltip.Content>
-                </Tooltip.Portal>
-              </Tooltip.Root>
-            </Tooltip.Provider>
+            <div key={clsProp.path} className="class-menu-item">
+              <Tooltip.Provider>
+                <Tooltip.Root>
+                  <Tooltip.Trigger asChild>
+                    <DropdownMenu.Item
+                      onMouseDown={e => handleMouseDown(e, clsProp)}
+                      disabled={reachedMaxCount(clsProp.path, clsProp.maxCount)}
+                      asChild
+                    >
+                      <Handle
+                        type="source"
+                        position={Position.Left}
+                        className={`
+                          text-sm text-spdx-dark px-2 flex justify-between items-center 
+                          data-[highlighted]:text-mauve1 data-[highlighted]:cursor-pointer
+                          data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none 
+                        `}
+                      >
+                        {propName}
+                      </Handle>
+                    </DropdownMenu.Item>
+                  </Tooltip.Trigger>
+                  <Tooltip.Portal>
+                    <Tooltip.Content
+                      className={targetClsTooltipClass}
+                      sideOffset={-5}
+                      side="right"
+                    >
+                      <ArrowRightIcon />
+                      <div className="ml-2">
+                        {parseIRI(clsProp.targetClass).name}
+                      </div>
+                    </Tooltip.Content>
+                  </Tooltip.Portal>
+                </Tooltip.Root>
+              </Tooltip.Provider>
+            </div>
           );
         }
       }
@@ -103,7 +116,7 @@ const NodeMenuClass = ({ nodeId }: { nodeId: string }) => {
   return items.length > 0 ? (
     <DropdownMenu.Sub>
       <DropdownMenu.SubTrigger className={itemClass}>
-        <span className="p-1">Add Class</span>
+        <span>Add Class</span>
         <ChevronRightIcon />
       </DropdownMenu.SubTrigger>
       <DropdownMenu.Portal>

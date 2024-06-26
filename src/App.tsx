@@ -9,7 +9,6 @@ import { updateMediaTypes } from '@/store/app';
 import InfoDialog from '@/components/InfoDialog';
 import ProfileMenu from '@/components/ProfileMenu';
 import Canvas from '@/components/Canvas';
-import DraggedClass from '@/components/DraggedClass';
 
 export default function App() {
   useEffect(() => {
@@ -25,7 +24,6 @@ export default function App() {
       <InfoDialog />
       <ProfileMenu />
       <Canvas />
-      <DraggedClass />
     </div>
   );
 }
