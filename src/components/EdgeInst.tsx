@@ -17,7 +17,7 @@ const EdgeInst = ({
   target,
   markerEnd,
   style,
-  data,
+  label,
 }: EdgeProps) => {
   const sourceNode = useStore(
     useCallback(store => store.nodeInternals.get(source), [source])
@@ -56,7 +56,7 @@ const EdgeInst = ({
           }}
           className="nodrag nopan font-lato font-semibold surface-card px-2 py-1 text-xs text-spdx-dark border border-spdx-dark rounded-md"
         >
-          {data.classProperty && data.classProperty.name}
+          {label}
         </div>
       </EdgeLabelRenderer>
     </>

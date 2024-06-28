@@ -1,12 +1,15 @@
 import React, { useMemo } from 'react';
 
+import { useNodeId } from 'reactflow';
+
 import { getNode } from '@/store/flow';
 import PropSelectField from '@/components/node/prop/PropSelectField';
 import PropLabel from '@/components/node/prop/PropLabel';
 import PropTextField from '@/components/node/prop/PropTextField';
 import PropBoolField from '@/components/node/prop/PropBoolField';
 
-const PropFields = ({ nodeId }: { nodeId: string }) => {
+const PropFields = () => {
+  const nodeId = useNodeId()!;
   const node = getNode(nodeId);
   const nodeProperties = node?.data.nodeProps;
 
@@ -29,8 +32,8 @@ const PropFields = ({ nodeId }: { nodeId: string }) => {
                   `}
                     key={propertyId}
                   >
-                    <PropBoolField nodeId={nodeId} propertyId={propertyId} />
-                    <PropLabel nodeId={nodeId} propertyId={propertyId} />
+                    <PropBoolField propertyId={propertyId} />
+                    <PropLabel propertyId={propertyId} />
                   </div>
                 );
               } else {
@@ -39,8 +42,8 @@ const PropFields = ({ nodeId }: { nodeId: string }) => {
                     className={`flex-auto w-full ${borderColor}`}
                     key={propertyId}
                   >
-                    <PropLabel nodeId={nodeId} propertyId={propertyId} />
-                    <PropTextField nodeId={nodeId} propertyId={propertyId} />
+                    <PropLabel propertyId={propertyId} />
+                    <PropTextField propertyId={propertyId} />
                   </div>
                 );
               }
@@ -50,14 +53,14 @@ const PropFields = ({ nodeId }: { nodeId: string }) => {
                   className={`flex-auto w-full ${borderColor}`}
                   key={propertyId}
                 >
-                  <PropLabel nodeId={nodeId} propertyId={propertyId} />
-                  <PropSelectField nodeId={nodeId} propertyId={propertyId} />
+                  <PropLabel propertyId={propertyId} />
+                  <PropSelectField propertyId={propertyId} />
                 </div>
               );
             }
           })
         : [],
-    [nodeId, nodeProperties]
+    [nodeProperties]
   );
 
   return (

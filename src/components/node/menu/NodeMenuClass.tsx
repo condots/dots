@@ -3,6 +3,7 @@ import React, { useCallback, useMemo } from 'react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { ArrowRightIcon, ChevronRightIcon } from '@radix-ui/react-icons';
+import { Handle, Position, useNodeId } from 'reactflow';
 
 import { ClassProperty, IRI } from '@/types';
 import { outEdgeCount, getNode, setNodeMenuState } from '@/store/flow';
@@ -14,9 +15,9 @@ import {
 } from '@/scripts/app-utils';
 import { getItem, ontoStore } from '@/store/onto';
 import { appStore } from '@/store/app';
-import { Handle, Position } from 'reactflow';
 
-const NodeMenuClass = ({ nodeId }: { nodeId: string }) => {
+const NodeMenuClass = () => {
+  const nodeId = useNodeId()!;
   const node = getNode(nodeId);
 
   const reachedMaxCount = useCallback(
@@ -29,13 +30,7 @@ const NodeMenuClass = ({ nodeId }: { nodeId: string }) => {
     (event: React.MouseEvent, classProperty: ClassProperty) => {
       if (event.button !== 0) return;
       appStore.setState(state => {
-        state.draggedCls = {
-          clientX: event.clientX,
-          clientY: event.clientY,
-          targetClass: classProperty.targetClass,
-          sourceNodeId: nodeId,
-          classProperty,
-        };
+        state.draggedPropData = { classProperty, sourceNodeId: nodeId };
       });
       setNodeMenuState(nodeId, false);
     },

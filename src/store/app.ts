@@ -9,7 +9,7 @@ import { immer } from 'zustand/middleware/immer';
 import superjson from 'superjson';
 import createSelectors from '@/store/createSelectors';
 
-import { DraggedCls, PropertyOption } from '@/types';
+import { DraggedClassData, DraggedPropData, PropertyOption } from '@/types';
 import { getMediaTypes } from '@/scripts/app-utils';
 
 type AppState = {
@@ -17,8 +17,8 @@ type AppState = {
   showInfoDialog: boolean;
   selectedNodeId: string | undefined;
   selectedInfoIri: string | undefined;
-  draggedCls: DraggedCls | undefined;
-  mouseOverNodeId: string | undefined;
+  draggedClassData: DraggedClassData | undefined;
+  draggedPropData: DraggedPropData | undefined;
   mediaTypes: PropertyOption[] | undefined;
   reset: () => void;
 };
@@ -28,8 +28,8 @@ const initialState = {
   showInfoDialog: false,
   selectedNodeId: undefined,
   selectedInfoIri: undefined,
-  draggedCls: undefined,
-  mouseOverNodeId: undefined,
+  draggedClassData: undefined,
+  draggedPropData: undefined,
   mediaTypes: undefined,
 };
 
@@ -37,7 +37,8 @@ const storage: PersistStorage<{
   [k: string]:
     | string
     | boolean
-    | DraggedCls
+    | DraggedClassData
+    | DraggedPropData
     | PropertyOption[]
     | (() => void)
     | undefined;
@@ -75,8 +76,8 @@ const appStoreBase = create<AppState>()(
                       'showClassesMenu',
                       'showInfoDialog',
                       'selectedInfoIri',
-                      'draggedCls',
-                      'mouseOverNodeId',
+                      'draggedClassData',
+                      'draggedPropData',
                     ].includes(key)
                 )
               ),

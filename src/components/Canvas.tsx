@@ -10,17 +10,19 @@ import {
   EdgeTypes,
   MarkerType,
   NodeTypes,
+  OnConnectEnd,
   Panel,
   ReactFlow,
   useReactFlow,
 } from 'reactflow';
 
 import { appStore } from '@/store/app';
-import { flowStore, isValidConnection } from '@/store/flow';
+import { addNode, flowStore, isValidConnection } from '@/store/flow';
 import NodeInst from '@/components/NodeInst';
 import EdgeInst from '@/components/EdgeInst';
 import DraggedClass from '@/components/DraggedClass';
 import ConnectionLine from '@/components/ConnectionLine';
+import { nanoid } from 'nanoid';
 
 const nodeTypes = {
   inst: NodeInst,
@@ -30,44 +32,58 @@ const edgeTypes = {
   inst: EdgeInst,
 } satisfies EdgeTypes;
 
-const defaultEdgeOptions = {
-  type: 'inst',
-  markerEnd: {
-    type: MarkerType.ArrowClosed,
-    strokeWidth: 1,
-    width: 20,
-    height: 20,
-    color: '#00416b',
-  },
-  style: { stroke: '#00416b' },
-  data: {},
-} satisfies DefaultEdgeOptions;
-
 const connectionLineStyle = {
   strokeWidth: 1,
   stroke: '#00416b',
 };
 
+const defaultEdgeOptions = {
+  type: 'inst',
+  markerEnd: {
+    type: MarkerType.ArrowClosed,
+    strokeWidth: connectionLineStyle.strokeWidth,
+    width: 20,
+    height: 20,
+    color: connectionLineStyle.stroke,
+  },
+  style: { stroke: connectionLineStyle.stroke },
+  data: {},
+} satisfies DefaultEdgeOptions;
+
 const Canvas = () => {
   const nodes = flowStore.use.nodes();
   const edges = flowStore.use.edges();
-  const { setViewport } = useReactFlow();
+  const { setViewport, addEdges } = useReactFlow();
 
   const handleTransform = useCallback(() => {
     setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 200 });
   }, [setViewport]);
 
-  const onNodeMouseEnter = useCallback((_, node) => {
-    appStore.setState(state => {
-      state.mouseOverNodeId = node.id;
-    });
-  }, []);
-
-  const onNodeMouseLeave = useCallback((_, node) => {
-    appStore.setState(state => {
-      state.mouseOverNodeId = undefined;
-    });
-  }, []);
+  const onConnectEnd: OnConnectEnd = useCallback(
+    (event: MouseEvent | TouchEvent) => {
+      const e = event as MouseEvent;
+      const data = appStore.getState().draggedPropData;
+      if (data) {
+        const targetNodeId = addNode(
+          'inst',
+          e.clientX - 128,
+          e.clientY - 26,
+          data.classProperty.targetClass
+        );
+        addEdges([
+          {
+            id: nanoid(),
+            source: data.sourceNodeId,
+            target: targetNodeId,
+            data: { classProperty: data.classProperty },
+            label: data?.classProperty.name,
+          },
+        ]);
+      }
+      appStore.setState(state => (state.draggedPropData = undefined));
+    },
+    [addEdges]
+  );
 
   return (
     <ReactFlow
@@ -92,10 +108,7 @@ const Canvas = () => {
       zoomOnDoubleClick={false}
       zoomActivationKeyCode={null}
       disableKeyboardA11y
-      onNodeMouseEnter={onNodeMouseEnter}
-      onNodeMouseLeave={onNodeMouseLeave}
-      onConnectStart={() => console.log('+ onConnectStart')}
-      onConnectEnd={() => console.log('- onConnectEnd')}
+      onConnectEnd={onConnectEnd}
     >
       {/* <DevTools /> */}
       <Background color="#00416b" variant={BackgroundVariant.Dots} />
@@ -125,11 +138,6 @@ const Canvas = () => {
         >
           <div className="pi pi-bars" />
         </ControlButton>
-        {/* {mouseOverNodeId && (
-          <p className="bg-yellow-200 m-3 p-3 text-red text-sm">
-            {mouseOverNodeId}
-          </p>
-        )} */}
       </Panel>
       <DraggedClass />
     </ReactFlow>

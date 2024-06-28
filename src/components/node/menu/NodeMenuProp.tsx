@@ -2,6 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
+import { useNodeId } from 'reactflow';
 
 import { ClassProperty, IRI } from '@/types';
 import {
@@ -17,7 +18,8 @@ import {
 } from '@/scripts/app-utils';
 import { ontoStore } from '@/store/onto';
 
-const NodeMenuProp = ({ nodeId }: { nodeId: string }) => {
+const NodeMenuProp = () => {
+  const nodeId = useNodeId()!;
   const node = getNode(nodeId);
 
   const reachedMaxCount = useCallback(

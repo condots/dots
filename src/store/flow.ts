@@ -16,7 +16,6 @@ import {
   EdgeChange,
   Node,
   NodeChange,
-  addEdge,
   OnNodesChange,
   OnEdgesChange,
   OnConnect,
@@ -41,6 +40,7 @@ import {
   generateNodeProperty,
   isNodePropertyValid,
 } from '@/scripts/app-utils';
+import { appStore } from './app';
 
 type DevtoolsActive = {
   nodeInspector: boolean;
@@ -106,8 +106,20 @@ const flowStoreBase = create<RFState>()(
               });
             },
             onConnect: (connection: Connection) => {
-              set({
-                edges: addEdge(connection, get().edges),
+              const newEdge = {
+                ...connection,
+                id: nanoid(),
+                type: 'inst',
+                source: connection.source!,
+                target: connection.target!,
+                label: appStore.getState().draggedPropData?.classProperty.name,
+                data: appStore.getState().draggedPropData,
+              };
+              appStore.setState(state => {
+                state.draggedPropData = undefined;
+              });
+              set(state => {
+                state.edges = [...state.edges, newEdge];
               });
             },
             onNodeDragStart: (event, node) => {

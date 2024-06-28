@@ -121,10 +121,15 @@ export interface InputProperty {
   pattern?: string;
 }
 
-export interface DraggedCls {
+export interface DraggedClassData {
   clientX: number;
   clientY: number;
   targetClass: IRI;
   sourceNodeId?: string;
   classProperty?: ClassProperty;
+}
+
+export interface DraggedPropData {
+  classProperty: ClassProperty;
+  sourceNodeId: string;
 }

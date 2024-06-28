@@ -1,14 +1,11 @@
-import React, { memo, useState } from 'react';
+import React from 'react';
+
+import { useNodeId } from 'reactflow';
 
 import { getNodeProperty, setNodeProperty } from '@/store/flow';
 
-const PropBoolField = ({
-  nodeId,
-  propertyId,
-}: {
-  nodeId: string;
-  propertyId: string;
-}) => {
+const PropBoolField = ({ propertyId }: { propertyId: string }) => {
+  const nodeId = useNodeId()!;
   const nodeProperty = getNodeProperty(nodeId, propertyId)!;
   const checked = nodeProperty.value;
 

@@ -3,14 +3,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { appStore } from '@/store/app';
 import { parseIRI } from '@/scripts/app-utils';
 import { addNode } from '@/store/flow';
-import { nanoid } from 'nanoid';
-import { useReactFlow } from 'reactflow';
 
 const DraggedClass = () => {
-  const data = appStore.use.draggedCls();
-  const { addEdges, getNode } = useReactFlow();
-  const mouseOverNodeId = appStore.use.mouseOverNodeId();
-
+  const data = appStore.use.draggedClassData();
   const [dragging, setDragging] = useState(false);
   const [position, setPosition] = useState({});
   const [offset, setOffset] = useState({});
@@ -30,39 +25,12 @@ const DraggedClass = () => {
 
     const handleMouseUp = e => {
       if (dragging) {
-        let targetNodeId;
-        if (
-          mouseOverNodeId &&
-          data?.sourceNodeId &&
-          getNode(mouseOverNodeId)?.data.cls.iri === data.targetClass
-        ) {
-          targetNodeId = mouseOverNodeId;
-        } else {
-          targetNodeId = addNode(
-            'inst',
-            e.clientX - 128,
-            e.clientY - 26,
-            data!.targetClass
-          );
-        }
-
-        if (data?.sourceNodeId) {
-          const newEdge = [
-            {
-              id: nanoid(),
-              source: data.sourceNodeId,
-              target: targetNodeId,
-              data: { classProperty: data.classProperty },
-            },
-          ];
-          addEdges(newEdge);
-        }
+        addNode('inst', e.clientX - 128, e.clientY - 26, data!.targetClass);
       }
       setDragging(false);
       setOffset({});
       setPosition({});
-      setDragging(false);
-      appStore.setState(state => (state.draggedCls = undefined));
+      appStore.setState(state => (state.draggedClassData = undefined));
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -72,7 +40,7 @@ const DraggedClass = () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [dragging, data, offset, position, addEdges, getNode, mouseOverNodeId]);
+  }, [dragging, data, offset, position]);
 
   useEffect(() => {
     if (draggableRef.current && data) {

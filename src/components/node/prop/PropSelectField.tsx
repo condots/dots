@@ -1,17 +1,14 @@
 import React from 'react';
+
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
+import { useNodeId } from 'reactflow';
 
 import { contentClass, itemClass } from '@/scripts/app-utils';
 import { getNodeProperty, setNodeProperty } from '@/store/flow';
 import { appStore } from '@/store/app';
 
-const PropSelectField = ({
-  nodeId,
-  propertyId,
-}: {
-  nodeId: string;
-  propertyId: string;
-}) => {
+const PropSelectField = ({ propertyId }: { propertyId: string }) => {
+  const nodeId = useNodeId()!;
   const nodeProperty = getNodeProperty(nodeId, propertyId)!;
   const mediaTypes = appStore.use.mediaTypes();
 

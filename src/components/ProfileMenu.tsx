@@ -51,7 +51,7 @@ const ProfileMenu = () => {
   const handleMouseDown = useCallback(
     (event: React.MouseEvent, targetClass: string) => {
       appStore.setState(state => {
-        state.draggedCls = {
+        state.draggedClassData = {
           clientX: event.clientX,
           clientY: event.clientY,
           targetClass: targetClass,
