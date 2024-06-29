@@ -80,7 +80,7 @@ const NodeInst = ({
   return (
     <div
       className={`
-        relative nowheel p-1 rounded 
+        relative p-1 rounded 
       `}
     >
       <Collapsible.Root
@@ -117,7 +117,7 @@ const NodeInst = ({
           {expandButton}
         </div>
         <Collapsible.Content
-          className="nodrag nopan cursor-auto overflow-hidden 
+          className="nodrag nopan nowheel cursor-auto overflow-hidden 
                      data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp"
         >
           <Separator className="bg-spdx-dark pt-[1px] h-[1px]" decorative />

@@ -43,7 +43,7 @@ const NodeMenu = () => {
       onOpenChange={open => setNodeMenuState(nodeId, open)}
     >
       <DropdownMenu.Trigger asChild>
-        <button className="nodrag nopan nowheel outline-none p-1 rounded text-spdx-dark hover:bg-spdx-dark/5">
+        <button className="nodrag nopan outline-none p-1 rounded text-spdx-dark hover:bg-spdx-dark/5">
           <HamburgerMenuIcon />
         </button>
       </DropdownMenu.Trigger>

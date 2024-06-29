@@ -15,6 +15,7 @@ import {
   ReactFlow,
   useReactFlow,
 } from 'reactflow';
+import { nanoid } from 'nanoid';
 
 import { appStore } from '@/store/app';
 import { addNode, flowStore, isValidConnection } from '@/store/flow';
@@ -22,7 +23,6 @@ import NodeInst from '@/components/NodeInst';
 import EdgeInst from '@/components/EdgeInst';
 import DraggedClass from '@/components/DraggedClass';
 import ConnectionLine from '@/components/ConnectionLine';
-import { nanoid } from 'nanoid';
 
 const nodeTypes = {
   inst: NodeInst,
