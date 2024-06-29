@@ -15,6 +15,7 @@ import {
   contentClass,
   getClassPropertyIcon,
   itemClass,
+  parseIRI,
 } from '@/scripts/app-utils';
 import { ontoStore } from '@/store/onto';
 
@@ -48,7 +49,8 @@ const NodeMenuProp = () => {
     const recClsProps =
       ontoStore.getState().allRecClsProps![node?.data.cls.iri];
     const classItems = [];
-    for (const [propClsName, clsProps] of recClsProps) {
+    for (const [propClsIRI, clsProps] of recClsProps) {
+      const propClsName = parseIRI(propClsIRI).name;
       const propItems = [];
       for (const [propName, clsProp] of Object.entries(clsProps).sort()) {
         if (!clsProp.targetClass) {

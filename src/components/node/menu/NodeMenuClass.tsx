@@ -42,10 +42,11 @@ const NodeMenuClass = () => {
     const recClsProps =
       ontoStore.getState().allRecClsProps![node?.data.cls.iri];
     const classItems = [];
-    for (const [propClsName, clsProps] of recClsProps) {
+    for (const [propClsIRI, clsProps] of recClsProps) {
+      const propClsName = parseIRI(propClsIRI).name;
       const propItems = [];
       for (const [propName, clsProp] of Object.entries(clsProps).sort()) {
-        if (clsProp.targetClass && !getItem(clsProp.targetClass)!.abstract) {
+        if (clsProp.targetClass) {
           propItems.push(
             <div key={clsProp.path} className="class-menu-item">
               <Tooltip.Provider>
@@ -76,7 +77,11 @@ const NodeMenuClass = () => {
                       side="right"
                     >
                       <ArrowRightIcon />
-                      <div className="ml-2">
+                      <div
+                        className={`mr-2
+                        ${getItem(clsProp.targetClass)!.abstract ? 'text-spdx-dark bg-white rounded px-1 box-border' : ''}
+                      `}
+                      >
                         {parseIRI(clsProp.targetClass).name}
                       </div>
                     </Tooltip.Content>

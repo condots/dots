@@ -97,6 +97,7 @@ export type NodeData = {
   menuOpen: boolean;
   expanded: boolean;
   cls: Class;
+  inheritanceList: string[];
   nodeProps: Record<string, NodeProperty>;
 };
 

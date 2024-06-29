@@ -187,6 +187,7 @@ export function addNode(type: string, x: number, y: number, classIRI: IRI) {
     menuOpen: false,
     expanded: false,
     cls: getItem(classIRI) as Class,
+    inheritanceList: [...recClsProps.keys()],
     nodeProps: initNodeProps(recClsProps),
   };
 

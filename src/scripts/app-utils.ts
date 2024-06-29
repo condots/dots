@@ -229,9 +229,8 @@ export const contentClass = `
 `;
 
 export const targetClsTooltipClass = `
-  text-sm text-mauve1 rounded flex
-  items-center h-6 relative p-2 select-none outline-none
-  p-1 bg-spdx-dark 
+  text-sm text-mauve1 rounded flex bg-spdx-dark space-x-2
+  items-center h-6 relative select-none outline-none
   shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]
   will-change-[opacity,transform]
   data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade 

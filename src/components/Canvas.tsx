@@ -18,6 +18,7 @@ import {
 import { nanoid } from 'nanoid';
 
 import { appStore } from '@/store/app';
+import { getItem } from '@/store/onto';
 import { addNode, flowStore, isValidConnection } from '@/store/flow';
 import ClassInstance from '@/components/node/ClassInstance';
 import EdgeLine from '@/components/edge/EdgeLine';
@@ -63,7 +64,7 @@ const Canvas = () => {
     (event: MouseEvent | TouchEvent) => {
       const e = event as MouseEvent;
       const data = appStore.getState().draggedPropData;
-      if (data) {
+      if (data && !getItem(data.classProperty.targetClass)!.abstract) {
         const targetNodeId = addNode(
           'inst',
           e.clientX - 128,

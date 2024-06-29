@@ -13,6 +13,7 @@ import NodeMenu from '@/components/node/menu/NodeMenu';
 import Tooltip from '@/components/Tooltip';
 import PropFields from '@/components/node/prop/PropFields';
 
+const connectionStartHandleSelector = state => state.connectionStartHandle;
 const connectionEndHandleSelector = state => state.connectionEndHandle;
 
 const ClassInstance = ({
@@ -24,11 +25,16 @@ const ClassInstance = ({
   const [tooltipDisabled, setTooltipDisabled] = useState(false);
   const textRef = useRef<HTMLSpanElement | null>(null);
   const showExpandButton = Object.entries(data.nodeProps).length > 0;
+  const connectionSource = useStore(connectionStartHandleSelector)?.nodeId;
   const connectionEndHandle = useStore(connectionEndHandleSelector);
   const isPotentialConnection = connectionEndHandle?.nodeId === nodeId;
   const draggedPropData = appStore.use.draggedPropData();
   const isTargetHandleConnectable =
-    draggedPropData?.classProperty.targetClass === data.cls.iri;
+    nodeId !== connectionSource &&
+    (draggedPropData?.classProperty.targetClass === data.cls.iri ||
+      data.inheritanceList.includes(
+        draggedPropData?.classProperty.targetClass
+      ));
 
   useEffect(() => {
     if (textRef.current) {

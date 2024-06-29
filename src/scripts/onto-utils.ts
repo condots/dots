@@ -177,7 +177,7 @@ function getRecClsProps(iris: Record<IRI, Item>, iri: IRI | undefined) {
     )) {
       classProperties[propertyName] = classProperty;
     }
-    recClsProps.set(cls.name, classProperties);
+    recClsProps.set(cls.iri, classProperties);
     iri = cls.subClassOf;
   }
   return recClsProps;
