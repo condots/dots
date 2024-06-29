@@ -19,17 +19,17 @@ import { nanoid } from 'nanoid';
 
 import { appStore } from '@/store/app';
 import { addNode, flowStore, isValidConnection } from '@/store/flow';
-import NodeInst from '@/components/NodeInst';
-import EdgeInst from '@/components/EdgeInst';
-import DraggedClass from '@/components/DraggedClass';
-import ConnectionLine from '@/components/ConnectionLine';
+import ClassInstance from '@/components/node/ClassInstance';
+import EdgeLine from '@/components/edge/EdgeLine';
+import DraggedClass from '@/components/node/DraggedClass';
+import ConnectionLine from '@/components/edge/ConnectionLine';
 
 const nodeTypes = {
-  inst: NodeInst,
+  inst: ClassInstance,
 } satisfies NodeTypes;
 
 const edgeTypes = {
-  inst: EdgeInst,
+  inst: EdgeLine,
 } satisfies EdgeTypes;
 
 const connectionLineStyle = {

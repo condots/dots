@@ -3,7 +3,7 @@ import React from 'react';
 import type { ConnectionLineComponentProps } from 'reactflow';
 
 import { appStore } from '@/store/app';
-import EdgeInst from './EdgeInst';
+import EdgeLine from './EdgeLine';
 
 function ConnectionLine({
   fromNode: sourceNode,
@@ -12,7 +12,7 @@ function ConnectionLine({
   connectionLineStyle: style,
 }: ConnectionLineComponentProps) {
   return (
-    <EdgeInst
+    <EdgeLine
       id={'connection'}
       source={sourceNode!.id}
       targetX={toX}

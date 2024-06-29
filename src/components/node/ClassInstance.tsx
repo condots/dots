@@ -15,7 +15,7 @@ import PropFields from '@/components/node/prop/PropFields';
 
 const connectionEndHandleSelector = state => state.connectionEndHandle;
 
-const NodeInst = ({
+const ClassInstance = ({
   id: nodeId,
   data,
   selected,
@@ -78,11 +78,7 @@ const NodeInst = ({
     return null;
   }
   return (
-    <div
-      className={`
-        relative p-1 rounded 
-      `}
-    >
+    <div className="relative p-1 rounded">
       <Collapsible.Root
         open={data.expanded}
         onOpenChange={open => setNodeExpanded(nodeId, open)}
@@ -132,4 +128,4 @@ const NodeInst = ({
   );
 };
 
-export default NodeInst;
+export default ClassInstance;

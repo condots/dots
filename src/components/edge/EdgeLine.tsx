@@ -15,7 +15,7 @@ import { getEdgeParams } from '@/scripts/flow-utils.js';
 const connectionStartHandleSelector = state => state.connectionStartHandle;
 const connectionEndHandleSelector = state => state.connectionEndHandle;
 
-const EdgeInst = ({
+const EdgeLine = ({
   id,
   source,
   target: edgeTarget,
@@ -112,4 +112,4 @@ const EdgeInst = ({
   );
 };
 
-export default EdgeInst;
+export default EdgeLine;
