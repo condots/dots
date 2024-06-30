@@ -7,7 +7,6 @@ import {
 } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import superjson from 'superjson';
-import { nanoid } from 'nanoid';
 import createSelectors from '@/store/createSelectors';
 
 import {
@@ -39,6 +38,7 @@ import {
   initNodeProps,
   generateNodeProperty,
   isNodePropertyValid,
+  generateURN,
 } from '@/scripts/app-utils';
 import { appStore } from './app';
 
@@ -108,7 +108,7 @@ const flowStoreBase = create<RFState>()(
             onConnect: (connection: Connection) => {
               const newEdge = {
                 ...connection,
-                id: nanoid(),
+                id: generateURN(),
                 type: 'inst',
                 source: connection.source!,
                 target: connection.target!,
@@ -176,7 +176,7 @@ export function getNodeProperty(
 }
 
 export function addNode(type: string, x: number, y: number, classIRI: IRI) {
-  const nodeId = nanoid();
+  const nodeId = generateURN();
   const position = flowStore
     .getState()
     .reactFlowInstance!.screenToFlowPosition({ x, y });

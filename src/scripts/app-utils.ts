@@ -178,7 +178,7 @@ export function generateNodeProperty(
   value: NodeProperty['value'] = undefined
 ) {
   const nodeProperty: NodeProperty = {
-    id: nanoid(),
+    id: generateURN(),
     classProperty,
     value,
     valid: false,
@@ -209,6 +209,10 @@ export function initNodeProps(recursive: RecClsProps) {
     nodeProperties[nodeProp.id] = nodeProp;
   }
   return nodeProperties;
+}
+
+export function generateURN(): string {
+  return `urn:nanoid:${nanoid()}`;
 }
 
 export const itemClass = `

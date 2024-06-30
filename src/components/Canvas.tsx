@@ -15,7 +15,6 @@ import {
   ReactFlow,
   useReactFlow,
 } from 'reactflow';
-import { nanoid } from 'nanoid';
 
 import { appStore } from '@/store/app';
 import { getItem } from '@/store/onto';
@@ -24,6 +23,7 @@ import ClassNode from '@/components/node/ClassNode';
 import PropertyEdge from '@/components/edge/PropertyEdge';
 import DraggedClass from '@/components/node/DraggedClass';
 import ConnectionLine from '@/components/edge/ConnectionLine';
+import { generateURN } from '@/scripts/app-utils';
 
 const nodeTypes = {
   inst: ClassNode,
@@ -74,7 +74,7 @@ const Canvas = () => {
         );
         addEdges([
           {
-            id: nanoid(),
+            id: generateURN(),
             source: data.sourceNodeId,
             target: targetNodeId,
             data: { classProperty: data.classProperty },

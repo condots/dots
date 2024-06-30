@@ -124,8 +124,8 @@ const ClassNode = ({
           >
             <span
               ref={textRef}
-              className={`text-spdx-dark w-full text-center truncate
-                         ${asEdge ? 'text-sm font-normal italic' : 'text-md font-medium'}`}
+              className={`text-spdx-dark w-full text-center truncate font-medium
+                         ${asEdge ? 'text-sm italic' : 'text-md'}`}
             >
               {title}
             </span>
