@@ -123,7 +123,7 @@ const ClassNode = ({
             sideOffset={9}
             className="text-sm"
           >
-            <div className="flex flex-col gap-0.5 text-spdx-dark w-full text-center truncate">
+            <div className="flex flex-col gap-0.5 text-spdx-dark w-full text-center truncate px-[2px]">
               <span ref={textRef} className={`w-full truncate`}>
                 {data.cls.name}
               </span>
