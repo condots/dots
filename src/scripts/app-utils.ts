@@ -200,8 +200,8 @@ export const getClsDataProps = (recClsProps: RecClsProps, required = false) => {
   return props;
 };
 
-export function initNodeProps(recursive: RecClsProps) {
-  const required = getClsDataProps(recursive, true);
+export function initNodeProps(recClsProps: RecClsProps) {
+  const required = getClsDataProps(recClsProps, true);
   const nodeProperties = {} as NodeData['nodeProps'];
   for (const clsProp of required) {
     const nodeProp = generateNodeProperty(clsProp);
@@ -209,6 +209,18 @@ export function initNodeProps(recursive: RecClsProps) {
     nodeProperties[nodeProp.id] = nodeProp;
   }
   return nodeProperties;
+}
+
+export function getClsPropMins(recClsProps: RecClsProps) {
+  const clsPropMins: Record<string, number> = {};
+  for (const clsProps of recClsProps.values()) {
+    for (const clsProp of Object.values(clsProps)) {
+      if (clsProp.targetClass && clsProp.minCount) {
+        clsPropMins[clsProp.path] = clsProp.minCount;
+      }
+    }
+  }
+  return clsPropMins;
 }
 
 export function generateURN(): string {
@@ -223,7 +235,7 @@ export const itemClass = `
 `;
 
 export const contentClass = `
-  p-1 bg-mauve1 rounded border border-mauve6 select-none 
+  bg-mauve1 rounded border border-mauve6 select-none 
   shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]
   will-change-[opacity,transform] 
   data-[side=top]:animate-slideDownAndFade 

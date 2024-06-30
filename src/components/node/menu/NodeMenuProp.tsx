@@ -77,7 +77,7 @@ const NodeMenuProp = () => {
               <ChevronRightIcon />
             </DropdownMenu.SubTrigger>
             <DropdownMenu.SubContent
-              className={contentClass}
+              className={contentClass + ' p-1'}
               sideOffset={-1}
               alignOffset={-5}
             >
@@ -98,7 +98,7 @@ const NodeMenuProp = () => {
       </DropdownMenu.SubTrigger>
       <DropdownMenu.Portal>
         <DropdownMenu.SubContent
-          className={contentClass}
+          className={contentClass + ' p-1'}
           sideOffset={-1}
           alignOffset={-5}
         >

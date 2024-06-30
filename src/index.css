@@ -38,7 +38,7 @@ input[type='datetime-local']:focus::-webkit-calendar-picker-indicator {
   position: static;
   top: 0;
   left: 0;
-  padding: 2px;
+  padding: 2px 0 2px 2px;
   border-radius: 0.25rem;
   transform: none;
   box-sizing: border-box;

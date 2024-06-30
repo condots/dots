@@ -99,6 +99,7 @@ export type NodeData = {
   cls: Class;
   inheritanceList: string[];
   nodeProps: Record<string, NodeProperty>;
+  clsPropMins: Record<string, number>;
 };
 
 export type FlowNode = Node<NodeData>;

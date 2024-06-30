@@ -26,6 +26,12 @@ const NodeMenuClass = () => {
     [nodeId]
   );
 
+  const unmetMinCount = useCallback(
+    (path: IRI, minCount: number | undefined | null) =>
+      minCount == null ? false : outEdgeCount(nodeId, path) < minCount,
+    [nodeId]
+  );
+
   const handleMouseDown = useCallback(
     (event: React.MouseEvent, classProperty: ClassProperty) => {
       if (event.button !== 0) return;
@@ -39,8 +45,7 @@ const NodeMenuClass = () => {
 
   const items = useMemo(() => {
     if (!node) return [];
-    const recClsProps =
-      ontoStore.getState().allRecClsProps![node?.data.cls.iri];
+    const recClsProps = ontoStore.getState().allRecClsProps![node.data.cls.iri];
     const classItems = [];
     for (const [propClsIRI, clsProps] of recClsProps) {
       const propClsName = parseIRI(propClsIRI).name;
@@ -61,12 +66,25 @@ const NodeMenuClass = () => {
                         type="source"
                         position={Position.Left}
                         className={`
-                          text-sm text-spdx-dark px-2 flex justify-between items-center 
+                          group pl-2 pr-3
+                          text-sm text-spdx-dark flex justify-between items-center 
                           data-[highlighted]:text-mauve1 data-[highlighted]:cursor-pointer
                           data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none 
                         `}
                       >
                         {propName}
+                        {unmetMinCount(clsProp.path, clsProp.minCount) && (
+                          <div className="w-[16px] flex items-center ml-2">
+                            <span
+                              className="material-symbols-outlined text-base text-rose-600 group-data-[highlighted]:hidden group-data-[]:hidden"
+                              style={{
+                                fontVariationSettings: `"FILL" 1, 'wght' 400, 'GRAD' 0, 'opsz' 24`,
+                              }}
+                            >
+                              error
+                            </span>
+                          </div>
+                        )}
                       </Handle>
                     </DropdownMenu.Item>
                   </Tooltip.Trigger>
@@ -100,7 +118,7 @@ const NodeMenuClass = () => {
               <ChevronRightIcon />
             </DropdownMenu.SubTrigger>
             <DropdownMenu.SubContent
-              className={contentClass}
+              className={contentClass + ' pl-1 py-1'}
               sideOffset={-1}
               alignOffset={-5}
             >
@@ -111,7 +129,7 @@ const NodeMenuClass = () => {
       }
     }
     return classItems;
-  }, [node, handleMouseDown, reachedMaxCount]);
+  }, [node, handleMouseDown, reachedMaxCount, unmetMinCount]);
 
   return items.length > 0 ? (
     <DropdownMenu.Sub>
@@ -121,7 +139,7 @@ const NodeMenuClass = () => {
       </DropdownMenu.SubTrigger>
       <DropdownMenu.Portal>
         <DropdownMenu.SubContent
-          className={contentClass}
+          className={contentClass + ' p-1'}
           sideOffset={-1}
           alignOffset={-5}
         >

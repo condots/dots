@@ -61,7 +61,7 @@ const PropSelectField = ({ propertyId }: { propertyId: string }) => {
           p-dropdown
           truncate
         `}
-      panelClassName={contentClass}
+      panelClassName={contentClass + ' p-1'}
       pt={{
         input: {
           className: `truncate ${inputColor}`,

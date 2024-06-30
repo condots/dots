@@ -39,6 +39,7 @@ import {
   generateNodeProperty,
   isNodePropertyValid,
   generateURN,
+  getClsPropMins,
 } from '@/scripts/app-utils';
 import { appStore } from './app';
 
@@ -189,6 +190,7 @@ export function addNode(type: string, x: number, y: number, classIRI: IRI) {
     cls: getItem(classIRI) as Class,
     inheritanceList: [...recClsProps.keys()],
     nodeProps: initNodeProps(recClsProps),
+    clsPropMins: getClsPropMins(recClsProps),
   };
 
   const node: FlowNode = { id: nodeId, position, data, type, selected: true };
