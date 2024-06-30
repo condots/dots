@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import type { NodeProps } from 'reactflow';
 import { Position, Handle, useStore } from 'reactflow';
@@ -12,17 +12,20 @@ import { setNodeExpanded } from '@/store/flow';
 import NodeMenu from '@/components/node/menu/NodeMenu';
 import Tooltip from '@/components/Tooltip';
 import PropFields from '@/components/node/prop/PropFields';
+import { parseIRI } from '@/scripts/app-utils';
 
 const connectionStartHandleSelector = state => state.connectionStartHandle;
 const connectionEndHandleSelector = state => state.connectionEndHandle;
 
-const ClassInstance = ({
+const ClassNode = ({
   id: nodeId,
   data,
   selected,
   dragging,
 }: NodeProps<NodeData>) => {
   const [tooltipDisabled, setTooltipDisabled] = useState(false);
+  const [title, setTitle] = useState(data.cls.name);
+  const [asEdge, setAsEdge] = useState(false);
   const textRef = useRef<HTMLSpanElement | null>(null);
   const showExpandButton = Object.entries(data.nodeProps).length > 0;
   const connectionSource = useStore(connectionStartHandleSelector)?.nodeId;
@@ -80,6 +83,16 @@ const ClassInstance = ({
     </div>
   );
 
+  useEffect(() => {
+    const relType = Object.values(data.nodeProps).find(
+      v => v.classProperty.name === 'relationshipType'
+    )?.value;
+    if (relType) {
+      setTitle(parseIRI(relType as string).name);
+      setAsEdge(true);
+    }
+  }, [data.nodeProps]);
+
   if (!data.cls) {
     return null;
   }
@@ -90,7 +103,7 @@ const ClassInstance = ({
         onOpenChange={open => setNodeExpanded(nodeId, open)}
         className={`
           cursor-move rounded w-64 bg-white shadow-2 outline outline-spdx-dark outline-1
-          ${selected && 'outline-2'} 
+          ${selected && 'outline-[3px]'} 
           ${dragging && 'shadow-4 translate-y-[-1.5px] translate-x-[0.8px]'}
           ${
             isTargetHandleConnectable &&
@@ -111,9 +124,10 @@ const ClassInstance = ({
           >
             <span
               ref={textRef}
-              className="text-spdx-dark text-md font-medium w-full text-center truncate"
+              className={`text-spdx-dark w-full text-center truncate
+                         ${asEdge ? 'text-sm font-normal italic' : 'text-md font-medium'}`}
             >
-              {data.cls.name}
+              {title}
             </span>
           </Tooltip>
           {expandButton}
@@ -134,4 +148,4 @@ const ClassInstance = ({
   );
 };
 
-export default ClassInstance;
+export default ClassNode;

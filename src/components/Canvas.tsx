@@ -20,22 +20,23 @@ import { nanoid } from 'nanoid';
 import { appStore } from '@/store/app';
 import { getItem } from '@/store/onto';
 import { addNode, flowStore, isValidConnection } from '@/store/flow';
-import ClassInstance from '@/components/node/ClassInstance';
-import EdgeLine from '@/components/edge/EdgeLine';
+import ClassNode from '@/components/node/ClassNode';
+import PropertyEdge from '@/components/edge/PropertyEdge';
 import DraggedClass from '@/components/node/DraggedClass';
 import ConnectionLine from '@/components/edge/ConnectionLine';
 
 const nodeTypes = {
-  inst: ClassInstance,
+  inst: ClassNode,
 } satisfies NodeTypes;
 
 const edgeTypes = {
-  inst: EdgeLine,
+  inst: PropertyEdge,
 } satisfies EdgeTypes;
 
 const connectionLineStyle = {
-  strokeWidth: 1,
+  strokeWidth: 4,
   stroke: '#00416b',
+  strokeDasharray: 7,
 };
 
 const defaultEdgeOptions = {
@@ -78,6 +79,7 @@ const Canvas = () => {
             target: targetNodeId,
             data: { classProperty: data.classProperty },
             label: data?.classProperty.name,
+            // animated: true,
           },
         ]);
       }

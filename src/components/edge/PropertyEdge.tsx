@@ -15,7 +15,7 @@ import { getEdgeParams } from '@/scripts/flow-utils.js';
 const connectionStartHandleSelector = state => state.connectionStartHandle;
 const connectionEndHandleSelector = state => state.connectionEndHandle;
 
-const EdgeLine = ({
+const PropertyEdge = ({
   id,
   source,
   target: edgeTarget,
@@ -77,13 +77,23 @@ const EdgeLine = ({
     return labelIndex * labelHeight - combinedHeight / 2;
   }, [id, connectionSource, connectionTarget, siblingEdges, source, target]);
 
+  const extraStyle = useMemo(
+    () =>
+      sourceNode.data.cls.name === 'Relationship' && {
+        strokeDasharray: 5,
+        animation: 'dashdraw 0.5s linear infinite',
+        animationDirection: label === 'from' ? 'reverse' : 'normal',
+      },
+    [sourceNode.data.cls.name, label]
+  );
+
   return (
     <>
       <BaseEdge
         id={id}
         path={edgePath}
         markerEnd={markerEnd}
-        style={style}
+        style={{ ...style, ...extraStyle }}
         interactionWidth={0}
       />
       <EdgeLabelRenderer>
@@ -94,14 +104,15 @@ const EdgeLine = ({
             transform: `translate(-50%, 0) translate(${labelX}px, ${labelY}px)`,
             height: labelHeight,
             marginTop: marginTop,
+            pointerEvents: 'all',
           }}
-          className={`nopan flex items-center pointer-events-auto cursor-pointer
+          className={`nodrag nopan flex items-center cursor-pointer
             font-medium text-xs text-spdx-dark border-spdx-dark
           `}
         >
           <div
             className={`flex px-2 py-0.5 border-1 bg-white border-1 border-spdx-dark rounded-md 
-              ${selected && 'border-2'}
+              ${(selected || id === 'connection') && 'border-3'}
             `}
           >
             {label}
@@ -112,4 +123,4 @@ const EdgeLine = ({
   );
 };
 
-export default EdgeLine;
+export default PropertyEdge;
