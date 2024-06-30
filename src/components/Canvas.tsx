@@ -43,7 +43,7 @@ const defaultEdgeOptions = {
   type: 'inst',
   markerEnd: {
     type: MarkerType.ArrowClosed,
-    strokeWidth: connectionLineStyle.strokeWidth,
+    strokeWidth: 2,
     width: 20,
     height: 20,
     color: connectionLineStyle.stroke,
