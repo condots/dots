@@ -21,7 +21,7 @@ const PropBoolField = ({ propertyId }: { propertyId: string }) => {
   return (
     <>
       <button
-        className="flex items-center justify-center outline-none"
+        className="flex items-center justify-center outline-none pt-2"
         onClick={() => setNodeProperty(nodeId, propertyId, !checked)}
       >
         <span className={`material-symbols-outlined text-2xl ${iconColor}`}>

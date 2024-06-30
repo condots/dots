@@ -95,7 +95,7 @@ const ClassNode = ({
     return null;
   }
   return (
-    <div className="relative p-1 rounded">
+    <div className="relative p-1 rounded font-lato">
       <Collapsible.Root
         open={data.expanded}
         onOpenChange={open => setNodeExpanded(nodeId, open)}
@@ -113,7 +113,7 @@ const ClassNode = ({
       >
         <div
           className={`flex items-center justify-between px-2 gap-[5px]
-                      ${subtitle ? 'py-1.5' : 'py-2'}`}
+                      ${subtitle ? 'pt-1.5 pb-2.5' : 'py-2'}`}
         >
           {menuButton}
           <Tooltip
@@ -123,8 +123,8 @@ const ClassNode = ({
             sideOffset={9}
             className="text-sm"
           >
-            <div className="flex flex-col gap-0.5 text-spdx-dark w-full text-center font-medium truncate">
-              <span ref={textRef} className={`w-full truncate font-medium`}>
+            <div className="flex flex-col gap-0.5 text-spdx-dark w-full text-center truncate">
+              <span ref={textRef} className={`w-full truncate`}>
                 {data.cls.name}
               </span>
               {subtitle && (

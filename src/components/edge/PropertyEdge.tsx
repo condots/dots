@@ -110,7 +110,7 @@ const PropertyEdge = ({
           `}
         >
           <div
-            className={`flex px-2 py-0.5 border-1 bg-white border-1 border-spdx-dark rounded-md italic 
+            className={`flex px-1.5 py-0.5 border-1 bg-white border-1 border-spdx-dark rounded-md font-medium
               ${(selected || id === 'connection') && 'border-3'}
             `}
           >
