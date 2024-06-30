@@ -79,12 +79,13 @@ const PropertyEdge = ({
 
   const extraStyle = useMemo(
     () =>
-      sourceNode.data.cls.name === 'Relationship' && {
+      label === 'to' ||
+      (label === 'from' && {
         strokeDasharray: 5,
         animation: 'dashdraw 0.5s linear infinite',
         animationDirection: label === 'from' ? 'reverse' : 'normal',
-      },
-    [sourceNode.data.cls.name, label]
+      }),
+    [label]
   );
 
   return (

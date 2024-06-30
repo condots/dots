@@ -13,6 +13,9 @@ import NodeMenuProp from '@/components/node/menu/NodeMenuProp';
 const NodeMenu = () => {
   const nodeId = useNodeId()!;
   const node = getNode(nodeId);
+  const invalidProps = node?.data.nodeProps
+    ? Object.entries(node.data.nodeProps).filter(p => !p[1].valid)
+    : [];
 
   const GetInfo = (
     <DropdownMenu.Item
@@ -37,14 +40,28 @@ const NodeMenu = () => {
     </DropdownMenu.Item>
   );
 
+  const warnStyle = {
+    fontVariationSettings: `"FILL" 1, 'wght' 400, 'GRAD' 0, 'opsz' 24`,
+  };
+
   return (
     <DropdownMenu.Root
       open={node?.data.menuOpen}
       onOpenChange={open => setNodeMenuState(nodeId, open)}
     >
       <DropdownMenu.Trigger asChild>
-        <button className="nodrag nopan outline-none p-1 rounded text-spdx-dark hover:bg-spdx-dark/5">
+        <button className="nodrag nopan outline-none p-1 rounded text-spdx-dark hover:bg-spdx-dark/5 flex relative">
           <HamburgerMenuIcon />
+          {invalidProps.length > 0 && (
+            <div className="absolute inline-flex items-center justify-center bg-white rounded-full top-[1px] right-[-3px]">
+              <span
+                className="material-symbols-outlined text-xs text-rose-600"
+                style={warnStyle}
+              >
+                error
+              </span>
+            </div>
+          )}
         </button>
       </DropdownMenu.Trigger>
 
