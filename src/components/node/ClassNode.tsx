@@ -24,8 +24,7 @@ const ClassNode = ({
   dragging,
 }: NodeProps<NodeData>) => {
   const [tooltipDisabled, setTooltipDisabled] = useState(false);
-  const [title, setTitle] = useState(data.cls.name);
-  const [asEdge, setAsEdge] = useState(false);
+  const [subtitle, setSubtitle] = useState('');
   const textRef = useRef<HTMLSpanElement | null>(null);
   const showExpandButton = Object.entries(data.nodeProps).length > 0;
   const connectionSource = useStore(connectionStartHandleSelector)?.nodeId;
@@ -88,8 +87,7 @@ const ClassNode = ({
       v => v.classProperty.name === 'relationshipType'
     )?.value;
     if (relType) {
-      setTitle(parseIRI(relType as string).name);
-      setAsEdge(true);
+      setSubtitle(parseIRI(relType as string).name);
     }
   }, [data.nodeProps]);
 
@@ -113,7 +111,10 @@ const ClassNode = ({
           }
         `}
       >
-        <div className="flex items-center justify-between p-2 gap-[5px]">
+        <div
+          className={`flex items-center justify-between px-2 gap-[5px]
+                      ${subtitle ? 'py-1.5' : 'py-2'}`}
+        >
           {menuButton}
           <Tooltip
             content={data.cls.name}
@@ -122,13 +123,14 @@ const ClassNode = ({
             sideOffset={9}
             className="text-sm"
           >
-            <span
-              ref={textRef}
-              className={`text-spdx-dark w-full text-center truncate font-medium
-                         ${asEdge ? 'text-sm italic' : 'text-md'}`}
-            >
-              {title}
-            </span>
+            <div className="flex flex-col gap-0.5 text-spdx-dark w-full text-center font-medium truncate">
+              <span ref={textRef} className={`w-full truncate font-medium`}>
+                {data.cls.name}
+              </span>
+              {subtitle && (
+                <span className="text-xs truncate">[ {subtitle} ]</span>
+              )}
+            </div>
           </Tooltip>
           {expandButton}
         </div>

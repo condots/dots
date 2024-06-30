@@ -11,6 +11,7 @@ import {
 import type { EdgeProps } from 'reactflow';
 
 import { getEdgeParams } from '@/scripts/flow-utils.js';
+import { parseIRI } from '@/scripts/app-utils';
 
 const connectionStartHandleSelector = state => state.connectionStartHandle;
 const connectionEndHandleSelector = state => state.connectionEndHandle;
@@ -77,16 +78,13 @@ const PropertyEdge = ({
     return labelIndex * labelHeight - combinedHeight / 2;
   }, [id, connectionSource, connectionTarget, siblingEdges, source, target]);
 
-  const extraStyle = useMemo(
-    () =>
-      label === 'to' ||
-      (label === 'from' && {
-        strokeDasharray: 5,
-        animation: 'dashdraw 0.5s linear infinite',
-        animationDirection: label === 'from' ? 'reverse' : 'normal',
-      }),
-    [label]
-  );
+  const relationshipStyle = sourceNode.data.inheritanceList.findIndex(
+    (v: string) => parseIRI(v).name === 'Relationship'
+  ) !== -1 && {
+    strokeDasharray: 5,
+    animation: 'dashdraw 0.5s linear infinite',
+    animationDirection: label === 'from' ? 'reverse' : 'normal',
+  };
 
   return (
     <>
@@ -94,7 +92,7 @@ const PropertyEdge = ({
         id={id}
         path={edgePath}
         markerEnd={markerEnd}
-        style={{ ...style, ...extraStyle }}
+        style={{ ...style, ...relationshipStyle }}
         interactionWidth={0}
       />
       <EdgeLabelRenderer>

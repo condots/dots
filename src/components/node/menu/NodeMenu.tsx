@@ -53,9 +53,9 @@ const NodeMenu = () => {
         <button className="nodrag nopan outline-none p-1 rounded text-spdx-dark hover:bg-spdx-dark/5 flex relative">
           <HamburgerMenuIcon />
           {invalidProps.length > 0 && (
-            <div className="absolute inline-flex items-center justify-center bg-white rounded-full top-[1px] right-[-3px]">
+            <div className="absolute inline-flex items-center justify-center bg-white rounded-full top-[-3px] right-[-6px]">
               <span
-                className="material-symbols-outlined text-xs text-rose-600"
+                className="material-symbols-outlined text-base text-rose-600"
                 style={warnStyle}
               >
                 error
