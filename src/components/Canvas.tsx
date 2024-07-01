@@ -18,8 +18,9 @@ import {
 
 import { appStore } from '@/store/app';
 import { getItem } from '@/store/onto';
-import { addNode, flowStore, isValidConnection } from '@/store/flow';
+import { addNode, flowStore } from '@/store/flow';
 import ClassNode from '@/components/node/ClassNode';
+import Origin from '@/components/Origin';
 import PropertyEdge from '@/components/edge/PropertyEdge';
 import DraggedClass from '@/components/node/DraggedClass';
 import ConnectionLine from '@/components/edge/ConnectionLine';
@@ -27,6 +28,7 @@ import { generateURN } from '@/scripts/app-utils';
 
 const nodeTypes = {
   inst: ClassNode,
+  origin: Origin,
 } satisfies NodeTypes;
 
 const edgeTypes = {
@@ -79,7 +81,6 @@ const Canvas = () => {
             target: targetNodeId,
             data: { classProperty: data.classProperty },
             label: data?.classProperty.name,
-            // animated: true,
           },
         ]);
       }
@@ -105,7 +106,6 @@ const Canvas = () => {
       onNodeDragStop={flowStore.getState().onNodeDragStop}
       onConnect={flowStore.getState().onConnect}
       onInit={flowStore.getState().onInit}
-      isValidConnection={isValidConnection}
       fitViewOptions={{ padding: 2 }}
       zoomOnPinch={false}
       zoomOnDoubleClick={false}

@@ -146,7 +146,8 @@ const flowStoreBase = create<RFState>()(
               set(state => {
                 state.devtoolsActive[name] = !state.devtoolsActive[name];
               }),
-            reset: () => set({ nodes: [], edges: [] }),
+            reset: () =>
+              set({ nodes: initialState.nodes, edges: initialState.edges }),
           }),
           {
             name: 'flow',
