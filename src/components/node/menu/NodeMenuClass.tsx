@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Tooltip from '@radix-ui/react-tooltip';
@@ -6,7 +6,7 @@ import { ArrowRightIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { Handle, Position, useNodeId } from 'reactflow';
 
 import { ClassProperty, IRI } from '@/types';
-import { outEdgeCount, getNode, setNodeMenuState } from '@/store/flow';
+import { outEdgeCount, getNode } from '@/store/flow';
 import {
   contentClass,
   itemClass,
@@ -20,31 +20,32 @@ const NodeMenuClass = () => {
   const nodeId = useNodeId()!;
   const node = getNode(nodeId);
 
-  const reachedMaxCount = useCallback(
-    (path: IRI, maxCount: number | undefined | null) =>
-      maxCount == null ? false : outEdgeCount(nodeId, path) >= maxCount,
-    [nodeId]
-  );
-
-  const unmetMinCount = useCallback(
-    (path: IRI, minCount: number | undefined | null) =>
-      minCount == null ? false : outEdgeCount(nodeId, path) < minCount,
-    [nodeId]
-  );
-
-  const handleMouseDown = useCallback(
-    (event: React.MouseEvent, classProperty: ClassProperty) => {
-      if (event.button !== 0) return;
-      appStore.setState(state => {
-        state.draggedPropData = { classProperty, sourceNodeId: nodeId };
-      });
-      setNodeMenuState(nodeId, false);
-    },
-    [nodeId]
-  );
-
   const items = useMemo(() => {
     if (!node) return [];
+
+    const reachedMaxCount = (path: IRI, maxCount: number | undefined | null) =>
+      maxCount == null ? false : outEdgeCount(node.id, path) >= maxCount;
+
+    const unmetMinCount = (path: IRI, minCount: number | undefined | null) =>
+      minCount == null ? false : outEdgeCount(node.id, path) < minCount;
+
+    const handleMouseDown = (
+      event: React.MouseEvent,
+      classProperty: ClassProperty
+    ) => {
+      if (event.button !== 0) return;
+      appStore.setState(state => {
+        state.draggedPropData = { classProperty, sourceNodeId: node.id };
+      });
+      event.target?.dispatchEvent(
+        new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          view: window,
+        })
+      );
+    };
+
     const recClsProps = ontoStore.getState().allRecClsProps![node.data.cls.iri];
     const classItems = [];
     for (const [propClsIRI, clsProps] of recClsProps) {
@@ -129,7 +130,7 @@ const NodeMenuClass = () => {
       }
     }
     return classItems;
-  }, [node, handleMouseDown, reachedMaxCount, unmetMinCount]);
+  }, [node]);
 
   return items.length > 0 ? (
     <DropdownMenu.Sub>

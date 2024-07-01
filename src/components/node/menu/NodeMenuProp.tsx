@@ -1,16 +1,11 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { useNodeId } from 'reactflow';
 
 import { ClassProperty, IRI } from '@/types';
-import {
-  addNodeProperty,
-  getNode,
-  setNodeExpanded,
-  setNodeMenuState,
-} from '@/store/flow';
+import { addNodeProperty, getNode, setNodeExpanded } from '@/store/flow';
 import {
   contentClass,
   getClassPropertyIcon,
@@ -23,31 +18,30 @@ const NodeMenuProp = () => {
   const nodeId = useNodeId()!;
   const node = getNode(nodeId);
 
-  const reachedMaxCount = useCallback(
-    (path: IRI, maxCount: number | undefined | null) => {
+  const items = useMemo(() => {
+    if (!node) return [];
+
+    const reachedMaxCount = (
+      path: IRI,
+      maxCount: number | undefined | null
+    ) => {
       if (maxCount == null) return false;
-      const propertyCount = Object.values(node!.data.nodeProps).filter(
+      const propertyCount = Object.values(node.data.nodeProps).filter(
         p => p.classProperty.path === path
       ).length;
       return propertyCount >= maxCount;
-    },
-    [node]
-  );
+    };
 
-  const handleMouseDown = useCallback(
-    (event: React.MouseEvent, classProperty: ClassProperty) => {
-      if (event.button !== 0) return;
-      addNodeProperty(nodeId, classProperty);
-      setNodeMenuState(nodeId, event.metaKey);
-      setNodeExpanded(nodeId, true);
-    },
-    [nodeId]
-  );
+    const onSelect = (
+      event: React.MouseEvent,
+      classProperty: ClassProperty
+    ) => {
+      if (event.metaKey) event.preventDefault();
+      addNodeProperty(node.id, classProperty);
+      setNodeExpanded(node.id, true);
+    };
 
-  const items = useMemo(() => {
-    if (!node) return [];
-    const recClsProps =
-      ontoStore.getState().allRecClsProps![node?.data.cls.iri];
+    const recClsProps = ontoStore.getState().allRecClsProps![node.data.cls.iri];
     const classItems = [];
     for (const [propClsIRI, clsProps] of recClsProps) {
       const propClsName = parseIRI(propClsIRI).name;
@@ -57,9 +51,9 @@ const NodeMenuProp = () => {
           propItems.push(
             <DropdownMenu.Item
               key={clsProp.path}
-              onMouseDown={e => handleMouseDown(e, clsProp)}
               disabled={reachedMaxCount(clsProp.path, clsProp.maxCount)}
               className={itemClass}
+              onClick={e => onSelect(e, clsProp)}
             >
               <span>{propName}</span>
               <span className="material-symbols-outlined text-sm">
@@ -88,7 +82,7 @@ const NodeMenuProp = () => {
       }
     }
     return classItems;
-  }, [node, handleMouseDown, reachedMaxCount]);
+  }, [node]);
 
   return items.length > 0 ? (
     <DropdownMenu.Sub>

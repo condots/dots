@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
@@ -6,12 +6,7 @@ import { useNodeId } from 'reactflow';
 
 import { appStore } from '@/store/app';
 import { contentClass, itemClass } from '@/scripts/app-utils';
-import {
-  deleteNode,
-  getNode,
-  outEdgeCount,
-  setNodeMenuState,
-} from '@/store/flow';
+import { deleteNode, getNode, outEdgeCount } from '@/store/flow';
 import NodeMenuClass from '@/components/node/menu/NodeMenuClass';
 import NodeMenuProp from '@/components/node/menu/NodeMenuProp';
 
@@ -51,10 +46,7 @@ const NodeMenu = () => {
   );
 
   return (
-    <DropdownMenu.Root
-      open={node?.data.menuOpen}
-      onOpenChange={open => setNodeMenuState(nodeId, open)}
-    >
+    <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button className="nodrag nopan outline-none p-1 rounded text-spdx-dark hover:bg-spdx-dark/5 flex relative">
           <HamburgerMenuIcon />

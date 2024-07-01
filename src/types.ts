@@ -94,7 +94,6 @@ export type NodeProperty = {
 export type NodeData = {
   isNode: boolean;
   active: boolean;
-  menuOpen: boolean;
   expanded: boolean;
   cls: Class;
   inheritanceList: string[];

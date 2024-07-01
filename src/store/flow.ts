@@ -185,7 +185,6 @@ export function addNode(type: string, x: number, y: number, classIRI: IRI) {
   const data: NodeData = {
     isNode: true,
     active: false,
-    menuOpen: false,
     expanded: false,
     cls: getItem(classIRI) as Class,
     inheritanceList: [...recClsProps.keys()],
@@ -261,12 +260,6 @@ export function isValidConnection(connection: Connection) {
   };
   if (target!.id === connection.source) return false;
   return !hasCycle(target!);
-}
-
-export function setNodeMenuState(nodeId: string, open: boolean) {
-  flowStore.setState(state => {
-    state.nodes.find(n => n.id === nodeId)!.data.menuOpen = open;
-  });
 }
 
 export function setNodeExpanded(nodeId: string, open: boolean) {
