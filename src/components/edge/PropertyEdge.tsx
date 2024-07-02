@@ -5,6 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import cc from 'classcat';
 
 import {
   useStore,
@@ -12,9 +13,10 @@ import {
   getSmoothStepPath,
   EdgeLabelRenderer,
   useEdges,
+  useOnSelectionChange,
 } from 'reactflow';
 
-import type { EdgeProps } from 'reactflow';
+import type { Edge, EdgeProps } from 'reactflow';
 
 import { getEdgeParams } from '@/scripts/flow-utils.js';
 import { parseIRI } from '@/scripts/app-utils';
@@ -129,6 +131,20 @@ const PropertyEdge = ({
     return () => observer.disconnect();
   }, []);
 
+  const [dimEdge, setDimEdge] = useState(false);
+
+  const onChange = useCallback(
+    ({ nodes, edges }: { nodes: Node[]; edges: Edge[] }) => {
+      const dim =
+        nodes.length > 0 &&
+        !!nodes.find(node => node.id !== source && node.id !== target);
+      setDimEdge(dim);
+    },
+    [source, target, id]
+  );
+
+  useOnSelectionChange({ onChange });
+
   const nodeSelected = sourceNode.selected || targetNode.selected;
   const isTargetCreationInfo = targetNode
     ? targetNode.data.inheritanceList.findIndex(
@@ -147,6 +163,8 @@ const PropertyEdge = ({
     ...style,
     ...relationshipStyle,
     visibility: creationInfoHidden ? 'hidden' : 'visible',
+    stroke: dimEdge ? '#d1d5db' : style.stroke,
+    // opacity: dimEdge ? 0.1 : 1,
   };
 
   return (
@@ -169,6 +187,7 @@ const PropertyEdge = ({
             pointerEvents: 'all',
             zIndex: (edgeZIndex ?? 0) + 1000,
             visibility: creationInfoHidden ? 'hidden' : 'visible',
+            opacity: dimEdge ? 0.3 : 1,
           }}
           className={`nodrag nopan flex items-center cursor-pointer
             font-medium text-xs text-spdx-dark border-spdx-dark
