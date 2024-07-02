@@ -129,13 +129,33 @@ const PropertyEdge = ({
     return () => observer.disconnect();
   }, []);
 
+  const nodeSelected = sourceNode.selected || targetNode.selected;
+  const isTargetCreationInfo = targetNode
+    ? targetNode.data.inheritanceList.findIndex(
+        (v: string) => parseIRI(v).name === 'CreationInfo'
+      ) !== -1
+    : false;
+
+  const creationInfoHidden =
+    label === 'creationInfo' &&
+    isTargetCreationInfo &&
+    id !== 'connection' &&
+    !nodeSelected &&
+    !selected;
+
+  const pathStyle = {
+    ...style,
+    ...relationshipStyle,
+    visibility: creationInfoHidden ? 'hidden' : 'visible',
+  };
+
   return (
     <>
       <BaseEdge
         id={id}
         path={edgePath}
         markerEnd={markerEnd}
-        style={{ ...style, ...relationshipStyle }}
+        style={pathStyle}
         interactionWidth={0}
       />
       <EdgeLabelRenderer>
@@ -148,6 +168,7 @@ const PropertyEdge = ({
             marginTop: marginTop,
             pointerEvents: 'all',
             zIndex: (edgeZIndex ?? 0) + 1000,
+            visibility: creationInfoHidden ? 'hidden' : 'visible',
           }}
           className={`nodrag nopan flex items-center cursor-pointer
             font-medium text-xs text-spdx-dark border-spdx-dark
