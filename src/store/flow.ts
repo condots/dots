@@ -18,12 +18,17 @@ import {
   OnNodesChange,
   OnEdgesChange,
   OnConnect,
+  OnSelectionChangeFunc,
   NodeDragHandler,
   applyNodeChanges,
   applyEdgeChanges,
   getOutgoers,
 } from 'reactflow';
-import type { ReactFlowInstance, OnInit } from 'reactflow';
+import type {
+  ReactFlowInstance,
+  OnInit,
+  OnSelectionChangeParams,
+} from 'reactflow';
 
 import {
   Class,
@@ -57,6 +62,7 @@ type RFState = {
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
   onConnect: OnConnect;
+  onSelectionChange: OnSelectionChangeFunc;
   onNodeDragStart: NodeDragHandler;
   onNodeDragStop: NodeDragHandler;
   onInit: OnInit;
@@ -123,6 +129,16 @@ const flowStoreBase = create<RFState>()(
                 state.edges = [...state.edges, newEdge];
               });
             },
+            onSelectionChange: (params: OnSelectionChangeParams) => {
+              const selectedNodes = params.nodes.map(param => param.id);
+              set(state => {
+                state.nodes.forEach(n => {
+                  if (!selectedNodes.includes(n.id)) {
+                    n.data.expanded = false;
+                  }
+                });
+              });
+            },
             onNodeDragStart: (event, node) => {
               set(state => {
                 state.nodes.find(n => n.id === node.id)!.data.active = true;
@@ -181,6 +197,22 @@ export function useNodeProperty(
   if (propertyId) return nodeProperties?.[propertyId];
 }
 
+export function selectNode(nodeId?: string) {
+  flowStore.setState(state => {
+    state.nodes.forEach(n => {
+      n.selected = n.id === nodeId;
+    });
+  });
+}
+
+export function selectEdge(edgeId?: string) {
+  flowStore.setState(state => {
+    state.edges.forEach(e => {
+      e.selected = e.id === edgeId;
+    });
+  });
+}
+
 export function addNode(type: string, x: number, y: number, classIRI: IRI) {
   const nodeId = generateURN();
   const position = flowStore
@@ -198,11 +230,9 @@ export function addNode(type: string, x: number, y: number, classIRI: IRI) {
   };
 
   const node: FlowNode = { id: nodeId, position, data, type, selected: true };
+  selectNode();
+  selectEdge();
   flowStore.setState(state => {
-    // Only select the new node
-    state.nodes.forEach(n => {
-      n.selected = false;
-    });
     state.nodes.push(node);
   });
   return nodeId;

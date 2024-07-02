@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import type { NodeProps } from 'reactflow';
 import { Position, Handle, useStore } from 'reactflow';
@@ -62,7 +62,7 @@ const ClassNode = ({
   );
 
   const menuButton = (
-    <div className="min-w-[23px] h-[24px] flex items-center justify-center nodrag nopan">
+    <div className="min-w-[23px] h-[24px] flex items-center justify-center">
       <NodeMenu />
     </div>
   );
@@ -72,7 +72,7 @@ const ClassNode = ({
       {showExpandButton && (
         <Collapsible.Trigger asChild>
           <button
-            className="nodrag nopan outline-none p-1 rounded text-spdx-dark 
+            className="nopan outline-none p-1 rounded text-spdx-dark 
                      hover:bg-spdx-dark/5 data-[state=open]:rotate-180 max-h-[23px]"
           >
             <ChevronDownIcon />

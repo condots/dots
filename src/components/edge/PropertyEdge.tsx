@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import {
   useStore,
@@ -86,6 +92,43 @@ const PropertyEdge = ({
     animationDirection: label === 'from' ? 'reverse' : 'normal',
   };
 
+  const edgeRef = useRef(null);
+  const [edgeZIndex, setEdgeZIndex] = useState(null);
+
+  useEffect(() => {
+    const getZIndexOfSvg = () => {
+      if (edgeRef.current) {
+        let currentElement = edgeRef.current;
+        while (
+          currentElement &&
+          currentElement.tagName.toLowerCase() !== 'svg'
+        ) {
+          currentElement = currentElement.parentElement;
+        }
+        if (currentElement) {
+          const computedStyles = window.getComputedStyle(currentElement);
+          const zIndex = computedStyles.getPropertyValue('z-index');
+          setEdgeZIndex(zIndex);
+        }
+      }
+    };
+    getZIndexOfSvg();
+    const observer = new MutationObserver(getZIndexOfSvg);
+    if (edgeRef.current) {
+      let svgElement = edgeRef.current;
+      while (svgElement && svgElement.tagName.toLowerCase() !== 'svg') {
+        svgElement = svgElement.parentElement;
+      }
+      if (svgElement) {
+        observer.observe(svgElement, {
+          attributes: true,
+          attributeFilter: ['style'],
+        });
+      }
+    }
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <>
       <BaseEdge
@@ -104,6 +147,7 @@ const PropertyEdge = ({
             height: labelHeight,
             marginTop: marginTop,
             pointerEvents: 'all',
+            zIndex: (edgeZIndex ?? 0) + 1000,
           }}
           className={`nodrag nopan flex items-center cursor-pointer
             font-medium text-xs text-spdx-dark border-spdx-dark

@@ -105,13 +105,15 @@ const Canvas = () => {
       onNodeDragStart={flowStore.getState().onNodeDragStart}
       onNodeDragStop={flowStore.getState().onNodeDragStop}
       onConnect={flowStore.getState().onConnect}
+      onConnectEnd={onConnectEnd}
       onInit={flowStore.getState().onInit}
       fitViewOptions={{ padding: 2 }}
       zoomOnPinch={false}
       zoomOnDoubleClick={false}
       zoomActivationKeyCode={null}
       disableKeyboardA11y
-      onConnectEnd={onConnectEnd}
+      onSelectionChange={flowStore.getState().onSelectionChange}
+      elevateEdgesOnSelect={true}
     >
       {/* <DevTools /> */}
       <Background color="#00416b" variant={BackgroundVariant.Dots} />

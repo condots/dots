@@ -6,7 +6,13 @@ import { useNodeId } from 'reactflow';
 
 import { appStore } from '@/store/app';
 import { contentClass, itemClass } from '@/scripts/app-utils';
-import { deleteNode, useNode, hasUnmetNodeClsProps } from '@/store/flow';
+import {
+  deleteNode,
+  useNode,
+  hasUnmetNodeClsProps,
+  selectNode,
+  selectEdge,
+} from '@/store/flow';
 import NodeMenuClass from '@/components/node/menu/NodeMenuClass';
 import NodeMenuProp from '@/components/node/menu/NodeMenuProp';
 
@@ -42,9 +48,16 @@ const NodeMenu = () => {
   );
 
   return (
-    <DropdownMenu.Root>
+    <DropdownMenu.Root
+      onOpenChange={open => {
+        if (open) {
+          selectEdge();
+          selectNode(nodeId);
+        }
+      }}
+    >
       <DropdownMenu.Trigger asChild>
-        <button className="nodrag nopan outline-none p-1 rounded text-spdx-dark hover:bg-spdx-dark/5 flex relative">
+        <button className="outline-none p-1 rounded text-spdx-dark hover:bg-spdx-dark/5 flex relative">
           <HamburgerMenuIcon />
           {(invalidProps.length > 0 || unmetNodeClsProps) && (
             <div className="absolute inline-flex items-center justify-center bg-white rounded-full top-[-3px] right-[-6px]">
