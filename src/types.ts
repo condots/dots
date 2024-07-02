@@ -98,14 +98,14 @@ export type NodeData = {
   cls: Class;
   inheritanceList: string[];
   nodeProps: Record<string, NodeProperty>;
-  clsPropMins: Record<string, number>;
+  recClsProps: Map<string, ClassProperties>;
 };
+
+export type ClsPropMin = Record<string, number>;
 
 export type FlowNode = Node<NodeData>;
 
 export type InputProperties = Map<LiteralPropertyTypes, InputProperty>;
-
-export type RecClsProps = Map<string, ClassProperties>;
 
 export interface InputProperty {
   icon: string;

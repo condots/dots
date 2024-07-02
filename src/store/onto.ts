@@ -10,7 +10,7 @@ import superjson from 'superjson';
 import createSelectors from '@/store/createSelectors';
 import { Store } from 'n3';
 
-import { Class, EnrichedProfiles, IRI, Item, Name, RecClsProps } from '@/types';
+import { Class, EnrichedProfiles, IRI, Item, Name, NodeData } from '@/types';
 import {
   createGraph,
   createModel,
@@ -24,7 +24,7 @@ type OntoState = {
   graph: Store | undefined;
   profiles: EnrichedProfiles | undefined;
   iris: Record<IRI, Item> | undefined;
-  allRecClsProps: Record<Name, RecClsProps> | undefined;
+  allRecClsProps: Record<Name, NodeData['recClsProps']> | undefined;
 };
 
 const initialState = {

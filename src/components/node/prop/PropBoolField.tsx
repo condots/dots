@@ -2,11 +2,11 @@ import React from 'react';
 
 import { useNodeId } from 'reactflow';
 
-import { getNodeProperty, setNodeProperty } from '@/store/flow';
+import { useNodeProperty, setNodeProperty } from '@/store/flow';
 
 const PropBoolField = ({ propertyId }: { propertyId: string }) => {
   const nodeId = useNodeId()!;
-  const nodeProperty = getNodeProperty(nodeId, propertyId)!;
+  const nodeProperty = useNodeProperty(nodeId, propertyId)!;
   const checked = nodeProperty.value;
 
   const checkboxIcon =

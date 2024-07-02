@@ -20,7 +20,6 @@ import {
   Profiles,
   Properties,
   PropertyOption,
-  RecClsProps,
   Section,
   SharedFields,
   Vocabularies,
@@ -158,7 +157,7 @@ export async function enrichModelFromMarkdown(
 }
 
 export function getAllRecClsProps(profiles: Profiles, iris: Record<IRI, Item>) {
-  const allRecClsProps: Record<Name, RecClsProps> = {};
+  const allRecClsProps: Record<Name, NodeData['recClsProps']> = {};
   for (const profile of Object.values(profiles)) {
     for (const cls of Object.values(profile.classes)) {
       allRecClsProps[cls.iri] = getRecClsProps(iris, cls.iri);
@@ -168,7 +167,7 @@ export function getAllRecClsProps(profiles: Profiles, iris: Record<IRI, Item>) {
 }
 
 function getRecClsProps(iris: Record<IRI, Item>, iri: IRI | undefined) {
-  const recClsProps: RecClsProps = new Map();
+  const recClsProps: NodeData['recClsProps'] = new Map();
   while (iri) {
     const cls = iris[iri] as Class;
     const classProperties: ClassProperties = {};

@@ -5,7 +5,7 @@ import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { useNodeId } from 'reactflow';
 
 import { ClassProperty, IRI } from '@/types';
-import { addNodeProperty, getNode, setNodeExpanded } from '@/store/flow';
+import { addNodeProperty, useNode, setNodeExpanded } from '@/store/flow';
 import {
   contentClass,
   getClassPropertyIcon,
@@ -16,7 +16,7 @@ import { ontoStore } from '@/store/onto';
 
 const NodeMenuProp = () => {
   const nodeId = useNodeId()!;
-  const node = getNode(nodeId);
+  const node = useNode(nodeId);
 
   const items = useMemo(() => {
     if (!node) return [];
@@ -55,7 +55,7 @@ const NodeMenuProp = () => {
               className={itemClass}
               onClick={e => onSelect(e, clsProp)}
             >
-              <span>{propName}</span>
+              <span className="pr-2">{propName}</span>
               <span className="material-symbols-outlined text-sm">
                 {getClassPropertyIcon(clsProp)}
               </span>
@@ -67,7 +67,7 @@ const NodeMenuProp = () => {
         classItems.push(
           <DropdownMenu.Sub key={propClsName}>
             <DropdownMenu.SubTrigger className={itemClass}>
-              <span className="p-1">{propClsName}</span>
+              <span className="pr-2">{propClsName}</span>
               <ChevronRightIcon />
             </DropdownMenu.SubTrigger>
             <DropdownMenu.SubContent
@@ -87,7 +87,7 @@ const NodeMenuProp = () => {
   return items.length > 0 ? (
     <DropdownMenu.Sub>
       <DropdownMenu.SubTrigger className={itemClass}>
-        <span>Add Property</span>
+        <span className="pr-2">Add Property</span>
         <ChevronRightIcon />
       </DropdownMenu.SubTrigger>
       <DropdownMenu.Portal>

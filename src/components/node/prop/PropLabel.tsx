@@ -4,12 +4,12 @@ import { useNodeId } from 'reactflow';
 
 import { Property } from '@/types';
 import { appStore } from '@/store/app';
-import { getNodeProperty, deleteNodeProperty } from '@/store/flow';
+import { useNodeProperty, deleteNodeProperty } from '@/store/flow';
 import { getItem } from '@/store/onto';
 
 const PropLabel = ({ propertyId }: { propertyId: string }) => {
   const nodeId = useNodeId()!;
-  const propertyData = getNodeProperty(nodeId, propertyId)!;
+  const propertyData = useNodeProperty(nodeId, propertyId)!;
   const property = getItem(propertyData.classProperty.path) as Property;
   const [infoHovered, setInfoHovered] = useState(false);
   const [deleteHovered, setDeleteHovered] = useState(false);

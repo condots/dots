@@ -14,7 +14,6 @@ import {
   NodeData,
   NodeProperty,
   PropertyOption,
-  RecClsProps,
 } from '@/types';
 
 export const advisoryText = (text: string | undefined) => {
@@ -188,7 +187,10 @@ export function generateNodeProperty(
   return nodeProperty;
 }
 
-export const getClsDataProps = (recClsProps: RecClsProps, required = false) => {
+export const getClsDataProps = (
+  recClsProps: NodeData['recClsProps'],
+  required = false
+) => {
   const props: ClassProperty[] = [];
   for (const clsProps of recClsProps.values()) {
     for (const clsProp of Object.values(clsProps)) {
@@ -200,7 +202,7 @@ export const getClsDataProps = (recClsProps: RecClsProps, required = false) => {
   return props;
 };
 
-export function initNodeProps(recClsProps: RecClsProps) {
+export function initNodeProps(recClsProps: NodeData['recClsProps']) {
   const required = getClsDataProps(recClsProps, true);
   const nodeProperties = {} as NodeData['nodeProps'];
   for (const clsProp of required) {
@@ -211,24 +213,13 @@ export function initNodeProps(recClsProps: RecClsProps) {
   return nodeProperties;
 }
 
-export function getClsPropMins(recClsProps: RecClsProps) {
-  const clsPropMins: Record<string, number> = {};
-  for (const clsProps of recClsProps.values()) {
-    for (const clsProp of Object.values(clsProps)) {
-      if (clsProp.targetClass && clsProp.minCount) {
-        clsPropMins[clsProp.path] = clsProp.minCount;
-      }
-    }
-  }
-  return clsPropMins;
-}
-
 export function generateURN(): string {
   return `urn:nanoid:${nanoid()}`;
 }
 
 export const itemClass = `
-  text-sm text-spdx-dark rounded flex justify-between space-x-2
+  group
+  text-sm text-spdx-dark rounded flex justify-between
   items-center h-6 relative p-2 select-none outline-none
   data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none 
   data-[highlighted]:bg-spdx-dark data-[highlighted]:text-mauve1

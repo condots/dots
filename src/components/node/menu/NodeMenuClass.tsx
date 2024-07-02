@@ -6,28 +6,31 @@ import { ArrowRightIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { Handle, Position, useNodeId } from 'reactflow';
 
 import { ClassProperty, IRI } from '@/types';
-import { outEdgeCount, getNode } from '@/store/flow';
+import {
+  outEdgeCount,
+  useNode,
+  isUnmetClsProp,
+  hasUnmetProfileClsProps,
+  hasUnmetNodeClsProps,
+} from '@/store/flow';
 import {
   contentClass,
   itemClass,
   parseIRI,
   targetClsTooltipClass,
 } from '@/scripts/app-utils';
-import { getItem, ontoStore } from '@/store/onto';
+import { getItem } from '@/store/onto';
 import { appStore } from '@/store/app';
 
 const NodeMenuClass = () => {
   const nodeId = useNodeId()!;
-  const node = getNode(nodeId);
+  const node = useNode(nodeId);
 
   const items = useMemo(() => {
     if (!node) return [];
 
     const reachedMaxCount = (path: IRI, maxCount: number | undefined | null) =>
       maxCount == null ? false : outEdgeCount(node.id, path) >= maxCount;
-
-    const unmetMinCount = (path: IRI, minCount: number | undefined | null) =>
-      minCount == null ? false : outEdgeCount(node.id, path) < minCount;
 
     const handleMouseDown = (
       event: React.MouseEvent,
@@ -46,9 +49,8 @@ const NodeMenuClass = () => {
       );
     };
 
-    const recClsProps = ontoStore.getState().allRecClsProps![node.data.cls.iri];
     const classItems = [];
-    for (const [propClsIRI, clsProps] of recClsProps) {
+    for (const [propClsIRI, clsProps] of node.data.recClsProps) {
       const propClsName = parseIRI(propClsIRI).name;
       const propItems = [];
       for (const [propName, clsProp] of Object.entries(clsProps).sort()) {
@@ -74,7 +76,7 @@ const NodeMenuClass = () => {
                         `}
                       >
                         {propName}
-                        {unmetMinCount(clsProp.path, clsProp.minCount) && (
+                        {isUnmetClsProp(node, clsProp) && (
                           <div className="w-[16px] flex items-center ml-2">
                             <span
                               className="material-symbols-outlined text-base text-rose-600 group-data-[highlighted]:hidden group-data-[]:hidden"
@@ -115,7 +117,21 @@ const NodeMenuClass = () => {
         classItems.push(
           <DropdownMenu.Sub key={propClsName}>
             <DropdownMenu.SubTrigger className={itemClass}>
-              <span className="p-1">{propClsName}</span>
+              <div className="flex justify-between">
+                <span className="pr-2">{propClsName}</span>
+                {hasUnmetProfileClsProps(node, clsProps) && (
+                  <div className="w-[16px] flex items-center pr-2">
+                    <span
+                      className="material-symbols-outlined text-base text-rose-600 group-data-[highlighted]:hidden group-data-[]:hidden"
+                      style={{
+                        fontVariationSettings: `"FILL" 1, 'wght' 400, 'GRAD' 0, 'opsz' 24`,
+                      }}
+                    >
+                      error
+                    </span>
+                  </div>
+                )}
+              </div>
               <ChevronRightIcon />
             </DropdownMenu.SubTrigger>
             <DropdownMenu.SubContent
@@ -135,7 +151,21 @@ const NodeMenuClass = () => {
   return items.length > 0 ? (
     <DropdownMenu.Sub>
       <DropdownMenu.SubTrigger className={itemClass}>
-        <span>Add Class</span>
+        <div className="flex justify-between">
+          <span className="pr-2">Add Class</span>
+          {hasUnmetNodeClsProps(node) && (
+            <div className="w-[16px] flex items-center pr-2">
+              <span
+                className="material-symbols-outlined text-base text-rose-600 group-data-[highlighted]:hidden group-data-[]:hidden"
+                style={{
+                  fontVariationSettings: `"FILL" 1, 'wght' 400, 'GRAD' 0, 'opsz' 24`,
+                }}
+              >
+                error
+              </span>
+            </div>
+          )}
+        </div>
         <ChevronRightIcon />
       </DropdownMenu.SubTrigger>
       <DropdownMenu.Portal>

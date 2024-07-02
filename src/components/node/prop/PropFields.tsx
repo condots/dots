@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 
 import { useNodeId } from 'reactflow';
 
-import { getNode } from '@/store/flow';
+import { useNode } from '@/store/flow';
 import PropSelectField from '@/components/node/prop/PropSelectField';
 import PropLabel from '@/components/node/prop/PropLabel';
 import PropTextField from '@/components/node/prop/PropTextField';
@@ -10,7 +10,7 @@ import PropBoolField from '@/components/node/prop/PropBoolField';
 
 const PropFields = () => {
   const nodeId = useNodeId()!;
-  const node = getNode(nodeId);
+  const node = useNode(nodeId);
   const nodeProperties = node?.data.nodeProps;
 
   const fields = useMemo(

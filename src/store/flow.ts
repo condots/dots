@@ -27,6 +27,7 @@ import type { ReactFlowInstance, OnInit } from 'reactflow';
 
 import {
   Class,
+  ClassProperties,
   ClassProperty,
   FlowNode,
   IRI,
@@ -39,7 +40,6 @@ import {
   generateNodeProperty,
   isNodePropertyValid,
   generateURN,
-  getClsPropMins,
 } from '@/scripts/app-utils';
 import { appStore } from './app';
 
@@ -161,19 +161,23 @@ const flowStoreBase = create<RFState>()(
 
 export const flowStore = createSelectors(flowStoreBase);
 
-export function getNode(nodeId: string | undefined) {
+export function useNode(nodeId: string | undefined) {
   return flowStore.use.nodes().find(n => n.id === nodeId);
 }
 
-export function getNodeProperties(nodeId: string | undefined) {
-  if (nodeId) return getNode(nodeId)?.data.nodeProps;
+export function getNode(nodeId: string | undefined) {
+  return flowStore.getState().nodes.find(n => n.id === nodeId);
 }
 
-export function getNodeProperty(
+export function useNodeProperties(nodeId: string | undefined) {
+  if (nodeId) return useNode(nodeId)?.data.nodeProps;
+}
+
+export function useNodeProperty(
   nodeId: string | undefined,
   propertyId: string | undefined
 ) {
-  const nodeProperties = getNodeProperties(nodeId);
+  const nodeProperties = useNodeProperties(nodeId);
   if (propertyId) return nodeProperties?.[propertyId];
 }
 
@@ -190,7 +194,7 @@ export function addNode(type: string, x: number, y: number, classIRI: IRI) {
     cls: getItem(classIRI) as Class,
     inheritanceList: [...recClsProps.keys()],
     nodeProps: initNodeProps(recClsProps),
-    clsPropMins: getClsPropMins(recClsProps),
+    recClsProps: recClsProps,
   };
 
   const node: FlowNode = { id: nodeId, position, data, type, selected: true };
@@ -280,8 +284,34 @@ export function getNodeOutgoers(nodeId: string) {
 export function outEdgeCount(nodeId: string, path: IRI) {
   const edges = flowStore
     .getState()
-    .edges?.filter(
+    .edges.filter(
       edge => edge.data.classProperty.path === path && edge.source === nodeId
     );
   return edges?.length || 0;
+}
+
+export function isUnmetClsProp(
+  node: FlowNode | undefined,
+  clsProp: ClassProperty
+) {
+  return node && clsProp.targetClass && clsProp.minCount
+    ? outEdgeCount(node.id, clsProp.path) < clsProp.minCount
+    : false;
+}
+
+export function hasUnmetProfileClsProps(
+  node: FlowNode | undefined,
+  clsProps: ClassProperties
+) {
+  for (const clsProp of Object.values(clsProps) || []) {
+    if (isUnmetClsProp(node, clsProp)) return true;
+  }
+  return false;
+}
+
+export function hasUnmetNodeClsProps(node: FlowNode | undefined) {
+  for (const clsProps of node?.data.recClsProps.values() || []) {
+    if (hasUnmetProfileClsProps(node, clsProps)) return true;
+  }
+  return false;
 }

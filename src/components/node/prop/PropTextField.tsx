@@ -4,11 +4,11 @@ import { useNodeId } from 'reactflow';
 
 import { NodeProperty } from '@/types';
 import { inputProperties } from '@/scripts/app-utils';
-import { getNodeProperty, setNodeProperty } from '@/store/flow';
+import { useNodeProperty, setNodeProperty } from '@/store/flow';
 
 const PropTextField = ({ propertyId }: { propertyId: string }) => {
   const nodeId = useNodeId()!;
-  const nodeProperty = getNodeProperty(nodeId, propertyId)!;
+  const nodeProperty = useNodeProperty(nodeId, propertyId)!;
   const p = inputProperties.get(nodeProperty.classProperty.datatype)!;
 
   return (
