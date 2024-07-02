@@ -1,14 +1,25 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { NodeProps } from 'reactflow';
-import { Position, Handle, useStore } from 'reactflow';
+import {
+  Position,
+  Handle,
+  useStore,
+  useOnSelectionChange,
+  getOutgoers,
+  getIncomers,
+} from 'reactflow';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { Separator } from '@radix-ui/react-separator';
 
 import type { NodeData } from '@/types';
 import { appStore } from '@/store/app';
-import { setNodeExpanded } from '@/store/flow';
+import {
+  getNodeIncomers,
+  getNodeOutgoers,
+  setNodeExpanded,
+} from '@/store/flow';
 import NodeMenu from '@/components/node/menu/NodeMenu';
 import Tooltip from '@/components/Tooltip';
 import PropFields from '@/components/node/prop/PropFields';
@@ -83,19 +94,46 @@ const ClassNode = ({
   );
 
   useEffect(() => {
-    const relType = Object.values(data.nodeProps).find(
-      v => v.classProperty.name === 'relationshipType'
+    const subtitle = Object.values(data.nodeProps).find(
+      v => v.classProperty.name === 'relationshipType' || 'name'
     )?.value;
-    if (relType) {
-      setSubtitle(parseIRI(relType as string).name);
+    if (subtitle) {
+      setSubtitle(parseIRI(subtitle as string).name);
     }
   }, [data.nodeProps]);
+
+  const [dimNode, setDimNode] = useState(false);
+
+  const onChange = useCallback(
+    ({ nodes, edges }: { nodes: Node[]; edges: Edge[] }) => {
+      const nodeIds = nodes.map(node => node.id);
+      const outgoersId = getNodeOutgoers(nodeId).map(node => node.id);
+      const incomersId = getNodeIncomers(nodeId).map(node => node.id);
+      console.log('nodeIds:', nodeIds);
+      console.log('outgoersId:', outgoersId);
+      console.log('incomersId:', outgoersId);
+      console.log('');
+
+      const dim =
+        nodeIds.length > 0 &&
+        !selected &&
+        !isTargetHandleConnectable &&
+        nodeIds.every(n => !outgoersId.includes(n)) &&
+        nodeIds.every(n => !incomersId.includes(n));
+      setDimNode(dim);
+    },
+    [nodeId, selected, isTargetHandleConnectable]
+  );
+
+  useOnSelectionChange({ onChange });
 
   if (!data.cls) {
     return null;
   }
   return (
-    <div className="relative p-1 rounded font-lato">
+    <div
+      className={`relative p-1 rounded font-lato ${dimNode ? 'opacity-10' : ''}`}
+    >
       <Collapsible.Root
         open={data.expanded}
         onOpenChange={open => setNodeExpanded(nodeId, open)}
@@ -123,12 +161,12 @@ const ClassNode = ({
             sideOffset={9}
             className="text-sm"
           >
-            <div className="flex flex-col gap-0.5 text-spdx-dark w-full text-center truncate px-[2px]">
+            <div className="flex flex-col gap-0.5 text-spdx-dark w-full text-center truncate px-[2px] font-lato font-semibold">
               <span ref={textRef} className={`w-full truncate`}>
                 {data.cls.name}
               </span>
               {subtitle && (
-                <span className="text-xs truncate">[ {subtitle} ]</span>
+                <span className="truncate font-normal">[ {subtitle} ]</span>
               )}
             </div>
           </Tooltip>

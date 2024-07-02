@@ -23,6 +23,7 @@ import {
   applyNodeChanges,
   applyEdgeChanges,
   getOutgoers,
+  getIncomers,
 } from 'reactflow';
 import type {
   ReactFlowInstance,
@@ -309,6 +310,14 @@ export function getNodeOutgoers(nodeId: string) {
   const edges = state.edges;
   const node = nodes.find(node => node.id === nodeId);
   return node ? getOutgoers(node, nodes, edges) : undefined;
+}
+
+export function getNodeIncomers(nodeId: string) {
+  const state = flowStore.getState();
+  const nodes = state.nodes;
+  const edges = state.edges;
+  const node = nodes.find(node => node.id === nodeId);
+  return node ? getIncomers(node, nodes, edges) : undefined;
 }
 
 export function outEdgeCount(nodeId: string, path: IRI) {

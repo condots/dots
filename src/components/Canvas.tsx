@@ -111,9 +111,11 @@ const Canvas = () => {
       zoomOnPinch={false}
       zoomOnDoubleClick={false}
       zoomActivationKeyCode={null}
-      disableKeyboardA11y
+      // disableKeyboardA11y
       onSelectionChange={flowStore.getState().onSelectionChange}
       elevateEdgesOnSelect={true}
+      snapToGrid={true}
+      snapGrid={[20, 20]}
     >
       {/* <DevTools /> */}
       <Background color="#00416b" variant={BackgroundVariant.Dots} />

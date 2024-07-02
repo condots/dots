@@ -164,7 +164,7 @@ const PropertyEdge = ({
     ...relationshipStyle,
     visibility: creationInfoHidden ? 'hidden' : 'visible',
     stroke: dimEdge ? '#d1d5db' : style.stroke,
-    // opacity: dimEdge ? 0.1 : 1,
+    opacity: dimEdge ? 0.1 : 1,
   };
 
   return (
@@ -187,7 +187,7 @@ const PropertyEdge = ({
             pointerEvents: 'all',
             zIndex: (edgeZIndex ?? 0) + 1000,
             visibility: creationInfoHidden ? 'hidden' : 'visible',
-            opacity: dimEdge ? 0.3 : 1,
+            opacity: dimEdge ? 0.1 : 1,
           }}
           className={`nodrag nopan flex items-center cursor-pointer
             font-medium text-xs text-spdx-dark border-spdx-dark
