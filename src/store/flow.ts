@@ -309,7 +309,7 @@ export function getNodeOutgoers(nodeId: string) {
   const nodes = state.nodes;
   const edges = state.edges;
   const node = nodes.find(node => node.id === nodeId);
-  return node ? getOutgoers(node, nodes, edges) : undefined;
+  return node ? getOutgoers(node, nodes, edges) : [];
 }
 
 export function getNodeIncomers(nodeId: string) {
@@ -317,7 +317,7 @@ export function getNodeIncomers(nodeId: string) {
   const nodes = state.nodes;
   const edges = state.edges;
   const node = nodes.find(node => node.id === nodeId);
-  return node ? getIncomers(node, nodes, edges) : undefined;
+  return node ? getIncomers(node, nodes, edges) : [];
 }
 
 export function outEdgeCount(nodeId: string, path: IRI) {

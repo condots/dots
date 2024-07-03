@@ -6,8 +6,8 @@ import {
   Handle,
   useStore,
   useOnSelectionChange,
-  getOutgoers,
-  getIncomers,
+  Edge,
+  Node,
 } from 'reactflow';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import * as Collapsible from '@radix-ui/react-collapsible';
@@ -42,26 +42,13 @@ const ClassNode = ({
   const connectionEndHandle = useStore(connectionEndHandleSelector);
   const isPotentialConnection = connectionEndHandle?.nodeId === nodeId;
   const draggedPropData = appStore.use.draggedPropData();
+
   const isTargetHandleConnectable =
     nodeId !== connectionSource &&
     (draggedPropData?.classProperty.targetClass === data.cls.iri ||
       data.inheritanceList.includes(
         draggedPropData?.classProperty.targetClass
       ));
-
-  useEffect(() => {
-    if (textRef.current) {
-      const truncated =
-        textRef.current.scrollWidth > textRef.current.clientWidth;
-      setTooltipDisabled(selected || !truncated);
-    }
-  }, [data.cls.name, selected]);
-
-  useEffect(() => {
-    if (!showExpandButton && data.expanded) {
-      setNodeExpanded(nodeId, false);
-    }
-  }, [showExpandButton, data.expanded, nodeId]);
 
   const targetHandle = (
     <Handle
@@ -94,6 +81,20 @@ const ClassNode = ({
   );
 
   useEffect(() => {
+    if (textRef.current) {
+      const truncated =
+        textRef.current.scrollWidth > textRef.current.clientWidth;
+      setTooltipDisabled(selected || !truncated);
+    }
+  }, [data.cls.name, selected]);
+
+  useEffect(() => {
+    if (!showExpandButton && data.expanded) {
+      setNodeExpanded(nodeId, false);
+    }
+  }, [showExpandButton, data.expanded, nodeId]);
+
+  useEffect(() => {
     const subtitle = Object.values(data.nodeProps).find(
       v => v.classProperty.name === 'relationshipType' || 'name'
     )?.value;
@@ -106,20 +107,15 @@ const ClassNode = ({
 
   const onChange = useCallback(
     ({ nodes, edges }: { nodes: Node[]; edges: Edge[] }) => {
-      const nodeIds = nodes.map(node => node.id);
-      const outgoersId = getNodeOutgoers(nodeId).map(node => node.id);
-      const incomersId = getNodeIncomers(nodeId).map(node => node.id);
-      console.log('nodeIds:', nodeIds);
-      console.log('outgoersId:', outgoersId);
-      console.log('incomersId:', outgoersId);
-      console.log('');
-
+      const nodeIds = nodes.map(n => n.id);
+      const outgoersIds = getNodeOutgoers(nodeId!).map(node => node.id);
+      const incomersIds = getNodeIncomers(nodeId).map(node => node.id);
       const dim =
-        nodeIds.length > 0 &&
         !selected &&
         !isTargetHandleConnectable &&
-        nodeIds.every(n => !outgoersId.includes(n)) &&
-        nodeIds.every(n => !incomersId.includes(n));
+        nodeIds.length > 0 &&
+        nodeIds.every(n => !outgoersIds.includes(n)) &&
+        nodeIds.every(n => !incomersIds.includes(n));
       setDimNode(dim);
     },
     [nodeId, selected, isTargetHandleConnectable]
