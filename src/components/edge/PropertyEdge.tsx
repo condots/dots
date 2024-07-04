@@ -85,9 +85,15 @@ const PropertyEdge = ({
     return labelIndex * labelHeight - combinedHeight / 2;
   }, [id, connectionSource, connectionTarget, siblingEdges, source, target]);
 
-  const relationshipStyle = sourceNode.data.inheritanceList.findIndex(
-    (v: string) => parseIRI(v).name === 'Relationship'
-  ) !== -1 && {
+  const isRelationshipEdge = useMemo(
+    () =>
+      sourceNode.data.inheritanceList.findIndex(
+        (v: string) => parseIRI(v).name === 'Relationship'
+      ) !== -1,
+    [sourceNode]
+  );
+
+  const relationshipStyle = isRelationshipEdge && {
     strokeDasharray: 5,
     animation: 'dashdraw 0.5s linear infinite',
     animationDirection: label === 'from' ? 'reverse' : 'normal',
@@ -139,7 +145,7 @@ const PropertyEdge = ({
         !!nodes.find(node => node.id !== source && node.id !== target);
       setDimEdge(dim);
     },
-    [source, target, id]
+    [source, target]
   );
 
   useOnSelectionChange({ onChange });
@@ -180,7 +186,7 @@ const PropertyEdge = ({
       <BaseEdge
         id={id}
         path={edgePath}
-        markerEnd={markerEnd}
+        markerEnd={isRelationshipEdge ? null : markerEnd}
         style={pathStyle}
         interactionWidth={0}
       />
