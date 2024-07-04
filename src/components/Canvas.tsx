@@ -136,14 +136,14 @@ const Canvas = () => {
           </span>
         </ControlButton>
       </Controls>
-      <Panel position="top-left" className="shadow-sm shadow-gray-300">
+      <Panel position="top-left" className="drop-shadow">
         <ControlButton
           onClick={() => appStore.setState({ showClassesMenu: true })}
           title="menu"
-          className="text-black rounded-xs"
+          className="bg-transparent"
         >
           <span
-            className="material-symbols-outlined"
+            className="material-symbols-outlined rounded-sm bg-spdx-dark hover:bg-[#005a96] text-white"
             style={{
               fontVariationSettings: `
               'FILL' 0,
@@ -153,28 +153,28 @@ const Canvas = () => {
               `,
             }}
           >
-            lists
+            menu
           </span>
         </ControlButton>
       </Panel>
-      <Panel position="top-right" className="shadow-sm shadow-gray-300">
+      <Panel position="top-right" className="drop-shadow">
         <ControlButton
           onClick={() => appStore.setState({ showClassesMenu: true })}
           title="profiles"
-          className="text-black rounded-xs"
+          className="bg-transparent"
         >
           <span
-            className="material-symbols-outlined"
+            className="material-symbols-outlined rounded-sm bg-spdx-dark hover:bg-[#005a96] text-white"
             style={{
               fontVariationSettings: `
               'FILL' 0,
-              'wght' 500,
+              'wght' 400,
               'GRAD' 0,
               'opsz' 24
               `,
             }}
           >
-            right_panel_open
+            keyboard_arrow_left
           </span>
         </ControlButton>
       </Panel>
