@@ -174,21 +174,20 @@ const ClassNode = ({
               sideOffset={10}
               className="text-sm"
             >
-              <div className="flex flex-col gap-0.5 text-spdx-dark w-full text-center truncate px-[2px] font-lato font-semibold">
-                <span ref={textRef} className={`w-full truncate`}>
-                  {data.cls.name}
-                </span>
-              </div>
+              <span
+                ref={textRef}
+                className="text-spdx-dark w-full text-center truncate px-[2px] font-lato font-semibold"
+              >
+                {data.cls.name}
+              </span>
             </Tooltip>
             {expandButton}
           </div>
           <Separator className="bg-spdx-dark/50 mx-6 h-px" />
           {subtitle && (
-            <div className="flex flex-col text-spdx-dark w-full text-center truncate px-[2px] font-lato font-normal">
-              <span ref={textRef} className={`w-full truncate`}>
-                {subtitle}
-              </span>
-            </div>
+            <span className="text-spdx-dark w-full text-center truncate px-[2px] font-lato font-normal">
+              {subtitle}
+            </span>
           )}
         </div>
         <Collapsible.Content

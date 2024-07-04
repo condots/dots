@@ -3,7 +3,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { appStore } from '@/store/app';
 import { parseIRI } from '@/scripts/app-utils';
 import { addNode } from '@/store/flow';
-import { ChevronDownIcon, HamburgerMenuIcon } from '@radix-ui/react-icons';
+import { HamburgerMenuIcon } from '@radix-ui/react-icons';
+import { Separator } from '@radix-ui/react-separator';
 
 const DraggedClass = () => {
   const data = appStore.use.draggedClassData();
@@ -55,31 +56,11 @@ const DraggedClass = () => {
     }
   }, [data]);
 
-  // return (
-  //   data && (
-  //     <div
-  //       ref={draggableRef}
-  //       className="rounded shadow-2 py-2 px-3 flex items-center justify-center
-  //                outline outline-spdx-dark outline-2
-  //                text-spdx-dark bg-white text-center font-medium text-sm"
-  //       style={{
-  //         position: 'absolute',
-  //         left: `${position.x}px`,
-  //         top: `${position.y}px`,
-  //         cursor: dragging ? 'grabbing' : 'grab',
-  //         userSelect: 'none',
-  //       }}
-  //     >
-  //       {parseIRI(data!.targetClass).name}
-  //     </div>
-  //   )
-  // );
-
   return (
     data && (
       <div
         ref={draggableRef}
-        className="p-1 rounded"
+        className="p-1 rounded font-lato"
         style={{
           position: 'absolute',
           left: `${position.x + 4}px`,
@@ -90,20 +71,21 @@ const DraggedClass = () => {
       >
         <div
           className="
-          cursor-move rounded w-64 bg-white shadow-2 outline outline-spdx-dark outline-2 
+          cursor-move rounded w-64 min-h-20 bg-white shadow-2 outline outline-spdx-dark outline-2 
           shadow-4 translate-y-[-1.5px] translate-x-[0.8px]
         "
         >
-          <div className="flex items-center justify-between p-2 gap-[5px]">
-            <div className="nodrag nopan outline-none p-1 rounded text-spdx-dark hover:bg-spdx-dark/5">
-              <HamburgerMenuIcon />
+          <div className="px-0.5 flex flex-col gap-y-2">
+            <div className={`flex gap-x-1`}>
+              <div className="nodrag nopan outline-none p-1 rounded text-spdx-dark hover:bg-spdx-dark/5">
+                <HamburgerMenuIcon />
+              </div>
+              <span className="text-spdx-dark w-full text-center truncate px-[2px] font-lato font-semibold">
+                {parseIRI(data!.targetClass).name}
+              </span>
+              <div className="min-w-[23px] h-[24px] flex items-center justify-center" />
             </div>
-            <span className="text-spdx-dark text-md font-medium w-full text-center truncate">
-              {parseIRI(data!.targetClass).name}
-            </span>
-            <div className="min-w-[23px] h-[24px] flex items-center justify-center">
-              {/* <ChevronDownIcon /> */}
-            </div>
+            <Separator className="bg-spdx-dark/50 mx-6 h-px" />
           </div>
         </div>
       </div>
