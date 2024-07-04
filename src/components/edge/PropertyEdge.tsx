@@ -5,7 +5,6 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import cc from 'classcat';
 
 import {
   useStore,
@@ -145,7 +144,6 @@ const PropertyEdge = ({
 
   useOnSelectionChange({ onChange });
 
-  const nodeSelected = sourceNode.selected || targetNode.selected;
   const isTargetCreationInfo = targetNode
     ? targetNode.data.inheritanceList.findIndex(
         (v: string) => parseIRI(v).name === 'CreationInfo'
@@ -156,7 +154,6 @@ const PropertyEdge = ({
     label === 'creationInfo' &&
     isTargetCreationInfo &&
     id !== 'connection' &&
-    !nodeSelected &&
     !selected;
 
   const pathStyle = {
@@ -164,6 +161,17 @@ const PropertyEdge = ({
     ...relationshipStyle,
     visibility: creationInfoHidden ? 'hidden' : 'visible',
     stroke: dimEdge ? '#d1d5db' : style.stroke,
+    opacity: dimEdge ? 0.1 : 1,
+  };
+
+  const labelStyle = {
+    position: 'absolute',
+    transform: `translate(-50%, 0) translate(${labelX}px, ${labelY}px)`,
+    height: labelHeight,
+    marginTop: marginTop,
+    pointerEvents: 'all',
+    zIndex: (edgeZIndex ?? 0) + 1000,
+    visibility: creationInfoHidden ? 'hidden' : 'visible',
     opacity: dimEdge ? 0.1 : 1,
   };
 
@@ -179,16 +187,7 @@ const PropertyEdge = ({
       <EdgeLabelRenderer>
         <div
           ref={labelRef}
-          style={{
-            position: 'absolute',
-            transform: `translate(-50%, 0) translate(${labelX}px, ${labelY}px)`,
-            height: labelHeight,
-            marginTop: marginTop,
-            pointerEvents: 'all',
-            zIndex: (edgeZIndex ?? 0) + 1000,
-            visibility: creationInfoHidden ? 'hidden' : 'visible',
-            opacity: dimEdge ? 0.1 : 1,
-          }}
+          style={labelStyle}
           className={`nodrag nopan flex items-center cursor-pointer
             font-medium text-xs text-spdx-dark border-spdx-dark
           `}

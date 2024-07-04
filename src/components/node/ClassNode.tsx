@@ -23,7 +23,7 @@ import {
 import NodeMenu from '@/components/node/menu/NodeMenu';
 import Tooltip from '@/components/Tooltip';
 import PropFields from '@/components/node/prop/PropFields';
-import { parseIRI } from '@/scripts/app-utils';
+import { parseIRI, preferredLabels } from '@/scripts/app-utils';
 
 const connectionStartHandleSelector = state => state.connectionStartHandle;
 const connectionEndHandleSelector = state => state.connectionEndHandle;
@@ -70,7 +70,7 @@ const ClassNode = ({
       {showExpandButton && (
         <Collapsible.Trigger asChild>
           <button
-            className="nopan outline-none p-1 rounded text-spdx-dark 
+            className="nopan outline-none p-1 rounded text-spdx-dark
                      hover:bg-spdx-dark/5 data-[state=open]:rotate-180 max-h-[23px]"
           >
             <ChevronDownIcon />
@@ -95,13 +95,33 @@ const ClassNode = ({
   }, [showExpandButton, data.expanded, nodeId]);
 
   useEffect(() => {
-    const subtitle = Object.values(data.nodeProps).find(
-      v => v.classProperty.name === 'relationshipType' || 'name'
-    )?.value;
-    if (subtitle) {
-      setSubtitle(parseIRI(subtitle as string).name);
+    if (!data.nodeProps) return;
+    let subtitle;
+    let labels: string[] = [];
+    for (const c in data.inheritanceList) {
+      labels = preferredLabels[data.inheritanceList[c]] || [];
+      if (labels.length > 0) {
+        break;
+      }
     }
-  }, [data.nodeProps]);
+    labels.push('name');
+    const values = Object.values(data.nodeProps);
+    for (const l of labels) {
+      subtitle = values
+        .filter(v => v.classProperty.name === l && v.value != null)
+        .map(v =>
+          v.classProperty.options ? parseIRI(v.value as string).name : v.value
+        )
+        .join(' | ');
+      if (subtitle) {
+        break;
+      }
+    }
+    if (subtitle == null) {
+      subtitle = values[0].value;
+    }
+    setSubtitle(subtitle as string);
+  }, [data.nodeProps, data.cls.iri, data.inheritanceList]);
 
   const [dimNode, setDimNode] = useState(false);
 
@@ -112,13 +132,12 @@ const ClassNode = ({
       const incomersIds = getNodeIncomers(nodeId).map(node => node.id);
       const dim =
         !selected &&
-        !isTargetHandleConnectable &&
         nodeIds.length > 0 &&
         nodeIds.every(n => !outgoersIds.includes(n)) &&
         nodeIds.every(n => !incomersIds.includes(n));
       setDimNode(dim);
     },
-    [nodeId, selected, isTargetHandleConnectable]
+    [nodeId, selected]
   );
 
   useOnSelectionChange({ onChange });
@@ -128,13 +147,13 @@ const ClassNode = ({
   }
   return (
     <div
-      className={`relative p-1 rounded font-lato ${dimNode ? 'opacity-10' : ''}`}
+      className={`relative p-1 rounded font-lato ${dimNode && !isTargetHandleConnectable && !isPotentialConnection ? 'opacity-10' : ''}`}
     >
       <Collapsible.Root
         open={data.expanded}
         onOpenChange={open => setNodeExpanded(nodeId, open)}
         className={`
-          cursor-move rounded w-64 bg-white shadow-2 outline outline-spdx-dark outline-1
+          cursor-move rounded w-64 min-h-20 bg-white shadow-2 outline outline-spdx-dark outline-1 p-2
           ${selected && 'outline-[3px]'} 
           ${dragging && 'shadow-4 translate-y-[-1.5px] translate-x-[0.8px]'}
           ${
@@ -145,34 +164,38 @@ const ClassNode = ({
           }
         `}
       >
-        <div
-          className={`flex items-center justify-between px-2 gap-[5px]
-                      ${subtitle ? 'pt-1.5 pb-2.5' : 'py-2'}`}
-        >
-          {menuButton}
-          <Tooltip
-            content={data.cls.name}
-            disabled={tooltipDisabled}
-            delayDuration={1000}
-            sideOffset={9}
-            className="text-sm"
-          >
-            <div className="flex flex-col gap-0.5 text-spdx-dark w-full text-center truncate px-[2px] font-lato font-semibold">
+        <div className="px-0.5 flex flex-col gap-y-2">
+          <div className={`flex gap-x-1`}>
+            {menuButton}
+            <Tooltip
+              content={data.cls.name}
+              disabled={tooltipDisabled}
+              delayDuration={1000}
+              sideOffset={10}
+              className="text-sm"
+            >
+              <div className="flex flex-col gap-0.5 text-spdx-dark w-full text-center truncate px-[2px] font-lato font-semibold">
+                <span ref={textRef} className={`w-full truncate`}>
+                  {data.cls.name}
+                </span>
+              </div>
+            </Tooltip>
+            {expandButton}
+          </div>
+          <Separator className="bg-spdx-dark/50 mx-6 h-px" />
+          {subtitle && (
+            <div className="flex flex-col text-spdx-dark w-full text-center truncate px-[2px] font-lato font-normal">
               <span ref={textRef} className={`w-full truncate`}>
-                {data.cls.name}
+                {subtitle}
               </span>
-              {subtitle && (
-                <span className="truncate font-normal">[ {subtitle} ]</span>
-              )}
             </div>
-          </Tooltip>
-          {expandButton}
+          )}
         </div>
         <Collapsible.Content
           className="nodrag nopan nowheel cursor-auto overflow-hidden 
                      data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp"
         >
-          <Separator className="bg-spdx-dark pt-[1px] h-[1px]" decorative />
+          {/* <Separator className="bg-spdx-dark pt-[1px] h-[1px]" decorative /> */}
           <div className="text-spdx-dark max-h-64 overflow-y-scroll scroll-smooth h-full">
             <PropFields />
           </div>

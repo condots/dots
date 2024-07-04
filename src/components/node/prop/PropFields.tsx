@@ -64,7 +64,7 @@ const PropFields = () => {
   );
 
   return (
-    <div className="my-3 mx-[15px] text-spdx-dark font-lato">
+    <div className="my-3 px-2 text-spdx-dark font-lato">
       <div className="grid gap-y-2">{fields}</div>
     </div>
   );
