@@ -142,7 +142,40 @@ const Canvas = () => {
           title="menu"
           className="text-black rounded-xs"
         >
-          <div className="pi pi-bars" />
+          <span
+            className="material-symbols-outlined"
+            style={{
+              fontVariationSettings: `
+              'FILL' 0,
+              'wght' 300,
+              'GRAD' 0,
+              'opsz' 24
+              `,
+            }}
+          >
+            lists
+          </span>
+        </ControlButton>
+      </Panel>
+      <Panel position="top-right" className="shadow-sm shadow-gray-300">
+        <ControlButton
+          onClick={() => appStore.setState({ showClassesMenu: true })}
+          title="profiles"
+          className="text-black rounded-xs"
+        >
+          <span
+            className="material-symbols-outlined"
+            style={{
+              fontVariationSettings: `
+              'FILL' 0,
+              'wght' 500,
+              'GRAD' 0,
+              'opsz' 24
+              `,
+            }}
+          >
+            right_panel_open
+          </span>
         </ControlButton>
       </Panel>
       <DraggedClass />

@@ -116,6 +116,7 @@ const ProfileMenu = () => {
   return (
     <div>
       <Sidebar
+        position="right"
         visible={showClassesMenu}
         modal={false}
         className="bg-transparent"
