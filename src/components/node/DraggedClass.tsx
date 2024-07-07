@@ -69,12 +69,7 @@ const DraggedClass = () => {
           userSelect: 'none',
         }}
       >
-        <div
-          className="
-          cursor-move rounded w-64 min-h-20 bg-white shadow-2 outline outline-spdx-dark outline-2 
-          shadow-4 translate-y-[-1.5px] translate-x-[0.8px]
-        "
-        >
+        <div className="cursor-move rounded w-64 min-h-20 bg-white outline-spdx-dark outline shadow-4">
           <div className="px-0.5 flex flex-col gap-y-2">
             <div className={`flex gap-x-1`}>
               <div className="nodrag nopan outline-none p-1 rounded text-spdx-dark hover:bg-spdx-dark/5">

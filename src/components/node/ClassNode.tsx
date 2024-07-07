@@ -133,8 +133,9 @@ const ClassNode = ({
       const dim =
         !selected &&
         nodeIds.length > 0 &&
-        nodeIds.every(n => !outgoersIds.includes(n)) &&
-        nodeIds.every(n => !incomersIds.includes(n));
+        nodeIds.every(
+          n => !outgoersIds.includes(n) && !incomersIds.includes(n)
+        );
       setDimNode(dim);
     },
     [nodeId, selected]
@@ -147,7 +148,7 @@ const ClassNode = ({
   }
   return (
     <div
-      className={`relative p-1 rounded font-lato ${dimNode && !isTargetHandleConnectable && !isPotentialConnection ? 'opacity-10' : ''}`}
+      className={`relative p-1 rounded font-lato transition-opacity ${dimNode && !isTargetHandleConnectable && !isPotentialConnection ? 'opacity-10' : ''}`}
     >
       <Collapsible.Root
         open={data.expanded}

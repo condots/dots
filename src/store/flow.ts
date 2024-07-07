@@ -96,7 +96,7 @@ const storage: PersistStorage<RFState> = {
   removeItem: name => localStorage.removeItem(name),
 };
 
-const flowStoreBase = create<RFState>()(
+export const flowStoreBase = create<RFState>()(
   subscribeWithSelector(
     immer(
       devtools(
@@ -104,8 +104,8 @@ const flowStoreBase = create<RFState>()(
           (set, get) => ({
             ...initialState,
             onNodesChange: (changes: NodeChange[]) => {
-              set({
-                nodes: applyNodeChanges(changes, get().nodes),
+              set(state => {
+                state.nodes = applyNodeChanges(changes, state.nodes);
               });
             },
             onEdgesChange: (changes: EdgeChange[]) => {
@@ -230,13 +230,16 @@ export function addNode(type: string, x: number, y: number, classIRI: IRI) {
     recClsProps: recClsProps,
   };
 
-  const node: FlowNode = { id: nodeId, position, data, type, selected: true };
-  selectNode();
-  selectEdge();
+  const node: FlowNode = { id: nodeId, position, data, type };
   flowStore.setState(state => {
     state.nodes.push(node);
   });
   return nodeId;
+}
+
+export function deselectAll() {
+  selectNode();
+  selectEdge();
 }
 
 export function deleteNode(nodeId: string) {

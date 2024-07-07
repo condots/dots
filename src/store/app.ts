@@ -15,7 +15,6 @@ import { getMediaTypes } from '@/scripts/app-utils';
 type AppState = {
   showClassesMenu: boolean;
   showInfoDialog: boolean;
-  selectedNodeId: string | undefined;
   selectedInfoIri: string | undefined;
   draggedClassData: DraggedClassData | undefined;
   draggedPropData: DraggedPropData | undefined;
@@ -26,7 +25,6 @@ type AppState = {
 const initialState = {
   showClassesMenu: false,
   showInfoDialog: false,
-  selectedNodeId: undefined,
   selectedInfoIri: undefined,
   draggedClassData: undefined,
   draggedPropData: undefined,

@@ -18,15 +18,13 @@ import {
 
 import { appStore } from '@/store/app';
 import { getItem } from '@/store/onto';
-import { addNode, flowStore } from '@/store/flow';
+import { addNode, deselectAll, flowStore } from '@/store/flow';
+import { generateURN } from '@/scripts/app-utils';
 import ClassNode from '@/components/node/ClassNode';
 import Origin from '@/components/Origin';
 import PropertyEdge from '@/components/edge/PropertyEdge';
 import DraggedClass from '@/components/node/DraggedClass';
 import ConnectionLine from '@/components/edge/ConnectionLine';
-import { generateURN } from '@/scripts/app-utils';
-import AppMemu from '@/components/AppMemu';
-import { exportSpdxJsonLd } from '@/scripts/fs-utils';
 
 const nodeTypes = {
   inst: ClassNode,
@@ -140,7 +138,10 @@ const Canvas = () => {
       </Controls>
       <Panel position="top-right" className="drop-shadow">
         <ControlButton
-          onClick={() => appStore.setState({ showClassesMenu: true })}
+          onClick={() => {
+            deselectAll();
+            appStore.setState({ showClassesMenu: true });
+          }}
           title="profiles"
           className="bg-transparent"
         >

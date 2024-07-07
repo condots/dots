@@ -12,6 +12,7 @@ import {
   isUnmetClsProp,
   hasUnmetProfileClsProps,
   hasUnmetNodeClsProps,
+  deselectAll,
 } from '@/store/flow';
 import {
   contentClass,
@@ -47,6 +48,7 @@ const NodeMenuClass = () => {
           view: window,
         })
       );
+      deselectAll();
     };
 
     const classItems = [];
