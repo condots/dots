@@ -254,7 +254,7 @@
         "summary": "States if a human is involved in the decisions of the AI software."
       },
       "domain": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A free-form text that describes the domain where the AI model contained in the AI software\ncan be expected to operate successfully. Examples include computer vision, natural language processing, etc.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/AI/domain",
         "name": "domain",
@@ -270,7 +270,7 @@
         "summary": "Indicates the amount of energy consumed to train the AI model."
       },
       "energyQuantity": {
-        "datatype": "decimal",
+        "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
         "description": "Provides the quantity information of the energy.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/AI/energyQuantity",
         "name": "energyQuantity",
@@ -310,7 +310,7 @@
         "summary": "Specifies the amount of energy consumed during inference time by an AI model that is being used in the AI system."
       },
       "informationAboutApplication": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A free-form text description of how the AI model is used within the software.\nIt should include any relevant information, such as pre-processing steps,\nthird-party APIs, and other pertinent details.\n\nIt can also include:\n\n- Functionality provided by the AI model within the software application,\n  including: any specific tasks or decisions it is designed to perform;\n  any pre-processing steps that are applied to the input data before it is\n  fed into the AI model for inference, such as data cleaning, normalization,\n  or feature extraction;\n  and any third-party APIs or services that are used in conjunction with\n  the AI model, such as data sources, cloud services, or other AI models.\n- Description of any dependencies or requirements needed to run the AI model\n  within the software application, including: specific hardware,\n  software libraries, and operating systems.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/AI/informationAboutApplication",
         "name": "informationAboutApplication",
@@ -318,7 +318,7 @@
         "summary": "Provides relevant information about the AI software, not including the model description."
       },
       "informationAboutTraining": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A detailed explanation of the training process,\nincluding the specific techniques, algorithms, and methods employed.\n\nExamples include:\n\n- training data used to train the AI model, along with any relevant details\n  about its source, quality, and pre-processing steps;\n- specific training algorithms employed, including stochastic gradient descent,\n  backpropagation, and reinforcement learning.\n- specific training techniques used to improve the performance or accuracy\n  of the AI model, such as transfer learning, fine-tuning, or active learning; and\n- any evaluation metrics used to assess the performance of the AI model\n  during the training process, including accuracy, precision, recall, and F1 score.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/AI/informationAboutTraining",
         "name": "informationAboutTraining",
@@ -326,7 +326,7 @@
         "summary": "Describes relevant information about different steps of the training process."
       },
       "limitation": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A free-form text that captures a limitation of the AI package\n(or of the AI models present in the AI package).\nNote that this is not guaranteed to be exhaustive.\nFor instance, a limitation might be that the AI package cannot be used on datasets from a certain demography.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/AI/limitation",
         "name": "limitation",
@@ -350,7 +350,7 @@
         "summary": "Captures the threshold that was used for computation of a metric described in the metric field."
       },
       "modelDataPreprocessing": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A free-form text that describes the preprocessing steps\napplied to the training data before training of the model(s) contained in the AI software.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/AI/modelDataPreprocessing",
         "name": "modelDataPreprocessing",
@@ -358,7 +358,7 @@
         "summary": "Describes all the preprocessing steps applied to the training data before the model training."
       },
       "modelExplainability": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A free-form text that lists the different explainability mechanisms\n(such as SHAP, or other model specific explainability mechanisms) that can be used to explain the model.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/AI/modelExplainability",
         "name": "modelExplainability",
@@ -374,7 +374,7 @@
         "summary": "Records the results of general safety risk assessment of the AI system."
       },
       "standardCompliance": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A free-form text that captures a standard that the AI software complies with.\n\nThis includes both published and unpublished standards, such as those developed by ISO, IEEE, and ETSI.\n\nThe standard may, but is not necessarily required to, satisfy a legal or regulatory requirement.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/AI/standardCompliance",
         "name": "standardCompliance",
@@ -390,7 +390,7 @@
         "summary": "Specifies the amount of energy consumed when training the AI model that is being used in the AI system."
       },
       "typeOfModel": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A free-form text that records the type of the AI model(s) used in the software.\nFor instance, if it is a supervised model, unsupervised model, reinforcement learning model or a combination of those.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/AI/typeOfModel",
         "name": "typeOfModel",
@@ -485,7 +485,8 @@
             "name": "buildEndTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Build/Build",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Build/buildEndTime"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Build/buildEndTime",
+            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
           },
           "buildId": {
             "datatype": "string",
@@ -501,7 +502,8 @@
             "name": "buildStartTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Build/Build",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Build/buildStartTime"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Build/buildStartTime",
+            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
           },
           "buildType": {
             "datatype": "anyURI",
@@ -558,7 +560,7 @@
     "name": "Build",
     "properties": {
       "buildEndTime": {
-        "datatype": "dateTimeStamp",
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
         "description": "buildEndTime describes the time at which a build stops or finishes. This value is typically recorded by the builder.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Build/buildEndTime",
         "name": "buildEndTime",
@@ -566,7 +568,7 @@
         "summary": "Property that describes the time at which a build stops."
       },
       "buildId": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A buildId is a locally unique identifier to identify a unique instance of a build. This identifier differs based on build toolchain, platform, or naming convention used by an organization or standard.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Build/buildId",
         "name": "buildId",
@@ -574,7 +576,7 @@
         "summary": "A buildId is a locally unique identifier used by a builder to identify a unique instance of a build produced by it."
       },
       "buildStartTime": {
-        "datatype": "dateTimeStamp",
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
         "description": "buildStartTime is the time at which a build is triggered. The builder typically records this value.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Build/buildStartTime",
         "name": "buildStartTime",
@@ -582,7 +584,7 @@
         "summary": "Property describing the start time of a build."
       },
       "buildType": {
-        "datatype": "anyURI",
+        "datatype": "http://www.w3.org/2001/XMLSchema#anyURI",
         "description": "A buildType is a URI expressing the toolchain, platform, or infrastructure that the build was invoked on. For example, if the build was invoked on GitHub's CI platform using github actions, the buildType can be expressed as `https://github.com/actions`. In contrast, if the build was invoked on a local machine, the buildType can be expressed as `file://username@host/path/to/build`.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Build/buildType",
         "name": "buildType",
@@ -598,7 +600,7 @@
         "summary": "Property that describes the digest of the build configuration file used to invoke a build."
       },
       "configSourceEntrypoint": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A build entrypoint is the invoked executable of a build which always runs when the build is triggered. For example, when a build is triggered by running a shell script, the entrypoint is `script.sh`. In terms of a declared build, the entrypoint is the position in a configuration file or a build declaration which is always run when the build is triggered. For example, in the following configuration file, the entrypoint of the build is `publish`.\n\n```\nname: Publish packages to PyPI\n\non:\ncreate:\ntags: \"*\"\n\njobs:\npublish:\nruns-on: ubuntu-latest\nif: startsWith(github.ref, 'refs/tags/')\nsteps:\n\n...\n```",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Build/configSourceEntrypoint",
         "name": "configSourceEntrypoint",
@@ -606,7 +608,7 @@
         "summary": "Property describes the invocation entrypoint of a build."
       },
       "configSourceUri": {
-        "datatype": "anyURI",
+        "datatype": "http://www.w3.org/2001/XMLSchema#anyURI",
         "description": "If a build configuration exists for the toolchain or platform performing the build, the configSourceUri of a build is the URI of that build configuration. For example, a build triggered by a GitHub action is defined by a build configuration YAML file. In this case, the configSourceUri is the URL of that YAML file. \nm",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Build/configSourceUri",
         "name": "configSourceUri",
@@ -676,7 +678,8 @@
             "name": "contentType",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Annotation",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/contentType"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/contentType",
+            "pattern": "^[^\\/]+\\/[^\\/]+$"
           },
           "statement": {
             "datatype": "string",
@@ -712,7 +715,8 @@
             "name": "builtTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Artifact",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/builtTime"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/builtTime",
+            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
           },
           "originatedBy": {
             "name": "originatedBy",
@@ -727,7 +731,8 @@
             "name": "releaseTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Artifact",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/releaseTime"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/releaseTime",
+            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
           },
           "standardName": {
             "datatype": "string",
@@ -786,7 +791,8 @@
             "name": "validUntilTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Artifact",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/validUntilTime"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/validUntilTime",
+            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Core/Element",
@@ -843,7 +849,8 @@
             "name": "created",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/CreationInfo",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/created"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/created",
+            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
           },
           "createdBy": {
             "minCount": 1,
@@ -867,7 +874,8 @@
             "name": "specVersion",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/CreationInfo",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/specVersion"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/specVersion",
+            "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
           }
         },
         "summary": "Provides information about the creation of the Element."
@@ -1210,7 +1218,8 @@
             "name": "contentType",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRef",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/contentType"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/contentType",
+            "pattern": "^[^\\/]+\\/[^\\/]+$"
           },
           "externalRefType": {
             "maxCount": 1,
@@ -1822,7 +1831,8 @@
             "name": "endTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Relationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/endTime"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/endTime",
+            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
           },
           "from": {
             "maxCount": 1,
@@ -2085,7 +2095,8 @@
             "name": "startTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Core/Relationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Core/startTime"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Core/startTime",
+            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
           },
           "to": {
             "minCount": 1,
@@ -2192,7 +2203,7 @@
         "summary": "Describes the type of annotation."
       },
       "beginIntegerRange": {
-        "datatype": "positiveInteger",
+        "datatype": "http://www.w3.org/2001/XMLSchema#positiveInteger",
         "description": "beginIntegerRange is a positive integer that defines the beginning of a range.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/beginIntegerRange",
         "name": "beginIntegerRange",
@@ -2200,7 +2211,7 @@
         "summary": "Defines the beginning of a range."
       },
       "builtTime": {
-        "datatype": "dateTimeStamp",
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
         "description": "A builtTime specifies the time an artifact was built.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/builtTime",
         "name": "builtTime",
@@ -2208,7 +2219,7 @@
         "summary": "Specifies the time an artifact was built."
       },
       "comment": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A comment is an optional field for creators of the Element to provide comments\nto the readers/reviewers of the document.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/comment",
         "name": "comment",
@@ -2224,7 +2235,7 @@
         "summary": "Provides information about the completeness of relationships."
       },
       "context": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A context gives information about the circumstances or unifying properties\nthat Elements of the bundle have been assembled under.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/context",
         "name": "context",
@@ -2232,7 +2243,7 @@
         "summary": "Gives information about the circumstances or unifying properties\nthat Elements of the bundle have been assembled under."
       },
       "created": {
-        "datatype": "dateTimeStamp",
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
         "description": "Created is a date that identifies when the Element was originally created.\nThe time stamp can serve as an indication as to whether the analysis needs to be updated. This is often the date of last change (e.g., a git commit date), not the date when the SPDX data was created, as doing so supports reproducible builds.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/created",
         "name": "created",
@@ -2280,7 +2291,7 @@
         "summary": "Artifact representing a serialization instance of SPDX data containing the definition of a particular Element."
       },
       "description": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "This field is a detailed description of the Element. It may also be extracted from the Element itself.\nThe intent is to provide recipients of the SPDX file with a detailed technical explanation\nof the functionality, anticipated use, and anticipated implementation of the Element.\nThis field may also include a description of improvements over prior versions of the Element.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/description",
         "name": "description",
@@ -2296,7 +2307,7 @@
         "summary": "Refers to one or more Elements that are part of an ElementCollection."
       },
       "endIntegerRange": {
-        "datatype": "positiveInteger",
+        "datatype": "http://www.w3.org/2001/XMLSchema#positiveInteger",
         "description": "endIntegerRange is a positive integer that defines the end of a range.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/endIntegerRange",
         "name": "endIntegerRange",
@@ -2304,7 +2315,7 @@
         "summary": "Defines the end of a range."
       },
       "endTime": {
-        "datatype": "dateTimeStamp",
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
         "description": "A endTime specifies the time from which element is no applicable / valid.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/endTime",
         "name": "endTime",
@@ -2352,7 +2363,7 @@
         "summary": "Specifies the type of the external reference."
       },
       "externalSpdxId": {
-        "datatype": "anyURI",
+        "datatype": "http://www.w3.org/2001/XMLSchema#anyURI",
         "description": "ExternalSpdxId identifies an external Element used within a Document but defined external to that Document.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/externalSpdxId",
         "name": "externalSpdxId",
@@ -2368,7 +2379,7 @@
         "summary": "References the Element on the left-hand side of a relationship."
       },
       "hashValue": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "HashValue is the result of applying a hash algorithm to an Element.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/hashValue",
         "name": "hashValue",
@@ -2376,7 +2387,7 @@
         "summary": "The result of applying a hash algorithm to an Element."
       },
       "identifier": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "An identifier uniquely identifies an external element.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/identifier",
         "name": "identifier",
@@ -2384,7 +2395,7 @@
         "summary": "Uniquely identifies an external element."
       },
       "identifierLocator": {
-        "datatype": "anyURI",
+        "datatype": "http://www.w3.org/2001/XMLSchema#anyURI",
         "description": "Identifiers are not always structured as URIs. An identifierLocator is a location hint (a URL) that provides contextual information relevant to the identifier.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/identifierLocator",
         "name": "identifierLocator",
@@ -2400,7 +2411,7 @@
         "summary": "Provides an ExternalMap of Element identifiers."
       },
       "issuingAuthority": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "An issuingAuthority is an entity that is authorized to issue identification credentials.\n\nThe entity may be a government, non-profit, educational institution, or commercial enterprise.  The string provides a unique identifier for the issuing authority.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/issuingAuthority",
         "name": "issuingAuthority",
@@ -2408,7 +2419,7 @@
         "summary": "An entity that is authorized to issue identification credentials."
       },
       "key": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A key used in generic a key-value pair.\nA key-value pair can be used to implement a dictionary which associates a key with a value.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/key",
         "name": "key",
@@ -2416,7 +2427,7 @@
         "summary": "A key used in a generic key-value pair."
       },
       "locationHint": {
-        "datatype": "anyURI",
+        "datatype": "http://www.w3.org/2001/XMLSchema#anyURI",
         "description": "A locationHint provides an indication of where to retrieve an external Element.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/locationHint",
         "name": "locationHint",
@@ -2424,7 +2435,7 @@
         "summary": "Provides an indication of where to retrieve an external Element."
       },
       "locator": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A locator provides the location of an external reference.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/locator",
         "name": "locator",
@@ -2432,7 +2443,7 @@
         "summary": "Provides the location of an external reference."
       },
       "name": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "This field identifies the name of an Element as designated by the creator. \nThe name of an Element is an important convention and easier to refer to than the URI.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/name",
         "name": "name",
@@ -2440,7 +2451,7 @@
         "summary": "Identifies the name of an Element as designated by the creator."
       },
       "namespace": {
-        "datatype": "anyURI",
+        "datatype": "http://www.w3.org/2001/XMLSchema#anyURI",
         "description": "A namespace provides an unambiguous mechanism for conveying a URI fragment portion of an ElementID.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/namespace",
         "name": "namespace",
@@ -2464,7 +2475,7 @@
         "summary": "Identifies from where or whom the Element originally came."
       },
       "packageVerificationCodeExcludedFile": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A relative filename with the root of the package archive or directory referencing a file to be excluded from the `PackageVerificationCode`.\n\nIn general, every filename is preceded with a ./, see http://www.ietf.org/rfc/rfc3986.txt for syntax.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/packageVerificationCodeExcludedFile",
         "name": "packageVerificationCodeExcludedFile",
@@ -2472,7 +2483,7 @@
         "summary": "The relative file name of a file to be excluded from the `PackageVerificationCode`."
       },
       "prefix": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A prefix is a substitute for a URI.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/prefix",
         "name": "prefix",
@@ -2496,7 +2507,7 @@
         "summary": "Information about the relationship between two Elements."
       },
       "releaseTime": {
-        "datatype": "dateTimeStamp",
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
         "description": "A releaseTime specifies the time an artifact was released.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/releaseTime",
         "name": "releaseTime",
@@ -2520,7 +2531,7 @@
         "summary": "Capture the scope of information about a specific relationship between elements."
       },
       "specVersion": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "The specVersion provides a reference number that can be used to understand how to parse and interpret an Element.\nIt will enable both future changes to the specification and to support backward compatibility.\nThe major version number shall be incremented when incompatible changes between versions are made\n(one or more sections are created, modified or deleted).\nThe minor version number shall be incremented when backwards compatible changes are made.\n\nHere, parties exchanging information in accordance with the SPDX specification need to provide \n100% transparency as to which SPDX specification version such information is conforming to.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/specVersion",
         "name": "specVersion",
@@ -2528,7 +2539,7 @@
         "summary": "Provides a reference number that can be used to understand how to parse and interpret an Element."
       },
       "standardName": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "Various standards may be relevant to useful to capture for specific artifacts.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/standardName",
         "name": "standardName",
@@ -2536,7 +2547,7 @@
         "summary": "The name of a relevant standard that may apply to an artifact."
       },
       "startTime": {
-        "datatype": "dateTimeStamp",
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
         "description": "A startTime specifies the time from which element is applicable / valid.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/startTime",
         "name": "startTime",
@@ -2544,7 +2555,7 @@
         "summary": "Specifies the time from which an element is applicable / valid."
       },
       "statement": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A statement is a commentary on an assertion that an annotator has made.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/statement",
         "name": "statement",
@@ -2560,7 +2571,7 @@
         "summary": "An Element an annotator has made an assertion about."
       },
       "summary": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A summary is a short description of an Element. Here, the intent is to allow the Element creator to \nprovide concise information about the function or use of the Element.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/summary",
         "name": "summary",
@@ -2592,7 +2603,7 @@
         "summary": "References an Element on the right-hand side of a relationship."
       },
       "validUntilTime": {
-        "datatype": "dateTimeStamp",
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
         "description": "A validUntilTime specifies until when the artifact can be used before its usage needs to be reassessed.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/validUntilTime",
         "name": "validUntilTime",
@@ -2600,7 +2611,7 @@
         "summary": "Specifies until when the artifact can be used before its usage needs to be reassessed."
       },
       "value": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A value used in a generic key-value pair.\nA key-value pair can be used to implement a dictionary which associates a key with a value.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Core/value",
         "name": "value",
@@ -3946,7 +3957,7 @@
     "name": "Dataset",
     "properties": {
       "anonymizationMethodUsed": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A free-form text that describes the methods used to anonymize the dataset (of fields in the dataset).",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Dataset/anonymizationMethodUsed",
         "name": "anonymizationMethodUsed",
@@ -3962,7 +3973,7 @@
         "summary": "Describes the confidentiality level of the data points contained in the dataset."
       },
       "dataCollectionProcess": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A free-form text that describes how a dataset was collected.\n\nExamples include the sources from which a dataset was scrapped and\nthe interview protocol that was used for data collection.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Dataset/dataCollectionProcess",
         "name": "dataCollectionProcess",
@@ -3970,7 +3981,7 @@
         "summary": "Describes how the dataset was collected."
       },
       "dataPreprocessing": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A free-form text that describes the various preprocessing steps\nthat were applied to the raw data to create the dataset.\n\nExamples include standardization, normalization, deduplication, tokenization, and removal of tokens.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Dataset/dataPreprocessing",
         "name": "dataPreprocessing",
@@ -3986,7 +3997,7 @@
         "summary": "The field describes the availability of a dataset."
       },
       "datasetNoise": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "Describes what kinds of noises a dataset might encompass.\n\nThe free-form text specifies fields or samples that might be noisy.\n\nAlternatively, it can also be used to describe various noises that could impact the whole dataset.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Dataset/datasetNoise",
         "name": "datasetNoise",
@@ -3994,7 +4005,7 @@
         "summary": "Describes potentially noisy elements of the dataset."
       },
       "datasetSize": {
-        "datatype": "nonNegativeInteger",
+        "datatype": "http://www.w3.org/2001/XMLSchema#nonNegativeInteger",
         "description": "Captures how large a dataset is.\n\nThe size is to be measured in bytes.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Dataset/datasetSize",
         "name": "datasetSize",
@@ -4010,7 +4021,7 @@
         "summary": "Describes the type of the given dataset."
       },
       "datasetUpdateMechanism": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A free-form text that describes a mechanism to update the dataset.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Dataset/datasetUpdateMechanism",
         "name": "datasetUpdateMechanism",
@@ -4026,7 +4037,7 @@
         "summary": "Describes if any sensitive personal information is present in the dataset."
       },
       "intendedUse": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A free-form text that describes what the given dataset should be used for.\n\nSome datasets are collected to be used only for particular purposes.\n\nFor example, medical data collected from a specific demography might only be applicable\nfor training machine learning models to make predictions for that demography.\nIn such a case, the intendedUse field would capture this information.\nSimilarly, if a dataset is collected for building a facial recognition model,\nthe intendedUse field would specify that.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Dataset/intendedUse",
         "name": "intendedUse",
@@ -4034,7 +4045,7 @@
         "summary": "Describes what the given dataset should be used for."
       },
       "knownBias": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A free-form text that describes the different biases that the dataset encompasses.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Dataset/knownBias",
         "name": "knownBias",
@@ -4568,7 +4579,7 @@
     "name": "ExpandedLicensing",
     "properties": {
       "additionText": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "An additionText contains the plain text of the LicenseAddition, without\ntemplating or other similar markup.\n\nUsers of the additionText for a License can apply the SPDX Matching Guidelines\nwhen comparing it to another text for matching purposes.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/additionText",
         "name": "additionText",
@@ -4576,7 +4587,7 @@
         "summary": "Identifies the full text of a LicenseAddition."
       },
       "deprecatedVersion": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A deprecatedVersion for a ListedLicense or ListedLicenseException on the SPDX\nLicense List specifies which version release of the License List was the first\none in which it was marked as deprecated.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/deprecatedVersion",
         "name": "deprecatedVersion",
@@ -4584,7 +4595,7 @@
         "summary": "Specifies the SPDX License List version in which this license or exception\nidentifier was deprecated."
       },
       "isDeprecatedAdditionId": {
-        "datatype": "boolean",
+        "datatype": "http://www.w3.org/2001/XMLSchema#boolean",
         "description": "The isDeprecatedAdditionId property specifies whether an identifier for a\nLicenseAddition has been marked as deprecated. If the property is not defined,\nthen it is presumed to be false (i.e., not deprecated).\n\nIf the LicenseAddition is included on the SPDX Exceptions List, then\nthe `deprecatedVersion` property indicates on which version release of the\nExceptions List it was first marked as deprecated.\n\n\"Deprecated\" in this context refers to deprecating the use of the\n_identifier_, not the underlying license addition. In other words, even if a\nLicenseAddition's author or steward has stated that a particular\nLicenseAddition generally should not be used, that would _not_ mean that the\nLicenseAddition's identifier is \"deprecated.\" Rather, a LicenseAddition\noperator is typically marked as \"deprecated\" when it is determined that use of\nanother identifier is preferable.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/isDeprecatedAdditionId",
         "name": "isDeprecatedAdditionId",
@@ -4592,7 +4603,7 @@
         "summary": "Specifies whether an additional text identifier has been marked as deprecated."
       },
       "isDeprecatedLicenseId": {
-        "datatype": "boolean",
+        "datatype": "http://www.w3.org/2001/XMLSchema#boolean",
         "description": "The isDeprecatedLicenseId property specifies whether an identifier for a\nLicense or LicenseAddition has been marked as deprecated. If the property\nis not defined, then it is presumed to be false (i.e., not deprecated).\n\nIf the License or LicenseAddition is included on the SPDX License List, then\nthe `deprecatedVersion` property indicates on which version release of the\nLicense List it was first marked as deprecated.\n\n\"Deprecated\" in this context refers to deprecating the use of the\n_identifier_, not the underlying license. In other words, even if a License's\nauthor or steward has stated that a particular License generally should not be\nused, that would _not_ mean that the License's identifier is \"deprecated.\"\nRather, a License or LicenseAddition operator is typically marked as\n\"deprecated\" when it is determined that use of another identifier is\npreferable.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/isDeprecatedLicenseId",
         "name": "isDeprecatedLicenseId",
@@ -4600,7 +4611,7 @@
         "summary": "Specifies whether a license or additional text identifier has been marked as\ndeprecated."
       },
       "isFsfLibre": {
-        "datatype": "boolean",
+        "datatype": "http://www.w3.org/2001/XMLSchema#boolean",
         "description": "isFsfLibre specifies whether the [Free Software Foundation FSF](https://fsf.org)\nhas listed this License as \"free\" in their commentary on licenses, located at\nthe time of this writing at https://www.gnu.org/licenses/license-list.en.html.\n\nA value of \"true\" indicates that the license is in the list of licenses that FSF publishes as libre.\n\nA value of \"false\" indicates that the license is explicitly not in the corresponding list of FSF libre licenses (e.g., FSF has the license on a non-free list).\n\nIf the isFsfLibre field is not specified, the SPDX data creator makes no\nassertions about whether the License is listed in the FSF's commentary.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/isFsfLibre",
         "name": "isFsfLibre",
@@ -4608,7 +4619,7 @@
         "summary": "Specifies whether the License is listed as free by the\n[Free Software Foundation (FSF)](https://fsf.org)."
       },
       "isOsiApproved": {
-        "datatype": "boolean",
+        "datatype": "http://www.w3.org/2001/XMLSchema#boolean",
         "description": "isOsiApproved specifies whether the [Open Source Initiative (OSI)](https://opensource.org)\nhas listed this License as \"approved\" in their list of OSI Approved Licenses,\nlocated at the time of this writing at https://opensource.org/licenses/.\n\nA value of \"true\" indicates that the license is in the list of licenses that OSI publishes as approved.\n\nA value of \"false\" indicates that the license is explicitly not in the corresponding list of OSI licenses (e.g., OSI has stated publicly that a license is not approved).\n\nIf the isOsiApproved field is not specified, the SPDX data creator makes no\nassertions about whether the License is approved by the OSI.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/isOsiApproved",
         "name": "isOsiApproved",
@@ -4616,7 +4627,7 @@
         "summary": "Specifies whether the License is listed as approved by the\n[Open Source Initiative (OSI)](https://opensource.org)."
       },
       "licenseXml": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "The license XML format is defined and used by the SPDX legal team.\nSee the XML fields defined at https://github.com/spdx/license-list-XML/blob/main/DOCS/xml-fields.md for a text description.\nThere is also an XML schema available at https://github.com/spdx/license-list-XML/blob/main/schema/ListedLicense.xsd.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/licenseXml",
         "name": "licenseXml",
@@ -4624,7 +4635,7 @@
         "summary": "Identifies all the text and metadata associated with a license in the license XML format."
       },
       "listVersionAdded": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A listVersionAdded for a ListedLicense or ListedLicenseException on the SPDX\nLicense List specifies which version release of the License List was the first\none in which it was included.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/listVersionAdded",
         "name": "listVersionAdded",
@@ -4640,7 +4651,7 @@
         "summary": "A license expression participating in a license set."
       },
       "obsoletedBy": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "An obsoletedBy value for a deprecated License or LicenseAddition specifies\nthe licenseId of the replacement License or LicenseAddition that is preferred\nto be used in its place. It should use the same format as specified for a\nlicenseId.\n\nThe License's or LicenseAddition's comment value may include more information\nabout the reason why the licenseId specified in the obsoletedBy value is\npreferred.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/obsoletedBy",
         "name": "obsoletedBy",
@@ -4648,7 +4659,7 @@
         "summary": "Specifies the licenseId that is preferred to be used in place of a deprecated\nLicense or LicenseAddition."
       },
       "seeAlso": {
-        "datatype": "anyURI",
+        "datatype": "http://www.w3.org/2001/XMLSchema#anyURI",
         "description": "A seeAlso defines a cross-reference with a URL where the License or\nLicenseAddition can be found in use by one or a few projects.\n\nIf applicable, it should include a URL where the license text is posted by\nthe license steward, particularly if the license steward has made available a\n\"canonical\" primary URL for the license text.\n\nIf the license is OSI approved, a seeAlso should be included with the URL for\nthe license's listing on the OSI website.\n\nThe seeAlso URL may refer to a previously-available URL for the License or\nLicenseAddition which is no longer active.\n\nWhere applicable, the seeAlso URL should include the license text in its\nnative language. seeAlso URLs to English or other translations may be included\nwhere multiple, equivalent official translations exist.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/seeAlso",
         "name": "seeAlso",
@@ -4656,7 +4667,7 @@
         "summary": "Contains a URL where the License or LicenseAddition can be found in use."
       },
       "standardAdditionTemplate": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A standardAdditionTemplate contains a license addition template which describes\nsections of the LicenseAddition text which can be varied. See the Legacy Text\nTemplate format section of the SPDX specification for format information.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/standardAdditionTemplate",
         "name": "standardAdditionTemplate",
@@ -4664,7 +4675,7 @@
         "summary": "Identifies the full text of a LicenseAddition, in SPDX templating format."
       },
       "standardLicenseHeader": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A standardLicenseHeader contains the plain text of the License author's\npreferred wording to be used, typically in a source code file's header\ncomments or similar location, to indicate that the file is subject to\nthe specified License.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/standardLicenseHeader",
         "name": "standardLicenseHeader",
@@ -4672,7 +4683,7 @@
         "summary": "Provides a License author's preferred text to indicate that a file is covered\nby the License."
       },
       "standardLicenseTemplate": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A standardLicenseTemplate contains a license template which describes\nsections of the License text which can be varied. See the Legacy Text Template\nformat section of the SPDX specification for format information.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/standardLicenseTemplate",
         "name": "standardLicenseTemplate",
@@ -4771,7 +4782,7 @@
     "name": "Extension",
     "properties": {
       "cdxPropName": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A cdxPropName is used in a CdxExtension name-value pair.\nUnlike key-value stores, cdxProperties support duplicate names, each potentially having different values.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Extension/cdxPropName",
         "name": "cdxPropName",
@@ -4779,7 +4790,7 @@
         "summary": "A name used in a CdxExtension name-value pair."
       },
       "cdxPropValue": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A cdxPropValue is used in a CdxExtension name-value pair.\nUnlike key-value stores, cdxProperties support duplicate names, each potentially having different values.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Extension/cdxPropValue",
         "name": "cdxPropValue",
@@ -4979,7 +4990,8 @@
             "name": "publishedTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/EpssVulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/publishedTime"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/publishedTime",
+            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Security/VulnAssessmentRelationship",
@@ -5089,7 +5101,8 @@
             "name": "actionStatementTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/VexAffectedVulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/actionStatementTime"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/actionStatementTime",
+            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Security/VexVulnAssessmentRelationship",
@@ -5126,7 +5139,8 @@
             "name": "impactStatementTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/VexNotAffectedVulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/impactStatementTime"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/impactStatementTime",
+            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
           },
           "justificationType": {
             "maxCount": 1,
@@ -5219,7 +5233,8 @@
             "name": "modifiedTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/VulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/modifiedTime"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/modifiedTime",
+            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
           },
           "publishedTime": {
             "datatype": "dateTimeStamp",
@@ -5227,7 +5242,8 @@
             "name": "publishedTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/VulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/publishedTime"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/publishedTime",
+            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
           },
           "suppliedBy": {
             "maxCount": 1,
@@ -5243,7 +5259,8 @@
             "name": "withdrawnTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/VulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/withdrawnTime"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/withdrawnTime",
+            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Core/Relationship",
@@ -5262,7 +5279,8 @@
             "name": "modifiedTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/Vulnerability",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/modifiedTime"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/modifiedTime",
+            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
           },
           "publishedTime": {
             "datatype": "dateTimeStamp",
@@ -5270,7 +5288,8 @@
             "name": "publishedTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/Vulnerability",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/publishedTime"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/publishedTime",
+            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
           },
           "withdrawnTime": {
             "datatype": "dateTimeStamp",
@@ -5278,7 +5297,8 @@
             "name": "withdrawnTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Security/Vulnerability",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Security/withdrawnTime"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Security/withdrawnTime",
+            "pattern": "^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/Core/Artifact",
@@ -5291,7 +5311,7 @@
     "name": "Security",
     "properties": {
       "actionStatement": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "When an element is referenced with a VexAffectedVulnAssessmentRelationship,\nthe relationship MUST include one actionStatement that SHOULD describe actions\nto remediate or mitigate the vulnerability.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Security/actionStatement",
         "name": "actionStatement",
@@ -5299,7 +5319,7 @@
         "summary": "Provides advise on how to mitigate or remediate a vulnerability when a VEX product\nis affected by it."
       },
       "actionStatementTime": {
-        "datatype": "dateTimeStamp",
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
         "description": "When a VEX statement communicates an affected status, the author MUST\ninclude an action statement with a recommended action to help mitigate the\nvulnerability's impact. The actionStatementTime property records the time\nwhen the action statement was first communicated.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Security/actionStatementTime",
         "name": "actionStatementTime",
@@ -5331,7 +5351,7 @@
         "summary": "Provide the enumeration of possible decisions in the Stakeholder-Specific Vulnerability Categorization (SSVC) decision tree [https://www.cisa.gov/sites/default/files/publications/cisa-ssvc-guide%20508c.pdf](https://www.cisa.gov/sites/default/files/publications/cisa-ssvc-guide%20508c.pdf)"
       },
       "exploited": {
-        "datatype": "boolean",
+        "datatype": "http://www.w3.org/2001/XMLSchema#boolean",
         "description": "This field is set when a CVE is listed in an exploit catalog.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Security/exploited",
         "name": "exploited",
@@ -5339,7 +5359,7 @@
         "summary": "Describe that a CVE is known to have an exploit because it's been listed in an exploit catalog."
       },
       "impactStatement": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "When a VEX product element is related with a VexNotAffectedVulnAssessmentRelationship\nand a machine readable justification label is not provided, then an impactStatement\nthat further explains how or why the prouct(s) are not affected by the vulnerability\nmust be provided.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Security/impactStatement",
         "name": "impactStatement",
@@ -5347,7 +5367,7 @@
         "summary": "Explains why a VEX product is not affected by a vulnerability. It is an\nalternative in VexNotAffectedVulnAssessmentRelationship to the machine-readable\njustification label."
       },
       "impactStatementTime": {
-        "datatype": "dateTimeStamp",
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
         "description": "Specifies the time when the impact statement was recorded.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Security/impactStatementTime",
         "name": "impactStatementTime",
@@ -5363,7 +5383,7 @@
         "summary": "Impact justification label to be used when linking a vulnerability to an element\nrepresenting a VEX product with a VexNotAffectedVulnAssessmentRelationship\nrelationship."
       },
       "modifiedTime": {
-        "datatype": "dateTimeStamp",
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
         "description": "Specifies a time when a vulnerability assessment was last modified.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Security/modifiedTime",
         "name": "modifiedTime",
@@ -5371,7 +5391,7 @@
         "summary": "Specifies a time when a vulnerability assessment was modified"
       },
       "percentile": {
-        "datatype": "decimal",
+        "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
         "description": "The percentile between 0 and 1 (0 and 100%) of the current probability score, the proportion of all scored vulnerabilities with the same or a lower EPSS score. [https://www.first.org/epss/data_stats](https://www.first.org/epss/data_stats)",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Security/percentile",
         "name": "percentile",
@@ -5379,7 +5399,7 @@
         "summary": "The percentile of the current probability score."
       },
       "probability": {
-        "datatype": "decimal",
+        "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
         "description": "The probability score between 0 and 1 (0 and 100%) estimating the likelihood of exploitation in the wild in the next 30 days (following score publication). [https://www.first.org/epss/data_stats](https://www.first.org/epss/data_stats)",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Security/probability",
         "name": "probability",
@@ -5387,7 +5407,7 @@
         "summary": "A probability score between 0 and 1 of a vulnerability being exploited."
       },
       "publishedTime": {
-        "datatype": "dateTimeStamp",
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
         "description": "Specifies the time when a vulnerability was first published.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Security/publishedTime",
         "name": "publishedTime",
@@ -5395,7 +5415,7 @@
         "summary": "Specifies the time when a vulnerability was published."
       },
       "score": {
-        "datatype": "decimal",
+        "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
         "description": "The score provides information on the severity of a vulnerability per the\nCommon Vulnerability Scoring System as defined on [https://www.first.org/cvss](https://www.first.org/cvss/).",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Security/score",
         "name": "score",
@@ -5411,7 +5431,7 @@
         "summary": "Specifies the CVSS qualitative severity rating of a vulnerability in relation to a piece of software."
       },
       "statusNotes": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A VEX statement may convey information about how status was determined and may reference other VEX information.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Security/statusNotes",
         "name": "statusNotes",
@@ -5419,7 +5439,7 @@
         "summary": "Conveys information about how VEX status was determined."
       },
       "vectorString": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "Specifies any combination of the CVSS Base, Temporal, Threat, Environmental, and/or Supplemental vector string values for a vulnerability. Supports vectorStrings specified in all CVSS versions.\n\n**Constraints**\n\nString values for the vectorString range must only include the abbreviated form of metric names specified in CVSS specifications, e.g. [https://www.first.org/cvss/v4.0/specification-document#Vector-String](https://www.first.org/cvss/v4.0/specification-document#Vector-String)",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Security/vectorString",
         "name": "vectorString",
@@ -5427,7 +5447,7 @@
         "summary": "Specifies the CVSS vector string for a vulnerability."
       },
       "vexVersion": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "The statement version default value is zero. When any VEX-related content changes, the version must be incremented.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Security/vexVersion",
         "name": "vexVersion",
@@ -5435,7 +5455,7 @@
         "summary": "Specifies the version of a VEX statement."
       },
       "withdrawnTime": {
-        "datatype": "dateTimeStamp",
+        "datatype": "http://www.w3.org/2001/XMLSchema#dateTimeStamp",
         "description": "Specified the time and date when a vulnerability was withdrawn.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Security/withdrawnTime",
         "name": "withdrawnTime",
@@ -5620,7 +5640,8 @@
             "name": "licenseListVersion",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/LicenseExpression",
-            "path": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/licenseListVersion"
+            "path": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/licenseListVersion",
+            "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/AnyLicenseInfo",
@@ -5661,7 +5682,7 @@
         "summary": "Maps a LicenseRef or AdditionRef string for a Custom License or a Custom License Addition to its URI ID."
       },
       "licenseExpression": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A licenseExpression enables the representation, in a single string, of a\ncombination of one or more licenses, together with additions such as license\nexceptions.\n\nThe syntax for a LicenseExpression string is set forth in the SPDX License\nExpressions annex to the SPDX Specification. A LicenseExpression string is\nnot valid if it does not conform to the grammar set forth in that annex.\n\nThe ExpandedLicensing profile can be used to represent the complete parsed\nlicense expression as a combination of license objects.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/licenseExpression",
         "name": "licenseExpression",
@@ -5669,7 +5690,7 @@
         "summary": "A string in the license expression format."
       },
       "licenseListVersion": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "Recognizing that licenses are added to the SPDX License List with each subsequent version, the intent is to provide consumers with the version of the SPDX License List used. \nThis anticipates that in the future, license expression might have used a version of the SPDX License List that is older than the then current one.\nThe specified version of the SPDX License List must include all listed licenses and exceptions referenced in the expression.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/licenseListVersion",
         "name": "licenseListVersion",
@@ -5677,7 +5698,7 @@
         "summary": "The version of the SPDX License List used in the license expression."
       },
       "licenseText": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A licenseText contains the plain text of the License or Addition,\nwithout templating or other similar markup.\n\nUsers of the licenseText for a License can apply the SPDX Matching Guidelines\nwhen comparing it to another text for matching purposes.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/licenseText",
         "name": "licenseText",
@@ -5741,7 +5762,8 @@
             "name": "contentType",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.0/terms/Software/File",
-            "path": "https://spdx.org/rdf/3.0.0/terms/Software/contentType"
+            "path": "https://spdx.org/rdf/3.0.0/terms/Software/contentType",
+            "pattern": "^[^\\/]+\\/[^\\/]+$"
           },
           "fileKind": {
             "maxCount": 1,
@@ -6191,7 +6213,7 @@
         "summary": "Provides additional purpose information of the software artifact."
       },
       "attributionText": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "An attributionText for a software Package, File or Snippet provides a consumer\nof SPDX data with acknowledgement content, to assist redistributors of the\nPackage, File or Snippet with reproducing those acknowledgements.\n\nFor example, this field may include a statement that is required by a\nparticular license to be reproduced in end-user documentation, advertising\nmaterials, or another form.\n\nThis field may describe where, or in which contexts, the acknowledgements\nneed to be reproduced, but it is not required to do so. The SPDX data creator\nmay also explain elsewhere (such as in a licenseComment field) how they intend\nfor data in this field to be used.\n\nAn attributionText is is not meant to include the software Package, File or\nSnippet’s actual complete license text (see concludedLicense to identify the\ncorresponding license).",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Software/attributionText",
         "name": "attributionText",
@@ -6223,7 +6245,7 @@
         "summary": "Specifies the type of the content identifier."
       },
       "contentIdentifierValue": {
-        "datatype": "anyURI",
+        "datatype": "http://www.w3.org/2001/XMLSchema#anyURI",
         "description": "A contentIdentifierValue specifies the value of a content identifier.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Software/contentIdentifierValue",
         "name": "contentIdentifierValue",
@@ -6231,7 +6253,7 @@
         "summary": "Specifies the value of the content identifier."
       },
       "contentType": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "This field is a reasonable estimation of the content type of the Element, from a creator perspective.\nContent type is intrinsic to the Element, independent of how the Element is being used.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Software/contentType",
         "name": "contentType",
@@ -6239,7 +6261,7 @@
         "summary": "Provides information about the content type of an Element."
       },
       "copyrightText": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A copyrightText consists of the text(s) of the copyright notice(s) found\nfor a software Package, File or Snippet, if any.\n\nIf a copyrightText contains text, then it may contain any text related to\none or more copyright notices (even if not complete) for that software\nPackage, File or Snippet.\n\nIf a copyrightText has a \"NONE\" value, this indicates that the software\nPackage, File or Snippet contains no copyright notice whatsoever.\n\nIf a copyrightText has a \"NOASSERTION\" value, this indicates that one of the\nfollowing applies:\n* the SPDX data creator has attempted to but cannot reach a reasonable\n  objective determination;\n* the SPDX data creator has made no attempt to determine this field; or\n* the SPDX data creator has intentionally provided no information (no\n  meaning should be implied by doing so).\n\nIf a copyrightText is present, but consists of solely an empty string or a\nstring with no substantive content (e.g., a string that contains only\nwhitespace), then this should be interpreted as equivalent to a \"NOASSERTION\"\nvalue as described above.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Software/copyrightText",
         "name": "copyrightText",
@@ -6247,7 +6269,7 @@
         "summary": "Identifies the text of one or more copyright notices for a software Package,\nFile or Snippet, if any."
       },
       "downloadLocation": {
-        "datatype": "anyURI",
+        "datatype": "http://www.w3.org/2001/XMLSchema#anyURI",
         "description": "DownloadLocation identifies the download Uniform Resource Identifier \nfor the package at the time that the document was created.\nWhere and how to download the exact package being referenced \nis critical for verification and tracking data.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Software/downloadLocation",
         "name": "downloadLocation",
@@ -6263,7 +6285,7 @@
         "summary": "Describes if a given file is a directory or non-directory kind of file."
       },
       "homePage": {
-        "datatype": "anyURI",
+        "datatype": "http://www.w3.org/2001/XMLSchema#anyURI",
         "description": "HomePage is a place for the SPDX document creator to record a website that serves as the package's home page.\nThis saves the recipient of the SPDX document who is looking for more info from\nhaving to search for and verify a match between the package and the associated project home page.\nThis link can also be used to reference further information about the package\nreferenced by the SPDX document creator.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Software/homePage",
         "name": "homePage",
@@ -6279,7 +6301,7 @@
         "summary": "Defines the line range in the original host file that the snippet information applies to."
       },
       "packageUrl": {
-        "datatype": "anyURI",
+        "datatype": "http://www.w3.org/2001/XMLSchema#anyURI",
         "description": "A packageUrl (commonly pronounced and referred to as \"purl\") is an attempt to standardize package representations in order to reliably identify and locate software packages. A purl is a URL string which represents a package in a mostly universal and uniform way across programming languages, package managers, packaging conventions, tools, APIs and databases.\n\nthe purl URL string is defined by seven components:\n```\nscheme:type/namespace/name@version?qualifiers#subpath\n```\n\nThe definition for each component can be found in the [purl specification](https://github.com/package-url/purl-spec/blob/master/PURL-SPECIFICATION.rst). Components are designed such that they form a hierarchy from the most significant on the left to the least significant components on the right. \n\nParsing a purl string into its components works from left to right. Some extra type-specific normalizations are required. For more information, see [How to parse a purl string in its components](https://github.com/package-url/purl-spec/blob/master/PURL-SPECIFICATION.rst#how-to-parse-a-purl-string-in-its-components).",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Software/packageUrl",
         "name": "packageUrl",
@@ -6287,7 +6309,7 @@
         "summary": "Provides a place for the SPDX data creator to record the package URL string (in accordance with the [package URL spec](https://github.com/package-url/purl-spec/blob/master/PURL-SPECIFICATION.rst)) for a software Package."
       },
       "packageVersion": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "A packageVersion is useful for identification purposes and for indicating later changes of the package version.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Software/packageVersion",
         "name": "packageVersion",
@@ -6319,7 +6341,7 @@
         "summary": "Defines the original host file that the snippet information applies to."
       },
       "sourceInfo": {
-        "datatype": "string",
+        "datatype": "http://www.w3.org/2001/XMLSchema#string",
         "description": "SourceInfo records any relevant background information or additional comments\nabout the origin of the package. For example, this field might include comments \nindicating whether the package was pulled from a source code management system \nor has been repackaged. The creator can provide additional information to describe\nany anomalies or discoveries in the determination of the origin of the package.",
         "iri": "https://spdx.org/rdf/3.0.0/terms/Software/sourceInfo",
         "name": "sourceInfo",

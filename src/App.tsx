@@ -14,8 +14,12 @@ export default function App() {
   useEffect(() => {
     updateMediaTypes().then(() => {
       const source = 'spdx-model.ttl';
+      const jsonLdContextSource =
+        // 'https://spdx.org/rdf/3.0.0/spdx-context.jsonld';
+        'https://spdx.github.io/spdx-spec/v3.0/model/spdx-context.jsonld';
+      // const jsonLdContextSource = 'spdx-context.jsonld';
       const model = 'model.json';
-      updateOntology(source, model);
+      updateOntology(source, jsonLdContextSource, model);
     });
   }, []);
 

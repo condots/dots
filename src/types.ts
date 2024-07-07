@@ -41,6 +41,7 @@ export interface ClassProperty {
   datatype: this['nodeKind'] extends 'Literal' ? LiteralPropertyTypes : never;
   targetClass: this['nodeKind'] extends 'BlankNodeOrIRI' ? IRI : never;
   options: this['nodeKind'] extends 'IRI' ? PropertyOption[] : never;
+  pattern?: string;
 }
 
 export interface Class extends SharedFields {

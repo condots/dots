@@ -25,6 +25,8 @@ import PropertyEdge from '@/components/edge/PropertyEdge';
 import DraggedClass from '@/components/node/DraggedClass';
 import ConnectionLine from '@/components/edge/ConnectionLine';
 import { generateURN } from '@/scripts/app-utils';
+import AppMemu from '@/components/AppMemu';
+import { exportSpdxJsonLd } from '@/scripts/fs-utils';
 
 const nodeTypes = {
   inst: ClassNode,
@@ -142,18 +144,27 @@ const Canvas = () => {
           title="menu"
           className="bg-transparent"
         >
+          <AppMemu />
+        </ControlButton>
+      </Panel>
+      <Panel position="top-center" className="drop-shadow">
+        <ControlButton
+          onClick={() => exportSpdxJsonLd()}
+          title="export"
+          className="bg-transparent"
+        >
           <span
             className="material-symbols-outlined rounded-sm bg-spdx-dark hover:bg-[#005a96] text-white"
             style={{
               fontVariationSettings: `
               'FILL' 0,
-              'wght' 300,
+              'wght' 400,
               'GRAD' 0,
               'opsz' 24
               `,
             }}
           >
-            menu
+            save
           </span>
         </ControlButton>
       </Panel>

@@ -16,6 +16,7 @@ import {
   createModel,
   enrichModelFromMarkdown,
   getAllRecClsProps,
+  getJsonLdContext,
   mapIRIs,
 } from '@/scripts/onto-utils';
 
@@ -25,6 +26,8 @@ type OntoState = {
   profiles: EnrichedProfiles | undefined;
   iris: Record<IRI, Item> | undefined;
   allRecClsProps: Record<Name, NodeData['recClsProps']> | undefined;
+  jsonLdContextSource: string | undefined;
+  jsonLdContext: object | undefined;
 };
 
 const initialState = {
@@ -33,6 +36,8 @@ const initialState = {
   profiles: undefined,
   iris: undefined,
   allRecClsProps: undefined,
+  jsonLdContextSource: undefined,
+  jsonLdContext: undefined,
 };
 
 const storage: PersistStorage<OntoState> = {
@@ -70,14 +75,27 @@ const ontoStoreBase = create<OntoState>()(
 
 export const ontoStore = createSelectors(ontoStoreBase);
 
-export async function updateOntology(source: string | File, model: string) {
+export async function updateOntology(
+  source: string | File,
+  jsonLdContextSource: string,
+  model: string
+) {
   // if (ontoStore.getState().source === source) return;
   const graph = await createGraph(source);
   const graphProfiles = createModel(graph);
   const profiles = await enrichModelFromMarkdown(graphProfiles, model);
   const iris = mapIRIs(profiles);
   const allRecClsProps = getAllRecClsProps(profiles, iris);
-  ontoStore.setState({ source, graph, profiles, iris, allRecClsProps });
+  const jsonLdContext = await getJsonLdContext(jsonLdContextSource);
+  ontoStore.setState({
+    source,
+    graph,
+    profiles,
+    iris,
+    allRecClsProps,
+    jsonLdContextSource,
+    jsonLdContext,
+  });
   console.log('updated ontology');
 }
 

@@ -41,6 +41,9 @@ importers:
       dompurify:
         specifier: ^3.1.3
         version: 3.1.3
+      file-saver:
+        specifier: ^2.0.5
+        version: 2.0.5
       html-react-parser:
         specifier: ^5.1.10
         version: 5.1.10(@types/react@18.3.2)(react@18.3.1)
@@ -50,6 +53,9 @@ importers:
       jsonld:
         specifier: ^8.3.2
         version: 8.3.2(web-streams-polyfill@3.3.3)
+      jsonld-streaming-serializer:
+        specifier: ^2.1.0
+        version: 2.1.0
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
@@ -2448,6 +2454,9 @@ packages:
 
   file-fetch@2.0.0:
     resolution: {integrity: sha512-zNBKfKZThjf5354uAcfXPMfxwDBiyZluznykkZc1HmMjP3IKKqAydDpDj7MO9oeUD0rVjqyuqhDjDi10blpwRA==}
+
+  file-saver@2.0.5:
+    resolution: {integrity: sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==}
 
   fill-range@7.0.1:
     resolution: {integrity: sha512-qOo9F+dMUmC2Lcb4BbVvnKJxTPjCm+RRpe4gDuGrzkL7mEVl/djYSu2OdQ2Pa302N4oqkSg9ir6jaLWJ2USVpQ==}
@@ -7578,6 +7587,8 @@ snapshots:
       mime-types: 2.1.35
       readable-stream: 4.5.2
       stream-chunks: 1.0.0
+
+  file-saver@2.0.5: {}
 
   fill-range@7.0.1:
     dependencies:

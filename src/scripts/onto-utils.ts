@@ -28,7 +28,7 @@ import {
 } from '@/types';
 import { parseIRI } from '@/scripts/app-utils';
 
-const NS = {
+export const NS = {
   rdf: rdfext.namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#'),
   rdfs: rdfext.namespace('http://www.w3.org/2000/01/rdf-schema#'),
   owl: rdfext.namespace('http://www.w3.org/2002/07/owl#'),
@@ -42,6 +42,9 @@ const isNode =
   typeof process !== 'undefined' &&
   process.versions != null &&
   process.versions.node != null;
+
+export const getJsonLdContext = async (source: string) =>
+  await (await fetch(source)).json();
 
 export async function createGraph(source: string | File) {
   const url = source instanceof File ? source.name : source;
@@ -233,10 +236,7 @@ function getDatatypeProperties(graph: Store) {
   const items: Properties = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
-    const datatype = graph
-      .getObjects(node.value, NS.rdfs.range, null)[0]
-      .value.split('#')
-      .pop() as LiteralPropertyTypes;
+    const datatype = graph.getObjects(node.value, NS.rdfs.range, null)[0].value;
     items[shared.name] = { ...shared, datatype };
   }
   return items;
@@ -294,10 +294,10 @@ function extractNodeShape(graph: Store, node: Term) {
     let nodeKind: nodeKindTypes;
     let minCount: number | undefined;
     let maxCount: number | undefined;
-    let datatype: LiteralPropertyTypes | undefined;
-    let spdxDatatype: string | undefined;
+    let datatype: string | undefined;
     let classIRI: IRI | undefined;
     let options: PropertyOption[] | undefined;
+    let pattern: string | undefined;
     for (const o of graph.getQuads(pshape, null, null, null)) {
       const field = o.predicate.value.split('#').pop()!;
       switch (field) {
@@ -325,21 +325,7 @@ function extractNodeShape(graph: Store, node: Term) {
             | undefined;
           break;
         case 'pattern':
-          switch (o.object.value) {
-            case '^[^\\/]+\\/[^\\/]+$':
-              spdxDatatype = 'MediaType';
-              break;
-            case '^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*' +
-              '[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?' +
-              '(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$':
-              spdxDatatype = 'SemVer';
-              break;
-            case '^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$':
-              break;
-
-            default:
-              throw new Error('Unknown pattern: ' + o.object.value);
-          }
+          pattern = o.object.value;
           break;
         case 'class':
           classIRI = o.object.value;
@@ -350,8 +336,23 @@ function extractNodeShape(graph: Store, node: Term) {
           break;
       }
     }
-    if (spdxDatatype === 'SemVer' || spdxDatatype === 'MediaType') {
-      datatype = spdxDatatype;
+
+    if (pattern) {
+      switch (pattern) {
+        case '^[^\\/]+\\/[^\\/]+$':
+          datatype = 'MediaType';
+          break;
+        case '^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*' +
+          '[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?' +
+          '(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$':
+          datatype = 'SemVer';
+          break;
+        case '^\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$':
+          break;
+
+        default:
+          throw new Error('Unknown pattern: ' + pattern);
+      }
     }
 
     const classProperty: ClassProperty = {
@@ -367,6 +368,7 @@ function extractNodeShape(graph: Store, node: Term) {
           : undefined,
       targetClass: nodeKind! === 'BlankNodeOrIRI' ? classIRI : undefined,
       options: nodeKind! === 'IRI' ? options : undefined,
+      pattern: pattern,
     } as ClassProperty;
 
     classProperties[classProperty.name] = classProperty;

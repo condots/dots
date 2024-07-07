@@ -320,6 +320,10 @@ export function getNodeIncomers(nodeId: string) {
   return node ? getIncomers(node, nodes, edges) : [];
 }
 
+export function getNodeOutEdges(nodeId: string) {
+  return flowStore.getState().edges.filter(edge => edge.source === nodeId);
+}
+
 export function outEdgeCount(nodeId: string, path: IRI) {
   const edges = flowStore
     .getState()
