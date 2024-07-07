@@ -12,9 +12,11 @@ import {
   hasUnmetNodeClsProps,
   selectNode,
   selectEdge,
+  getNodeTree,
 } from '@/store/flow';
 import NodeMenuClass from '@/components/node/menu/NodeMenuClass';
 import NodeMenuProp from '@/components/node/menu/NodeMenuProp';
+import { exportSpdxJsonLd } from '@/scripts/fs-utils';
 
 const NodeMenu = () => {
   const nodeId = useNodeId()!;
@@ -23,6 +25,26 @@ const NodeMenu = () => {
     ? Object.entries(node.data.nodeProps).filter(p => !p[1].valid)
     : [];
   const unmetNodeClsProps = hasUnmetNodeClsProps(node);
+
+  const Save = (
+    <DropdownMenu.Item
+      className={itemClass}
+      onSelect={() => {
+        if (!node) return;
+        const nodeTree = getNodeTree(node);
+        const name = Object.values(node.data.nodeProps).find(
+          p => p.classProperty.name === 'name'
+        )?.value;
+        if (typeof name === 'string') {
+          exportSpdxJsonLd(nodeTree, name);
+        } else {
+          exportSpdxJsonLd(nodeTree);
+        }
+      }}
+    >
+      Save
+    </DropdownMenu.Item>
+  );
 
   const GetInfo = (
     <DropdownMenu.Item
@@ -78,6 +100,7 @@ const NodeMenu = () => {
         <DropdownMenu.Content className={contentClass + ' p-1'} align="start">
           <NodeMenuProp />
           <NodeMenuClass />
+          {node?.data.cls.name === 'SpdxDocument' && Save}
           {GetInfo}
           {Delete}
         </DropdownMenu.Content>

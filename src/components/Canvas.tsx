@@ -138,36 +138,6 @@ const Canvas = () => {
           </span>
         </ControlButton>
       </Controls>
-      <Panel position="top-left" className="drop-shadow">
-        <ControlButton
-          onClick={() => appStore.setState({ showClassesMenu: true })}
-          title="menu"
-          className="bg-transparent"
-        >
-          <AppMemu />
-        </ControlButton>
-      </Panel>
-      <Panel position="top-center" className="drop-shadow">
-        <ControlButton
-          onClick={() => exportSpdxJsonLd()}
-          title="export"
-          className="bg-transparent"
-        >
-          <span
-            className="material-symbols-outlined rounded-sm bg-spdx-dark hover:bg-[#005a96] text-white"
-            style={{
-              fontVariationSettings: `
-              'FILL' 0,
-              'wght' 400,
-              'GRAD' 0,
-              'opsz' 24
-              `,
-            }}
-          >
-            save
-          </span>
-        </ControlButton>
-      </Panel>
       <Panel position="top-right" className="drop-shadow">
         <ControlButton
           onClick={() => appStore.setState({ showClassesMenu: true })}

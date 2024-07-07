@@ -324,6 +324,26 @@ export function getNodeOutEdges(nodeId: string) {
   return flowStore.getState().edges.filter(edge => edge.source === nodeId);
 }
 
+export function getNodeTree(node: FlowNode) {
+  const queue: FlowNode[] = [node];
+  const visited = new Set<FlowNode>();
+  const result: FlowNode[] = [];
+
+  while (queue.length) {
+    const n = queue.shift()!;
+
+    if (!visited.has(n)) {
+      visited.add(n);
+      result.push(n);
+
+      for (const nn of [...getNodeOutgoers(n.id), ...getNodeIncomers(n.id)]) {
+        queue.push(nn);
+      }
+    }
+  }
+  return result;
+}
+
 export function outEdgeCount(nodeId: string, path: IRI) {
   const edges = flowStore
     .getState()
