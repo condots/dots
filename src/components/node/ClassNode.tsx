@@ -148,7 +148,7 @@ const ClassNode = ({
   }
   return (
     <div
-      className={`relative p-1 rounded font-lato transition-opacity ${dimNode && !isTargetHandleConnectable && !isPotentialConnection ? 'opacity-10' : ''}`}
+      className={`relative p-1 rounded font-lato ${dimNode && !isTargetHandleConnectable && !isPotentialConnection ? 'opacity-10 transition-none' : 'transition-opacity'}`}
     >
       <Collapsible.Root
         open={data.expanded}

@@ -97,9 +97,9 @@ const storage: PersistStorage<RFState> = {
 };
 
 export const flowStoreBase = create<RFState>()(
-  subscribeWithSelector(
-    immer(
-      devtools(
+  immer(
+    devtools(
+      subscribeWithSelector(
         persist(
           (set, get) => ({
             ...initialState,
