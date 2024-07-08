@@ -6,10 +6,6 @@ import {
   ConnectionMode,
   ControlButton,
   Controls,
-  DefaultEdgeOptions,
-  EdgeTypes,
-  MarkerType,
-  NodeTypes,
   OnConnectEnd,
   Panel,
   ReactFlow,
@@ -20,39 +16,16 @@ import { appStore } from '@/store/app';
 import { getItem } from '@/store/onto';
 import { addNode, deselectAll, flowStore } from '@/store/flow';
 import { generateURN } from '@/scripts/app-utils';
-import ClassNode from '@/components/node/ClassNode';
-import Origin from '@/components/Origin';
-import PropertyEdge from '@/components/edge/PropertyEdge';
 import DraggedClass from '@/components/node/DraggedClass';
 import ConnectionLine from '@/components/edge/ConnectionLine';
 
-const nodeTypes = {
-  inst: ClassNode,
-  origin: Origin,
-} satisfies NodeTypes;
-
-const edgeTypes = {
-  inst: PropertyEdge,
-} satisfies EdgeTypes;
-
-const connectionLineStyle = {
-  strokeWidth: 4,
-  stroke: '#00416b',
-  strokeDasharray: 7,
-};
-
-const defaultEdgeOptions = {
-  type: 'inst',
-  markerEnd: {
-    type: MarkerType.ArrowClosed,
-    strokeWidth: 2,
-    width: 20,
-    height: 20,
-    color: connectionLineStyle.stroke,
-  },
-  style: { stroke: connectionLineStyle.stroke },
-  data: {},
-} satisfies DefaultEdgeOptions;
+import {
+  nodeTypes,
+  edgeTypes,
+  connectionLineStyle,
+  defaultEdgeOptions,
+  snapGrid,
+} from '@/scripts/canvas-defaults';
 
 const Canvas = () => {
   const nodes = flowStore.use.nodes();
@@ -114,7 +87,7 @@ const Canvas = () => {
       onSelectionChange={flowStore.getState().onSelectionChange}
       elevateEdgesOnSelect={true}
       snapToGrid={true}
-      snapGrid={[260, 82]}
+      snapGrid={snapGrid}
     >
       {/* <DevTools /> */}
       <Background color="#00416b" variant={BackgroundVariant.Dots} />
