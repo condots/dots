@@ -31,9 +31,6 @@ function genPropQuads(store: Store, subject: Quad_Subject, node: FlowNode) {
     let object = nodeProp.value;
     const clsProp = nodeProp.classProperty;
     if (clsProp.nodeKind === 'Literal') {
-      if (nodeProp.classProperty.datatype === 'dateTimeStamp') {
-        object = `${object}Z`;
-      }
       const dt = (getItem(nodeProp.classProperty.path) as Property).datatype!;
       object = literal(object, namedNode(dt));
     }

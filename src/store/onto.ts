@@ -10,19 +10,29 @@ import superjson from 'superjson';
 import createSelectors from '@/store/createSelectors';
 import { Store } from 'n3';
 
-import { Class, EnrichedProfiles, IRI, Item, Name, NodeData } from '@/types';
+import {
+  Class,
+  EnrichedProfiles,
+  IRI,
+  Item,
+  Name,
+  NodeData,
+  OntologyMetadata,
+} from '@/types';
 import {
   createGraph,
   createModel,
   enrichModelFromMarkdown,
   getAllRecClsProps,
   getJsonLdContext,
+  getOntologyMetadata,
   mapIRIs,
 } from '@/scripts/onto-utils';
 
 type OntoState = {
   source: string | File | undefined;
   graph: Store | undefined;
+  ontologyMetadata: OntologyMetadata | undefined;
   profiles: EnrichedProfiles | undefined;
   iris: Record<IRI, Item> | undefined;
   allRecClsProps: Record<Name, NodeData['recClsProps']> | undefined;
@@ -33,6 +43,7 @@ type OntoState = {
 const initialState = {
   source: undefined,
   graph: undefined,
+  ontologyMetadata: undefined,
   profiles: undefined,
   iris: undefined,
   allRecClsProps: undefined,
@@ -82,6 +93,7 @@ export async function updateOntology(
 ) {
   // if (ontoStore.getState().source === source) return;
   const graph = await createGraph(source);
+  const ontologyMetadata = getOntologyMetadata(graph);
   const graphProfiles = createModel(graph);
   const profiles = await enrichModelFromMarkdown(graphProfiles, model);
   const iris = mapIRIs(profiles);
@@ -90,6 +102,7 @@ export async function updateOntology(
   ontoStore.setState({
     source,
     graph,
+    ontologyMetadata,
     profiles,
     iris,
     allRecClsProps,

@@ -112,7 +112,7 @@ export interface InputProperty {
   icon: string;
   helpText?: string;
   validator?: (v: string | number | boolean) => boolean;
-  inputType?: 'text' | 'number';
+  inputType?: 'text' | 'number' | 'url' | 'datetime-local';
   mask?: string;
   slotChar?: string;
   min?: number;
@@ -135,3 +135,8 @@ export interface DraggedPropData {
   classProperty: ClassProperty;
   sourceNodeId: string;
 }
+
+export type OntologyMetadata = Record<string, string>;
+// export interface OntologyMetadata {
+//   [x: string]: string;
+// }

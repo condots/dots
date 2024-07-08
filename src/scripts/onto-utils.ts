@@ -25,6 +25,7 @@ import {
   Vocabularies,
   VocabularyEntries,
   nodeKindTypes,
+  OntologyMetadata,
 } from '@/types';
 import { parseIRI } from '@/scripts/app-utils';
 
@@ -79,6 +80,18 @@ export async function createGraph(source: string | File) {
     throw new Error('Unsupported file extension');
   }
   return new Store(quads);
+}
+
+export function getOntologyMetadata(graph: Store) {
+  const iri = graph.getSubjects(NS.rdf.type, NS.owl.Ontology, null)[0];
+  const metadata: OntologyMetadata = {};
+  graph.getQuads(iri, null, null, null).forEach(o => {
+    const k = o.predicate.value.split('#').pop()!.split('/').pop()!;
+    if (k === 'type') return;
+    metadata[k] = o.object.value;
+  });
+  metadata.specVersion = metadata.versionIRI.split('/').reverse()[2];
+  return metadata;
 }
 
 export function createModel(graph: Store) {

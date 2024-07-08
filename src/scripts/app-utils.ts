@@ -15,6 +15,7 @@ import {
   NodeProperty,
   PropertyOption,
 } from '@/types';
+import { ontoStore } from '@/store/onto';
 
 export const advisoryText = (text: string | undefined) => {
   if (!text) return '';
@@ -54,7 +55,7 @@ export const inputProperties: InputProperties = new Map([
       icon: 'calendar_today',
       inputType: 'datetime-local',
       validator: (v: string) =>
-        moment(v, 'YYYY-MM-DDTHH:mm:ss', true).isValid(),
+        moment(v, 'YYYY-MM-DDTHH:mm:ssZ', true).isValid(),
       step: 1,
     },
   ],
@@ -195,28 +196,39 @@ export function generateNodeProperty(
   return nodeProperty;
 }
 
-export const getClsDataProps = (
-  recClsProps: NodeData['recClsProps'],
-  required = false
+export const getRequiredClsDataProps = (
+  recClsProps: NodeData['recClsProps']
 ) => {
-  const props: ClassProperty[] = [];
-  for (const clsProps of recClsProps.values()) {
+  const reqProps: Map<string, ClassProperty[]> = new Map();
+  for (const [clsName, clsProps] of recClsProps.entries()) {
+    const props: ClassProperty[] = [];
     for (const clsProp of Object.values(clsProps)) {
-      if (!clsProp.targetClass && (!required || clsProp.minCount)) {
+      if (!clsProp.targetClass && clsProp.minCount) {
         props.push(clsProp);
       }
     }
+    if (props.length) reqProps.set(clsName, props);
   }
-  return props;
+  return reqProps;
 };
 
 export function initNodeProps(recClsProps: NodeData['recClsProps']) {
-  const required = getClsDataProps(recClsProps, true);
+  const requiredProps = getRequiredClsDataProps(recClsProps);
   const nodeProperties = {} as NodeData['nodeProps'];
-  for (const clsProp of required) {
-    const nodeProp = generateNodeProperty(clsProp);
-    nodeProp.required = true;
-    nodeProperties[nodeProp.id] = nodeProp;
+  for (const [clsName, clsProps] of requiredProps.entries()) {
+    for (const clsProp of clsProps) {
+      let value;
+      if (clsName.endsWith('/CreationInfo')) {
+        if (clsProp.name === 'specVersion') {
+          value = ontoStore.getState().ontologyMetadata?.specVersion;
+        } else if (clsProp.name === 'created') {
+          value = moment.utc().format();
+        }
+      }
+      const nodeProp = generateNodeProperty(clsProp, value);
+      nodeProp.required = true;
+      nodeProperties[nodeProp.id] = nodeProp;
+    }
   }
   return nodeProperties;
 }
