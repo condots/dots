@@ -8,6 +8,7 @@ import { flowStore, getNodeOutEdges } from '@/store/flow';
 import { FlowNode, Property } from '@/types';
 import { getItem, ontoStore } from '@/store/onto';
 import { XYPosition } from 'reactflow';
+import { snapGrid } from '@/scripts/canvas-defaults';
 
 type SubjectMap = Map<string, Quad_Subject>;
 
@@ -61,6 +62,22 @@ function genSpdxGraph(nodes: FlowNode[]) {
   return store;
 }
 
+function getRelativePosition(ref: XYPosition, pos: XYPosition) {
+  const x = (pos.x - ref.x) / snapGrid[0];
+  const y = (pos.y - ref.y) / snapGrid[1];
+  return { x, y };
+}
+
+function getPositions(nodes: FlowNode[]) {
+  const positions: Record<string, XYPosition> = {
+    [nodes[0].id]: { x: 0, y: 0 },
+  };
+  for (const node of nodes.slice(1)) {
+    positions[node.id] = getRelativePosition(nodes[0].position, node.position);
+  }
+  return positions;
+}
+
 export async function exportSpdxJsonLd(
   nodes?: FlowNode[],
   name: string = 'sbom'
@@ -80,13 +97,9 @@ export async function exportSpdxJsonLd(
   const doc = JSON.parse(data.join(' '));
   const ctx = ontoStore.getState().jsonLdContext!;
   const compacted = await jsonld.compact(doc, ctx);
-  compacted['@context'] = 'https://spdx.org/rdf/3.0.0/spdx-context.jsonld';
 
-  const dots: Record<string, XYPosition> = {};
-  for (const node of nodes) {
-    dots[node.id] = node.position;
-  }
-  compacted.dots = dots;
+  compacted['@context'] = 'https://spdx.org/rdf/3.0.0/spdx-context.jsonld';
+  compacted['dots'] = getPositions(nodes);
 
   const blob = new Blob([JSON.stringify(compacted, null, 2)], {
     type: 'application/ld+json;charset=utf-8',
