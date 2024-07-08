@@ -106,9 +106,12 @@ const ClassNode = ({
     }
     labels.push('name');
     const values = Object.values(data.nodeProps);
+    for (const p of Object.values(data.nodeProps).filter(p => p.required)) {
+      labels.push(p.classProperty.name);
+    }
     for (const l of labels) {
       subtitle = values
-        .filter(v => v.classProperty.name === l && v.value != null)
+        .filter(v => v.classProperty.name === l && v.valid)
         .map(v =>
           v.classProperty.options ? parseIRI(v.value as string).name : v.value
         )
@@ -117,10 +120,7 @@ const ClassNode = ({
         break;
       }
     }
-    if (subtitle == null) {
-      subtitle = values[0].value;
-    }
-    setSubtitle(subtitle as string);
+    setSubtitle(subtitle ?? '');
   }, [data.nodeProps, data.cls.iri, data.inheritanceList]);
 
   const [dimNode, setDimNode] = useState(false);
@@ -166,7 +166,7 @@ const ClassNode = ({
         `}
       >
         <div className="px-0.5 flex flex-col gap-y-2">
-          <div className={`flex gap-x-1`}>
+          <div className={`flex gap-x-1 h-6`}>
             {menuButton}
             <Tooltip
               content={data.cls.name}
@@ -185,11 +185,9 @@ const ClassNode = ({
             {expandButton}
           </div>
           <Separator className="bg-spdx-dark/50 mx-6 h-px" />
-          {subtitle && (
-            <span className="text-spdx-dark w-full text-center truncate px-[2px] font-lato font-normal">
-              {subtitle}
-            </span>
-          )}
+          <span className="text-spdx-dark w-full text-center truncate px-[2px] font-lato font-normal h-6">
+            {subtitle}
+          </span>
         </div>
         <Collapsible.Content
           className="nodrag nopan nowheel cursor-auto overflow-hidden 
