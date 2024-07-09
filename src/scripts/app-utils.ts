@@ -221,8 +221,8 @@ export function initNodeProps(recClsProps: NodeData['recClsProps']) {
       if (clsName.endsWith('/CreationInfo')) {
         if (clsProp.name === 'specVersion') {
           value = ontoStore.getState().ontologyMetadata?.specVersion;
-        } else if (clsProp.name === 'created') {
-          value = moment.utc().format();
+          // } else if (clsProp.name === 'created') {
+          //   value = moment.utc().format();
         }
       }
       const nodeProp = generateNodeProperty(clsProp, value);

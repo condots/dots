@@ -28,6 +28,7 @@ import {
   getOntologyMetadata,
   mapIRIs,
 } from '@/scripts/onto-utils';
+import { ContextDefinition } from 'jsonld';
 
 type OntoState = {
   source: string | File | undefined;
@@ -37,7 +38,8 @@ type OntoState = {
   iris: Record<IRI, Item> | undefined;
   allRecClsProps: Record<Name, NodeData['recClsProps']> | undefined;
   jsonLdContextSource: string | undefined;
-  jsonLdContext: object | undefined;
+  jsonLdContextUrl: string | undefined;
+  jsonLdContext: ContextDefinition | undefined;
 };
 
 const initialState = {
@@ -48,6 +50,7 @@ const initialState = {
   iris: undefined,
   allRecClsProps: undefined,
   jsonLdContextSource: undefined,
+  jsonLdContextUrl: undefined,
   jsonLdContext: undefined,
 };
 
@@ -89,6 +92,7 @@ export const ontoStore = createSelectors(ontoStoreBase);
 export async function updateOntology(
   source: string | File,
   jsonLdContextSource: string,
+  jsonLdContextUrl: string,
   model: string
 ) {
   // if (ontoStore.getState().source === source) return;
@@ -107,9 +111,10 @@ export async function updateOntology(
     iris,
     allRecClsProps,
     jsonLdContextSource,
+    jsonLdContextUrl,
     jsonLdContext,
   });
-  console.log('updated ontology');
+  console.log(`loaded SPDX ${ontologyMetadata?.specVersion}`);
 }
 
 export const getItem = (iri: IRI | undefined) => {

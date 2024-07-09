@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
+import sanitize from 'sanitize-filename';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import { useNodeId } from 'reactflow';
@@ -26,25 +27,22 @@ const NodeMenu = () => {
     : [];
   const unmetNodeClsProps = hasUnmetNodeClsProps(node);
 
-  const Save = (
-    <DropdownMenu.Item
-      className={itemClass}
-      onSelect={() => {
-        if (!node) return;
-        const nodeTree = getNodeTree(node);
-        const name = Object.values(node.data.nodeProps).find(
-          p => p.classProperty.name === 'name'
-        )?.value;
-        if (typeof name === 'string') {
-          exportSpdxJsonLd(nodeTree, name);
-        } else {
-          exportSpdxJsonLd(nodeTree);
-        }
-      }}
-    >
-      Save
-    </DropdownMenu.Item>
-  );
+  const Save = useMemo(() => {
+    if (node?.data.cls.name !== 'SpdxDocument') return null;
+    const name = (Object.values(node.data.nodeProps).find(
+      p => p.classProperty.name === 'name'
+    )?.value ?? `spdx-doc-${~~(Date.now() / 1000)}`) as string;
+    const filename = `${sanitize(name)}.json`;
+
+    return (
+      <DropdownMenu.Item
+        className={itemClass}
+        onSelect={() => exportSpdxJsonLd(filename, getNodeTree(node))}
+      >
+        {`Save as "${filename}"`}
+      </DropdownMenu.Item>
+    );
+  }, [node]);
 
   const GetInfo = (
     <DropdownMenu.Item
@@ -100,9 +98,9 @@ const NodeMenu = () => {
         <DropdownMenu.Content className={contentClass + ' p-1'} align="start">
           <NodeMenuProp />
           <NodeMenuClass />
-          {node?.data.cls.name === 'SpdxDocument' && Save}
           {GetInfo}
           {Delete}
+          {Save}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

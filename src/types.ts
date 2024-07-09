@@ -93,7 +93,6 @@ export type NodeProperty = {
 };
 
 export type NodeData = {
-  isNode: boolean;
   active: boolean;
   expanded: boolean;
   cls: Class;
@@ -140,3 +139,8 @@ export type OntologyMetadata = Record<string, string>;
 // export interface OntologyMetadata {
 //   [x: string]: string;
 // }
+
+export interface AlertMessage {
+  title: string;
+  description?: string;
+}

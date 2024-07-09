@@ -29,6 +29,7 @@ import type {
   ReactFlowInstance,
   OnInit,
   OnSelectionChangeParams,
+  XYPosition,
 } from 'reactflow';
 
 import {
@@ -214,14 +215,17 @@ export function selectEdge(edgeId?: string) {
   });
 }
 
-export function addNode(type: string, x: number, y: number, classIRI: IRI) {
-  const nodeId = generateURN();
-  const position = flowStore
-    .getState()
-    .reactFlowInstance!.screenToFlowPosition({ x, y });
+export const screenToCanvas = (x: number, y: number) =>
+  flowStore.getState().reactFlowInstance!.screenToFlowPosition({ x, y });
+
+export function addNode(
+  type: string,
+  id: string,
+  classIRI: IRI,
+  position: XYPosition
+) {
   const recClsProps = ontoStore.getState().allRecClsProps![classIRI];
   const data: NodeData = {
-    isNode: true,
     active: false,
     expanded: false,
     cls: getItem(classIRI) as Class,
@@ -230,11 +234,11 @@ export function addNode(type: string, x: number, y: number, classIRI: IRI) {
     recClsProps: recClsProps,
   };
 
-  const node: FlowNode = { id: nodeId, position, data, type };
+  const node: FlowNode = { id, position, data, type };
   flowStore.setState(state => {
     state.nodes.push(node);
   });
-  return nodeId;
+  return id;
 }
 
 export function deselectAll() {

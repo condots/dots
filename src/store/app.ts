@@ -9,12 +9,18 @@ import { immer } from 'zustand/middleware/immer';
 import superjson from 'superjson';
 import createSelectors from '@/store/createSelectors';
 
-import { DraggedClassData, DraggedPropData, PropertyOption } from '@/types';
+import {
+  AlertMessage,
+  DraggedClassData,
+  DraggedPropData,
+  PropertyOption,
+} from '@/types';
 import { getMediaTypes } from '@/scripts/app-utils';
 
 type AppState = {
   showClassesMenu: boolean;
   showInfoDialog: boolean;
+  alertMessage: AlertMessage | undefined;
   selectedInfoIri: string | undefined;
   draggedClassData: DraggedClassData | undefined;
   draggedPropData: DraggedPropData | undefined;
@@ -25,6 +31,7 @@ type AppState = {
 const initialState = {
   showClassesMenu: false,
   showInfoDialog: false,
+  alertMessage: undefined,
   selectedInfoIri: undefined,
   draggedClassData: undefined,
   draggedPropData: undefined,
@@ -73,6 +80,7 @@ const appStoreBase = create<AppState>()(
                     ![
                       'showClassesMenu',
                       'showInfoDialog',
+                      'alertMessage',
                       'selectedInfoIri',
                       'draggedClassData',
                       'draggedPropData',
@@ -92,5 +100,5 @@ export async function updateMediaTypes() {
   // if (appStore.getState().mediaTypes) return;
   const mediaTypes = await getMediaTypes();
   appStore.setState({ mediaTypes });
-  console.log('updated MediaTypes');
+  console.log(`loaded MediaTypes`);
 }

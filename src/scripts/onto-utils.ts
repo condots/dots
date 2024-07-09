@@ -39,20 +39,20 @@ export const NS = {
 
 const shaclLists: Map<IRI, IRI[]> = new Map();
 
-const isNode =
+const isNodeJs =
   typeof process !== 'undefined' &&
   process.versions != null &&
   process.versions.node != null;
 
 export const getJsonLdContext = async (source: string) =>
-  await (await fetch(source)).json();
+  (await (await fetch(source)).json())['@context'];
 
 export async function createGraph(source: string | File) {
   const url = source instanceof File ? source.name : source;
   const ext = url.split('.').pop() || '';
   let text: string;
   if (typeof source === 'string') {
-    if (isNode) {
+    if (isNodeJs) {
       const { promises: fs } = await import('fs');
       text = await fs.readFile(source, 'utf8');
     } else {
@@ -129,7 +129,7 @@ export async function enrichModelFromMarkdown(
   model: string
 ) {
   let markdown: Record<string, object>;
-  if (isNode) {
+  if (isNodeJs) {
     const { promises: fs } = await import('fs');
     markdown = JSON.parse(await fs.readFile(model, 'utf8'));
   } else {

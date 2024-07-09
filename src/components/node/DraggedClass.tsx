@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 import { appStore } from '@/store/app';
-import { parseIRI } from '@/scripts/app-utils';
-import { addNode } from '@/store/flow';
+import { generateURN, parseIRI } from '@/scripts/app-utils';
+import { addNode, screenToCanvas } from '@/store/flow';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import { Separator } from '@radix-ui/react-separator';
 
@@ -27,7 +27,12 @@ const DraggedClass = () => {
 
     const handleMouseUp = e => {
       if (dragging) {
-        addNode('inst', e.clientX - 128, e.clientY - 26, data!.targetClass);
+        addNode(
+          'inst',
+          generateURN(),
+          data.targetClass,
+          screenToCanvas(e.clientX - 128, e.clientY - 26)
+        );
       }
       setDragging(false);
       setOffset({});

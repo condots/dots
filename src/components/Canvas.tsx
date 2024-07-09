@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 
 import {
   Background,
@@ -14,7 +14,7 @@ import {
 
 import { appStore } from '@/store/app';
 import { getItem } from '@/store/onto';
-import { addNode, deselectAll, flowStore } from '@/store/flow';
+import { addNode, deselectAll, flowStore, screenToCanvas } from '@/store/flow';
 import { generateURN } from '@/scripts/app-utils';
 import DraggedClass from '@/components/node/DraggedClass';
 import ConnectionLine from '@/components/edge/ConnectionLine';
@@ -26,11 +26,13 @@ import {
   defaultEdgeOptions,
   snapGrid,
 } from '@/scripts/canvas-defaults';
+import { importSpdxJsonLd } from '@/scripts/fs-utils';
 
 const Canvas = () => {
   const nodes = flowStore.use.nodes();
   const edges = flowStore.use.edges();
   const { setViewport, addEdges } = useReactFlow();
+  const importJsonLdRef = useRef();
 
   const handleTransform = useCallback(() => {
     setViewport({ x: 0, y: 0, zoom: 1 }, { duration: 200 });
@@ -43,9 +45,9 @@ const Canvas = () => {
       if (data && !getItem(data.classProperty.targetClass)!.abstract) {
         const targetNodeId = addNode(
           'inst',
-          e.clientX - 128,
-          e.clientY - 26,
-          data.classProperty.targetClass
+          generateURN(),
+          data.classProperty.targetClass,
+          screenToCanvas(e.clientX - 128, e.clientY - 26)
         );
         addEdges([
           {
@@ -61,6 +63,13 @@ const Canvas = () => {
     },
     [addEdges]
   );
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      importSpdxJsonLd(file, { x: 0, y: 0 });
+    }
+  };
 
   return (
     <ReactFlow
@@ -109,6 +118,34 @@ const Canvas = () => {
           </span>
         </ControlButton>
       </Controls>
+      <Panel position="top-left" className="drop-shadow">
+        <ControlButton
+          onClick={() => importJsonLdRef.current?.click()}
+          title="import"
+          className="bg-transparent"
+        >
+          <span
+            className="material-symbols-outlined rounded-sm bg-spdx-dark hover:bg-[#005a96] text-white"
+            style={{
+              fontVariationSettings: `
+              'FILL' 0,
+              'wght' 400,
+              'GRAD' 0,
+              'opsz' 24
+              `,
+            }}
+          >
+            upload_file
+          </span>
+        </ControlButton>
+        <input
+          ref={importJsonLdRef}
+          type="file"
+          accept="application/ld+json, application/json"
+          onChange={handleImport}
+          hidden
+        />
+      </Panel>
       <Panel position="top-right" className="drop-shadow">
         <ControlButton
           onClick={() => {
