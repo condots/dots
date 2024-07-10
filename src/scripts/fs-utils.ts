@@ -10,6 +10,7 @@ import {
   flowStore,
   getNode,
   getNodeOutEdges,
+  hideTreeNodes,
   setNodeProperty,
 } from '@/store/flow';
 import { ClassProperty, FlowNode, Property } from '@/types';
@@ -194,15 +195,13 @@ export async function importSpdxJsonLd(
         impProps.push({ id: s.value, path, value });
       }
     }
-    impNodes[s.value] = {
+    const impNode: ImportedNode = {
       id: s.value.startsWith('_:') ? generateURN() : s.value,
       classIRI: classIRI!,
       position: positions[s.value] ?? refPos,
     };
-  }
-
-  for (const impNode of Object.values(impNodes)) {
     addNode('inst', impNode.id, impNode.classIRI, impNode.position);
+    impNodes[s.value] = impNode;
   }
 
   for (const p of impProps) {
@@ -244,4 +243,9 @@ export async function importSpdxJsonLd(
       });
     }
   }
+
+  const spdxDocumentId = Object.values(impNodes).find(n =>
+    n.classIRI.endsWith('/SpdxDocument')
+  )!.id;
+  hideTreeNodes(spdxDocumentId);
 }
