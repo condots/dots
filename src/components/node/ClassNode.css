@@ -1,0 +1,20 @@
+.stock-effect::before,
+.stock-effect::after {
+  content: '';
+  position: absolute;
+  outline-color: #00416b;
+  box-sizing: border-box;
+  top: -1px;
+  left: -1px;
+  height: 82px;
+  width: 258px;
+  border-radius: 6px;
+  outline: #00416b 1px solid;
+  background-color: white;
+  z-index: -1;
+}
+
+.stock-effect-selected::before,
+.stock-effect-selected::after {
+  outline: #00416b 3px solid;
+}

@@ -18,12 +18,16 @@ import { appStore } from '@/store/app';
 import {
   getNodeIncomers,
   getNodeOutgoers,
+  hideTreeNodes,
   setNodeExpanded,
+  unhideTreeNodes,
 } from '@/store/flow';
 import NodeMenu from '@/components/node/menu/NodeMenu';
 import Tooltip from '@/components/Tooltip';
 import PropFields from '@/components/node/prop/PropFields';
 import { parseIRI, preferredLabels } from '@/scripts/app-utils';
+
+import '@/components/node/ClassNode.css';
 
 const connectionStartHandleSelector = state => state.connectionStartHandle;
 const connectionEndHandleSelector = state => state.connectionEndHandle;
@@ -148,15 +152,25 @@ const ClassNode = ({
   }
   return (
     <div
-      className={`relative p-1 rounded font-lato ${dimNode && !isTargetHandleConnectable && !isPotentialConnection ? 'opacity-10 transition-none' : 'transition-opacity'}`}
+      className={`
+        relative p-1 font-lato rounded
+        ${dimNode && !isTargetHandleConnectable && !isPotentialConnection ? 'opacity-10 transition-none' : 'transition-opacity'}
+        ${data.hiddenNodes.length ? 'stock-effect' : ''}
+        ${selected ? 'stock-effect-selected' : ''}
+      `}
+      onDoubleClick={() =>
+        data.hiddenNodes.length
+          ? unhideTreeNodes(nodeId)
+          : hideTreeNodes(nodeId)
+      }
     >
       <Collapsible.Root
         open={data.expanded}
         onOpenChange={open => setNodeExpanded(nodeId, open)}
         className={`
           cursor-move rounded w-64 min-h-20 bg-white shadow-2 outline outline-spdx-dark outline-1 p-2
-          ${selected && 'outline-[3px]'} 
-          ${dragging && 'shadow-4 translate-y-[-1.5px] translate-x-[0.8px]'}
+          ${selected && 'outline-[3px]'}
+          ${dragging && 'shadow-4'}
           ${
             isTargetHandleConnectable &&
             (isPotentialConnection

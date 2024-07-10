@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import sanitize from 'sanitize-filename';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
@@ -14,6 +14,8 @@ import {
   selectNode,
   selectEdge,
   getNodeTree,
+  unhideTreeNodes,
+  hideTreeNodes,
 } from '@/store/flow';
 import NodeMenuClass from '@/components/node/menu/NodeMenuClass';
 import NodeMenuProp from '@/components/node/menu/NodeMenuProp';
@@ -67,6 +69,28 @@ const NodeMenu = () => {
     </DropdownMenu.Item>
   );
 
+  const HideTree = (
+    <DropdownMenu.Item
+      className={itemClass}
+      onSelect={() => {
+        hideTreeNodes(nodeId);
+      }}
+    >
+      Collapse
+    </DropdownMenu.Item>
+  );
+
+  const UnhideTree = (
+    <DropdownMenu.Item
+      className={itemClass}
+      onSelect={() => {
+        unhideTreeNodes(nodeId);
+      }}
+    >
+      Expand
+    </DropdownMenu.Item>
+  );
+
   return (
     <DropdownMenu.Root
       onOpenChange={open => {
@@ -98,6 +122,7 @@ const NodeMenu = () => {
         <DropdownMenu.Content className={contentClass + ' p-1'} align="start">
           <NodeMenuProp />
           <NodeMenuClass />
+          {node?.data.hiddenNodes.length == 0 ? HideTree : UnhideTree}
           {GetInfo}
           {Delete}
           {Save}

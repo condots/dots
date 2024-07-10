@@ -232,6 +232,7 @@ export function addNode(
     inheritanceList: [...recClsProps.keys()],
     nodeProps: initNodeProps(recClsProps),
     recClsProps: recClsProps,
+    hiddenNodes: [],
   };
 
   const node: FlowNode = { id, position, data, type };
@@ -384,4 +385,38 @@ export function hasUnmetNodeClsProps(node: FlowNode | undefined) {
     if (hasUnmetProfileClsProps(node, clsProps)) return true;
   }
   return false;
+}
+
+export function hideTreeNodes(nodeId: string) {
+  flowStore.setState(state => {
+    const node = state.nodes.find(n => n.id === nodeId);
+    if (!node || node.data.hiddenNodes.length > 0) return;
+    node.data.hiddenNodes = getNodeTree(node)
+      .filter(n => n.id !== node.id)
+      .map(n => n.id);
+    for (const hn of node.data.hiddenNodes) {
+      state.nodes.find(n => n.id === hn)!.hidden = true;
+    }
+    node.data.initialHidePosition = node.position;
+  });
+}
+
+export function unhideTreeNodes(nodeId: string) {
+  flowStore.setState(state => {
+    const node = state.nodes.find(n => n.id === nodeId);
+    if (!node || node.data.hiddenNodes.length === 0) return;
+    const offset = {
+      x: node.position.x - node.data.initialHidePosition!.x,
+      y: node.position.y - node.data.initialHidePosition!.y,
+    };
+    for (const hn of node.data.hiddenNodes) {
+      const nd = state.nodes.find(n => n.id === hn)!;
+      nd.hidden = false;
+      nd.position = {
+        x: nd.position.x + offset.x,
+        y: nd.position.y + offset.y,
+      };
+    }
+    node.data.hiddenNodes = [];
+  });
 }

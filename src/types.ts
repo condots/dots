@@ -1,4 +1,4 @@
-import { Node } from 'reactflow';
+import { Node, XYPosition } from 'reactflow';
 
 export interface SharedFields {
   iri: IRI;
@@ -99,6 +99,8 @@ export type NodeData = {
   inheritanceList: string[];
   nodeProps: Record<string, NodeProperty>;
   recClsProps: Map<string, ClassProperties>;
+  hiddenNodes: string[];
+  initialHidePosition?: XYPosition;
 };
 
 export type ClsPropMin = Record<string, number>;
