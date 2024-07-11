@@ -10,6 +10,7 @@ import InfoDialog from '@/components/InfoDialog';
 import ProfileMenu from '@/components/ProfileMenu';
 import Canvas from '@/components/Canvas';
 import Alert from '@/components/Alert';
+import HelpDialog from '@/components/HelpDialog';
 
 export default function App() {
   useEffect(() => {
@@ -28,6 +29,7 @@ export default function App() {
       <Alert />
       <InfoDialog />
       <ProfileMenu />
+      <HelpDialog />
       <Canvas />
     </div>
   );

@@ -95,6 +95,12 @@ const Canvas = () => {
     e.preventDefault();
   };
 
+  const handleShowHelp = () => {
+    appStore.setState(state => {
+      state.showHelpDialog = true;
+    });
+  };
+
   return (
     <ReactFlow
       proOptions={{ hideAttribution: true }}
@@ -113,7 +119,6 @@ const Canvas = () => {
       onConnect={flowStore.getState().onConnect}
       onConnectEnd={onConnectEnd}
       onInit={flowStore.getState().onInit}
-      fitViewOptions={{ padding: 2 }}
       zoomOnPinch={false}
       zoomOnDoubleClick={false}
       zoomActivationKeyCode={null}
@@ -127,20 +132,18 @@ const Canvas = () => {
     >
       {/* <DevTools /> */}
       <Background color="#00416b" variant={BackgroundVariant.Dots} />
-      <Controls position="bottom-left" showZoom={false} showInteractive={false}>
+      <Controls
+        position="top-left"
+        showZoom={false}
+        showInteractive={false}
+        fitViewOptions={{ duration: 200 }}
+      >
         <ControlButton
           onClick={() => handleTransform()}
           title="recenter"
           className="text-black"
         >
           <span className="material-symbols-outlined text-base">recenter</span>
-        </ControlButton>
-        <ControlButton
-          onClick={() => importJsonLdRef.current?.click()}
-          title="import"
-          className="text-black"
-        >
-          <span className="material-symbols-outlined text-base">upload</span>
         </ControlButton>
         <ControlButton
           onClick={() => flowStore.getState().reset()}
@@ -150,6 +153,20 @@ const Canvas = () => {
           <span className="material-symbols-outlined text-base">
             ink_eraser
           </span>
+        </ControlButton>
+        <ControlButton
+          onClick={() => importJsonLdRef.current?.click()}
+          title="import"
+          className="text-black"
+        >
+          <span className="material-symbols-outlined text-xl">upload</span>
+        </ControlButton>
+        <ControlButton
+          onClick={() => handleShowHelp()}
+          title="help"
+          className="text-black"
+        >
+          <span className="material-symbols-outlined text-lg">help</span>
         </ControlButton>
       </Controls>
       <Panel position="top-right" className="drop-shadow">

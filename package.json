@@ -44,6 +44,7 @@
     "sanitize-filename": "^1.6.3",
     "semver": "^7.6.2",
     "superjson": "^2.2.1",
+    "zundo": "^2.1.0",
     "zustand": "^4.5.2"
   },
   "devDependencies": {

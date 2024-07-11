@@ -20,6 +20,7 @@ import { getMediaTypes } from '@/scripts/app-utils';
 type AppState = {
   showClassesMenu: boolean;
   showInfoDialog: boolean;
+  showHelpDialog: boolean;
   alertMessage: AlertMessage | undefined;
   selectedInfoIri: string | undefined;
   draggedClassData: DraggedClassData | undefined;
@@ -31,6 +32,7 @@ type AppState = {
 const initialState = {
   showClassesMenu: false,
   showInfoDialog: false,
+  showHelpDialog: false,
   alertMessage: undefined,
   selectedInfoIri: undefined,
   draggedClassData: undefined,
@@ -80,6 +82,7 @@ const appStoreBase = create<AppState>()(
                     ![
                       'showClassesMenu',
                       'showInfoDialog',
+                      'showHelpDialog',
                       'alertMessage',
                       'selectedInfoIri',
                       'draggedClassData',
