@@ -19,6 +19,7 @@ import {
   OnEdgesChange,
   OnConnect,
   OnSelectionChangeFunc,
+  OnNodesDelete,
   NodeDragHandler,
   applyNodeChanges,
   applyEdgeChanges,
@@ -68,6 +69,7 @@ type RFState = {
   onNodeDragStart: NodeDragHandler;
   onNodeDragStop: NodeDragHandler;
   onInit: OnInit;
+  onNodesDelete: OnNodesDelete;
   setNodes: (nodes: Node[]) => void;
   setEdges: (edges: Edge[]) => void;
   setDevtoolsActive: (name: keyof DevtoolsActive) => void;
@@ -153,6 +155,16 @@ export const flowStoreBase = create<RFState>()(
             },
             onInit: (reactFlowInstance: ReactFlowInstance) => {
               set({ reactFlowInstance });
+            },
+            onNodesDelete: (nodes: Node[]) => {
+              const nodesToDelete: Node[] = [];
+              for (const node of nodes) {
+                const collapsedNodes = get().nodes.filter(n =>
+                  node.data.hiddenNodes.includes(n.id)
+                );
+                nodesToDelete.push(...collapsedNodes);
+              }
+              get().reactFlowInstance!.deleteElements({ nodes: nodesToDelete });
             },
             setNodes: (nodes: Node[]) => {
               set({ nodes });
@@ -249,8 +261,8 @@ export function deselectAll() {
 
 export function deleteNode(nodeId: string) {
   const state = flowStore.getState();
-  const node = state.nodes.find(n => n.id === nodeId);
-  state.reactFlowInstance!.deleteElements({ nodes: [node!], edges: [] });
+  const node = state.nodes.find(n => n.id === nodeId)!;
+  state.reactFlowInstance!.deleteElements({ nodes: [node], edges: [] });
 }
 
 export function addNodeProperty(

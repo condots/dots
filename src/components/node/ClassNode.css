@@ -2,12 +2,11 @@
 .stock-effect::after {
   content: '';
   position: absolute;
-  outline-color: #00416b;
   box-sizing: border-box;
   top: -1px;
   left: -1px;
   height: 82px;
-  width: 258px;
+  width: 256px;
   border-radius: 6px;
   outline: #00416b 1px solid;
   background-color: white;
@@ -16,5 +15,5 @@
 
 .stock-effect-selected::before,
 .stock-effect-selected::after {
-  outline: #00416b 3px solid;
+  outline: #00416b 2.5px solid;
 }

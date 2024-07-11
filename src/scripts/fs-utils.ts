@@ -1,9 +1,13 @@
 import { Store, DataFactory, Quad_Subject, Quad } from 'n3';
 const { namedNode, literal, quad } = DataFactory;
-import { NS } from '@/scripts/onto-utils';
 import { JsonLdSerializer } from 'jsonld-streaming-serializer';
 import jsonld, { JsonLdDocument } from 'jsonld';
 import { saveAs } from 'file-saver';
+import { XYPosition } from 'reactflow';
+
+import { ClassProperty, FlowNode, Property } from '@/types';
+import { appStore } from '@/store/app';
+import { getItem, ontoStore } from '@/store/onto';
 import {
   addNode,
   addNodeProperty,
@@ -11,13 +15,11 @@ import {
   getNode,
   getNodeOutEdges,
   hideTreeNodes,
+  selectNode,
   setNodeProperty,
 } from '@/store/flow';
-import { ClassProperty, FlowNode, Property } from '@/types';
-import { getItem, ontoStore } from '@/store/onto';
-import { XYPosition, addEdge } from 'reactflow';
+import { NS } from '@/scripts/onto-utils';
 import { snapGrid } from '@/scripts/canvas-defaults';
-import { appStore } from '@/store/app';
 import { generateURN } from '@/scripts/app-utils';
 
 type SubjectMap = Map<string, Quad_Subject>;
@@ -244,8 +246,9 @@ export async function importSpdxJsonLd(
     }
   }
 
-  const spdxDocumentId = Object.values(impNodes).find(n =>
-    n.classIRI.endsWith('/SpdxDocument')
-  )!.id;
-  hideTreeNodes(spdxDocumentId);
+  const collapsedNode =
+    Object.values(impNodes).find(n => n.classIRI.endsWith('/SpdxDocument')) ??
+    impNodes[0];
+  hideTreeNodes(collapsedNode.id);
+  selectNode(collapsedNode.id);
 }

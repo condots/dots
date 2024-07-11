@@ -9,6 +9,7 @@ import {
   OnConnectEnd,
   Panel,
   ReactFlow,
+  XYPosition,
   useReactFlow,
 } from 'reactflow';
 
@@ -64,11 +65,34 @@ const Canvas = () => {
     [addEdges]
   );
 
-  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const handleImport = (
+    file: File | undefined,
+    refPos: XYPosition = { x: 0, y: 0 }
+  ) => {
     if (file) {
-      importSpdxJsonLd(file, { x: 0, y: 0 });
+      importSpdxJsonLd(file, refPos);
     }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    const refPos = screenToCanvas(
+      window.innerWidth / 2 - 128,
+      window.innerHeight / 2 - 26
+    );
+    handleImport(file, refPos);
+    e.target.value = '';
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    const refPos = screenToCanvas(e.clientX - 128, e.clientY - 26);
+    handleImport(file, refPos);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
   };
 
   return (
@@ -97,6 +121,9 @@ const Canvas = () => {
       elevateEdgesOnSelect={true}
       snapToGrid={true}
       snapGrid={snapGrid}
+      onNodesDelete={flowStore.getState().onNodesDelete}
+      onDrop={handleDrop}
+      onDragOver={handleDragOver}
     >
       {/* <DevTools /> */}
       <Background color="#00416b" variant={BackgroundVariant.Dots} />
@@ -109,6 +136,13 @@ const Canvas = () => {
           <span className="material-symbols-outlined text-base">recenter</span>
         </ControlButton>
         <ControlButton
+          onClick={() => importJsonLdRef.current?.click()}
+          title="import"
+          className="text-black"
+        >
+          <span className="material-symbols-outlined text-base">upload</span>
+        </ControlButton>
+        <ControlButton
           onClick={() => flowStore.getState().reset()}
           title="clear"
           className="text-black"
@@ -118,34 +152,6 @@ const Canvas = () => {
           </span>
         </ControlButton>
       </Controls>
-      <Panel position="top-left" className="drop-shadow">
-        <ControlButton
-          onClick={() => importJsonLdRef.current?.click()}
-          title="import"
-          className="bg-transparent"
-        >
-          <span
-            className="material-symbols-outlined rounded-sm bg-spdx-dark hover:bg-[#005a96] text-white"
-            style={{
-              fontVariationSettings: `
-              'FILL' 0,
-              'wght' 400,
-              'GRAD' 0,
-              'opsz' 24
-              `,
-            }}
-          >
-            upload_file
-          </span>
-        </ControlButton>
-        <input
-          ref={importJsonLdRef}
-          type="file"
-          accept="application/ld+json, application/json"
-          onChange={handleImport}
-          hidden
-        />
-      </Panel>
       <Panel position="top-right" className="drop-shadow">
         <ControlButton
           onClick={() => {
@@ -171,6 +177,13 @@ const Canvas = () => {
         </ControlButton>
       </Panel>
       <DraggedClass />
+      <input
+        ref={importJsonLdRef}
+        type="file"
+        accept="application/ld+json, application/json"
+        onChange={handleFileChange}
+        hidden
+      />
     </ReactFlow>
   );
 };
