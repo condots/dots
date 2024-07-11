@@ -430,5 +430,6 @@ export function unhideTreeNodes(nodeId: string) {
       };
     }
     node.data.hiddenNodes = [];
+    node.selected = false;
   });
 }
