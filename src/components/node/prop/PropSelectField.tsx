@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
-import { useNodeId } from 'reactflow';
+import { useNodeId } from '@xyflow/react';
 
 import { contentClass, itemClass } from '@/scripts/app-utils';
 import { useNodeProperty, setNodeProperty } from '@/store/flow';

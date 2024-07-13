@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { useNodeId } from 'reactflow';
+import { useNodeId } from '@xyflow/react';
 
 import { Property } from '@/types';
 import { appStore } from '@/store/app';

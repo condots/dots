@@ -13,17 +13,19 @@ import {
   EdgeLabelRenderer,
   useEdges,
   useOnSelectionChange,
-} from 'reactflow';
+  useInternalNode,
+} from '@xyflow/react';
 
-import type { Edge, EdgeProps } from 'reactflow';
+import type { Node, Edge, EdgeProps } from '@xyflow/react';
 
-import { getEdgeParams } from '@/scripts/flow-utils.js';
+import { getEdgeParams } from '@/scripts/edge-utils.js';
 import { parseIRI } from '@/scripts/app-utils';
+import { InternalClassNode, PropertyEdge } from '@/types';
 
 const connectionStartHandleSelector = state => state.connectionStartHandle;
 const connectionEndHandleSelector = state => state.connectionEndHandle;
 
-const PropertyEdge = ({
+const CustomPropertyEdge = ({
   id,
   source,
   target: edgeTarget,
@@ -33,7 +35,7 @@ const PropertyEdge = ({
   style,
   label,
   selected,
-}: EdgeProps) => {
+}: EdgeProps<PropertyEdge>) => {
   const connectionSource = useStore(connectionStartHandleSelector)?.nodeId;
   const connectionTarget = useStore(connectionEndHandleSelector)?.nodeId;
   const target = edgeTarget ?? connectionTarget;
@@ -43,19 +45,17 @@ const PropertyEdge = ({
     edge => edge.source === source && edge.target === target
   );
 
-  const sourceNode = useStore(
-    useCallback(store => store.nodeInternals.get(source), [source])
-  )!;
-  const targetNode = useStore(
-    useCallback(store => store.nodeInternals.get(target), [target])
-  )!;
+  const sourceNode = useInternalNode(source) as InternalClassNode;
+  const targetNode = useInternalNode(target) as InternalClassNode;
 
   const { sx, sy, tx, ty, sourcePos, targetPos } = getEdgeParams(
     sourceNode,
     targetNode ?? {
-      width: 5,
-      height: 5,
-      positionAbsolute: { x: targetX, y: targetY },
+      measured: {
+        width: 5,
+        height: 5,
+      },
+      internals: { positionAbsolute: { x: targetX, y: targetY } },
     }
   );
 
@@ -66,6 +66,7 @@ const PropertyEdge = ({
     targetPosition: targetPos,
     targetX: tx,
     targetY: ty,
+    borderRadius: 20,
   });
 
   const labelHeight = 27;
@@ -175,7 +176,6 @@ const PropertyEdge = ({
     transform: `translate(-50%, 0) translate(${labelX}px, ${labelY}px)`,
     height: labelHeight,
     marginTop: marginTop,
-    pointerEvents: 'all',
     zIndex: (edgeZIndex ?? 0) + 1000,
     visibility: creationInfoHidden ? 'hidden' : 'visible',
     opacity: dimEdge ? 0.1 : 1,
@@ -186,7 +186,7 @@ const PropertyEdge = ({
       <BaseEdge
         id={id}
         path={edgePath}
-        markerEnd={isRelationshipEdge ? null : markerEnd}
+        markerEnd={isRelationshipEdge ? undefined : markerEnd}
         style={pathStyle}
         interactionWidth={0}
       />
@@ -194,7 +194,7 @@ const PropertyEdge = ({
         <div
           ref={labelRef}
           style={labelStyle}
-          className={`nodrag nopan flex items-center cursor-pointer
+          className={`nodrag nopan flex items-center cursor-pointer pointer-events-auto
             font-medium text-xs text-spdx-dark border-spdx-dark
           `}
         >
@@ -211,4 +211,4 @@ const PropertyEdge = ({
   );
 };
 
-export default PropertyEdge;
+export default CustomPropertyEdge;

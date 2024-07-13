@@ -1,4 +1,4 @@
-import { Node, XYPosition } from 'reactflow';
+import { Node, InternalNode, XYPosition, Edge } from '@xyflow/react';
 
 export interface SharedFields {
   iri: IRI;
@@ -103,9 +103,16 @@ export type NodeData = {
   initialHidePosition?: XYPosition;
 };
 
+export type EdgeData = {
+  nodeProperty?: NodeProperty;
+};
+
 export type ClsPropMin = Record<string, number>;
 
-export type FlowNode = Node<NodeData>;
+export type ClassNode = Node<NodeData, 'class'>;
+export type InternalClassNode = InternalNode<ClassNode>;
+
+export type PropertyEdge = Edge<EdgeData, 'property'>;
 
 export type InputProperties = Map<LiteralPropertyTypes, InputProperty>;
 

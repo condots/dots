@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { ArrowRightIcon, ChevronRightIcon } from '@radix-ui/react-icons';
-import { Handle, Position, useNodeId } from 'reactflow';
+import { Handle, Position, useNodeId } from '@xyflow/react';
 
 import { ClassProperty, IRI } from '@/types';
 import {

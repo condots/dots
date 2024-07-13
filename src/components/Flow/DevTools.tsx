@@ -1,5 +1,5 @@
 import React, { type ReactNode, HTMLAttributes } from 'react';
-import { Panel } from 'reactflow';
+import { Panel } from '@xyflow/react';
 import { flowStore } from '@/store/flow';
 
 import '@/components/flow/devtools.css';

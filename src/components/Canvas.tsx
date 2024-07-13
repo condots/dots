@@ -11,7 +11,7 @@ import {
   ReactFlow,
   XYPosition,
   useReactFlow,
-} from 'reactflow';
+} from '@xyflow/react';
 
 import { appStore } from '@/store/app';
 import { getItem } from '@/store/onto';

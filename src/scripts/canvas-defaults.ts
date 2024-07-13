@@ -3,19 +3,19 @@ import {
   EdgeTypes,
   MarkerType,
   NodeTypes,
-} from 'reactflow';
+} from '@xyflow/react';
 
-import ClassNode from '@/components/node/ClassNode';
+import CustomClassNode from '@/components/node/CustomClassNode';
 import Origin from '@/components/Origin';
-import PropertyEdge from '@/components/edge/PropertyEdge';
+import CustomPropertyEdge from '@/components/edge/CustomPropertyEdge';
 
 export const nodeTypes = {
-  inst: ClassNode,
+  inst: CustomClassNode,
   origin: Origin,
 } satisfies NodeTypes;
 
 export const edgeTypes = {
-  inst: PropertyEdge,
+  inst: CustomPropertyEdge,
 } satisfies EdgeTypes;
 
 export const connectionLineStyle = {

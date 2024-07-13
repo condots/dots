@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
-import { useNodeId } from 'reactflow';
+import { useNodeId } from '@xyflow/react';
 
 import { ClassProperty, IRI } from '@/types';
 import { addNodeProperty, useNode, setNodeExpanded } from '@/store/flow';

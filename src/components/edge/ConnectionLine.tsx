@@ -1,9 +1,9 @@
 import React from 'react';
 
-import type { ConnectionLineComponentProps } from 'reactflow';
+import type { ConnectionLineComponentProps } from '@xyflow/react';
 
 import { appStore } from '@/store/app';
-import PropertyEdge from '@/components/edge/PropertyEdge';
+import CustomPropertyEdge from '@/components/edge/CustomPropertyEdge';
 
 function ConnectionLine({
   fromNode: sourceNode,
@@ -12,7 +12,7 @@ function ConnectionLine({
   connectionLineStyle: style,
 }: ConnectionLineComponentProps) {
   return (
-    <PropertyEdge
+    <CustomPropertyEdge
       id={'connection'}
       source={sourceNode!.id}
       targetX={toX}

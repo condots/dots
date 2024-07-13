@@ -1,9 +1,5 @@
 import React, { useEffect } from 'react';
 
-import 'primereact/resources/primereact.min.css';
-import 'primeicons/primeicons.css';
-import 'primeflex/primeflex.css';
-
 import { updateOntology } from '@/store/onto';
 import { updateMediaTypes } from '@/store/app';
 import InfoDialog from '@/components/InfoDialog';

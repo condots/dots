@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useNodeId } from 'reactflow';
+import { useNodeId } from '@xyflow/react';
 
 import { useNodeProperty, setNodeProperty } from '@/store/flow';
 

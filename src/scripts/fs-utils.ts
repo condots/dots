@@ -3,9 +3,9 @@ const { namedNode, literal, quad } = DataFactory;
 import { JsonLdSerializer } from 'jsonld-streaming-serializer';
 import jsonld, { JsonLdDocument } from 'jsonld';
 import { saveAs } from 'file-saver';
-import { XYPosition } from 'reactflow';
+import { XYPosition } from '@xyflow/react';
 
-import { ClassProperty, FlowNode, Property } from '@/types';
+import { ClassProperty, ClassNode, Property } from '@/types';
 import { appStore } from '@/store/app';
 import { getItem, ontoStore } from '@/store/onto';
 import {
@@ -39,7 +39,7 @@ interface ImportedNode {
 }
 type ImportedNodes = Record<string, ImportedNode>;
 
-function genNodeQuad(store: Store, subjects: SubjectMap, node: FlowNode) {
+function genNodeQuad(store: Store, subjects: SubjectMap, node: ClassNode) {
   const subject = node.data.inheritanceList.includes(
     'https://spdx.org/rdf/3.0.0/terms/Core/Element'
   )
@@ -51,7 +51,7 @@ function genNodeQuad(store: Store, subjects: SubjectMap, node: FlowNode) {
   subjects.set(node.id, subject);
 }
 
-function genPropQuads(store: Store, subject: Quad_Subject, node: FlowNode) {
+function genPropQuads(store: Store, subject: Quad_Subject, node: ClassNode) {
   for (const nodeProp of Object.values(node.data.nodeProps)) {
     if (!nodeProp.valid) throw new Error('propQuad is null');
 
@@ -67,7 +67,7 @@ function genPropQuads(store: Store, subject: Quad_Subject, node: FlowNode) {
   }
 }
 
-function genEdgeQuads(store: Store, subjects: SubjectMap, node: FlowNode) {
+function genEdgeQuads(store: Store, subjects: SubjectMap, node: ClassNode) {
   const sourceSubject = subjects.get(node.id)!;
   for (const edge of getNodeOutEdges(node.id)) {
     if (subjects.has(edge.target)) {
@@ -81,7 +81,7 @@ function genEdgeQuads(store: Store, subjects: SubjectMap, node: FlowNode) {
   }
 }
 
-function genSpdxGraph(nodes: FlowNode[]) {
+function genSpdxGraph(nodes: ClassNode[]) {
   const store = new Store();
   const subjects: SubjectMap = new Map();
   nodes.forEach(node => genNodeQuad(store, subjects, node));
@@ -101,7 +101,7 @@ function relativeToCanvasPosition(refPos: XYPosition, relPos: XYPosition) {
   return { x, y };
 }
 
-function getRelativePositions(nodes: FlowNode[], subjects: SubjectMap) {
+function getRelativePositions(nodes: ClassNode[], subjects: SubjectMap) {
   const id = subjects.get(nodes[0].id)!.id;
   const positions: NamedPositions = {
     [id]: { x: 0, y: 0 },
@@ -121,7 +121,7 @@ function getCanvasPositions(relPositions: NamedPositions, refPos: XYPosition) {
   return positions;
 }
 
-export async function exportSpdxJsonLd(filename: string, nodes?: FlowNode[]) {
+export async function exportSpdxJsonLd(filename: string, nodes?: ClassNode[]) {
   if (!nodes) {
     nodes = flowStore.getState().nodes;
   }

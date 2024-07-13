@@ -13,31 +13,30 @@ import {
   Connection,
   Edge,
   EdgeChange,
-  Node,
   NodeChange,
   OnNodesChange,
   OnEdgesChange,
   OnConnect,
   OnSelectionChangeFunc,
   OnNodesDelete,
-  NodeDragHandler,
   applyNodeChanges,
   applyEdgeChanges,
   getOutgoers,
   getIncomers,
-} from 'reactflow';
+} from '@xyflow/react';
 import type {
   ReactFlowInstance,
   OnInit,
   OnSelectionChangeParams,
   XYPosition,
-} from 'reactflow';
+  OnNodeDrag,
+} from '@xyflow/react';
 
 import {
   Class,
   ClassProperties,
   ClassProperty,
-  FlowNode,
+  ClassNode,
   IRI,
   NodeData,
   NodeProperty,
@@ -58,19 +57,19 @@ type DevtoolsActive = {
 };
 
 type RFState = {
-  nodes: FlowNode[];
+  nodes: ClassNode[];
   edges: Edge[];
   reactFlowInstance: ReactFlowInstance | undefined;
   devtoolsActive: DevtoolsActive;
-  onNodesChange: OnNodesChange;
+  onNodesChange: OnNodesChange<ClassNode>;
   onEdgesChange: OnEdgesChange;
   onConnect: OnConnect;
   onSelectionChange: OnSelectionChangeFunc;
-  onNodeDragStart: NodeDragHandler;
-  onNodeDragStop: NodeDragHandler;
+  onNodeDragStart: OnNodeDrag<ClassNode>;
+  onNodeDragStop: OnNodeDrag<ClassNode>;
   onInit: OnInit;
-  onNodesDelete: OnNodesDelete;
-  setNodes: (nodes: Node[]) => void;
+  onNodesDelete: OnNodesDelete<ClassNode>;
+  setNodes: (nodes: ClassNode[]) => void;
   setEdges: (edges: Edge[]) => void;
   setDevtoolsActive: (name: keyof DevtoolsActive) => void;
   reset: () => void;
@@ -156,18 +155,20 @@ export const flowStoreBase = create<RFState>()(
             onInit: (reactFlowInstance: ReactFlowInstance) => {
               set({ reactFlowInstance });
             },
-            onNodesDelete: (nodes: Node[]) => {
-              const nodesToDelete: Node[] = [];
+            onNodesDelete: (nodes: ClassNode[]) => {
+              const nodesToDelete: ClassNode[] = [];
               for (const node of nodes) {
                 const collapsedNodes = get().nodes.filter(n =>
                   node.data.hiddenNodes.includes(n.id)
                 );
                 nodesToDelete.push(...collapsedNodes);
               }
-              get().reactFlowInstance!.deleteElements({ nodes: nodesToDelete });
+              get().reactFlowInstance!.deleteElements({
+                nodes: [...nodesToDelete],
+              });
             },
-            setNodes: (nodes: Node[]) => {
-              set({ nodes });
+            setNodes: (nodes: ClassNode[]) => {
+              set({ nodes: [...nodes] });
             },
             setEdges: (edges: Edge[]) => {
               set({ edges });
@@ -247,7 +248,7 @@ export function addNode(
     hiddenNodes: [],
   };
 
-  const node: FlowNode = { id, position, data, type };
+  const node: ClassNode = { id, position, data, type };
   flowStore.setState(state => {
     state.nodes.push(node);
   });
@@ -306,7 +307,7 @@ export function isValidConnection(connection: Connection) {
   const nodes = state.nodes;
   const edges = state.edges;
   const target = nodes.find(node => node.id === connection.target);
-  const hasCycle = (node: Node, visited = new Set()) => {
+  const hasCycle = (node: ClassNode, visited = new Set()) => {
     if (visited.has(node.id)) return false;
     visited.add(node.id);
     for (const outgoer of getOutgoers(node, nodes, edges)) {
@@ -344,10 +345,10 @@ export function getNodeOutEdges(nodeId: string) {
   return flowStore.getState().edges.filter(edge => edge.source === nodeId);
 }
 
-export function getNodeTree(node: FlowNode) {
-  const queue: FlowNode[] = [node];
-  const visited = new Set<FlowNode>();
-  const result: FlowNode[] = [];
+export function getNodeTree(node: ClassNode) {
+  const queue: ClassNode[] = [node];
+  const visited = new Set<ClassNode>();
+  const result: ClassNode[] = [];
 
   while (queue.length) {
     const n = queue.shift()!;
@@ -374,7 +375,7 @@ export function outEdgeCount(nodeId: string, path: IRI) {
 }
 
 export function isUnmetClsProp(
-  node: FlowNode | undefined,
+  node: ClassNode | undefined,
   clsProp: ClassProperty
 ) {
   return node && clsProp.targetClass && clsProp.minCount
@@ -383,7 +384,7 @@ export function isUnmetClsProp(
 }
 
 export function hasUnmetProfileClsProps(
-  node: FlowNode | undefined,
+  node: ClassNode | undefined,
   clsProps: ClassProperties
 ) {
   for (const clsProp of Object.values(clsProps) || []) {
@@ -392,7 +393,7 @@ export function hasUnmetProfileClsProps(
   return false;
 }
 
-export function hasUnmetNodeClsProps(node: FlowNode | undefined) {
+export function hasUnmetNodeClsProps(node: ClassNode | undefined) {
   for (const clsProps of node?.data.recClsProps.values() || []) {
     if (hasUnmetProfileClsProps(node, clsProps)) return true;
   }

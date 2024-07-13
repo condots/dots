@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import type { NodeProps } from 'reactflow';
+import type { NodeProps } from '@xyflow/react';
 import {
   Position,
   Handle,
@@ -8,12 +8,12 @@ import {
   useOnSelectionChange,
   Edge,
   Node,
-} from 'reactflow';
+} from '@xyflow/react';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { Separator } from '@radix-ui/react-separator';
 
-import type { NodeData } from '@/types';
+import type { ClassNode } from '@/types';
 import { appStore } from '@/store/app';
 import {
   getNodeIncomers,
@@ -27,17 +27,17 @@ import Tooltip from '@/components/Tooltip';
 import PropFields from '@/components/node/prop/PropFields';
 import { parseIRI, preferredLabels } from '@/scripts/app-utils';
 
-import '@/components/node/ClassNode.css';
+import '@/components/node/CustomClassNode.css';
 
 const connectionStartHandleSelector = state => state.connectionStartHandle;
 const connectionEndHandleSelector = state => state.connectionEndHandle;
 
-const ClassNode = ({
+const CustomClassNode = ({
   id: nodeId,
   data,
   selected,
   dragging,
-}: NodeProps<NodeData>) => {
+}: NodeProps<ClassNode>) => {
   const [tooltipDisabled, setTooltipDisabled] = useState(false);
   const [subtitle, setSubtitle] = useState('');
   const textRef = useRef<HTMLSpanElement | null>(null);
@@ -60,6 +60,7 @@ const ClassNode = ({
       position={Position.Left}
       className="targetHandle"
       isConnectable={isTargetHandleConnectable}
+      hidden
     ></Handle>
   );
 
@@ -131,18 +132,17 @@ const ClassNode = ({
 
   const onChange = useCallback(
     ({ nodes, edges }: { nodes: Node[]; edges: Edge[] }) => {
-      const nodeIds = nodes.map(n => n.id);
-      const outgoersIds = getNodeOutgoers(nodeId!).map(node => node.id);
-      const incomersIds = getNodeIncomers(nodeId).map(node => node.id);
-      const dim =
-        !selected &&
-        nodeIds.length > 0 &&
-        nodeIds.every(
-          n => !outgoersIds.includes(n) && !incomersIds.includes(n)
+      let dim = false;
+      if (nodes.length > 0) {
+        const outgoersIds = getNodeOutgoers(nodeId).map(n => n.id);
+        const incomersIds = getNodeIncomers(nodeId).map(n => n.id);
+        dim = nodes.every(
+          n => ![nodeId, ...outgoersIds, ...incomersIds].includes(n.id)
         );
+      }
       setDimNode(dim);
     },
-    [nodeId, selected]
+    [nodeId]
   );
 
   useOnSelectionChange({ onChange });
@@ -212,11 +212,11 @@ const ClassNode = ({
             <PropFields />
           </div>
         </Collapsible.Content>
+        <Handle type="source" position={Position.Right} hidden />
+        {targetHandle}
       </Collapsible.Root>
-      <Handle type="source" position={Position.Right} hidden />
-      {targetHandle}
     </div>
   );
 };
 
-export default ClassNode;
+export default CustomClassNode;

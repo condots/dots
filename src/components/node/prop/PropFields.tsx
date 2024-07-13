@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 
-import { useNodeId } from 'reactflow';
+import { useNodeId } from '@xyflow/react';
 
 import { useNode } from '@/store/flow';
 import PropSelectField from '@/components/node/prop/PropSelectField';

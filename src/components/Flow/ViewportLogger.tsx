@@ -1,5 +1,5 @@
 import React from 'react';
-import { Panel, useStore } from 'reactflow';
+import { Panel, useStore } from '@xyflow/react';
 
 export default function ViewportLogger() {
   const viewport = useStore(
