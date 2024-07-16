@@ -8,6 +8,7 @@ import {
   useOnSelectionChange,
   Edge,
   Node,
+  useReactFlow,
 } from '@xyflow/react';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import * as Collapsible from '@radix-ui/react-collapsible';
@@ -16,11 +17,10 @@ import { Separator } from '@radix-ui/react-separator';
 import type { ClassNode } from '@/types';
 import { appStore } from '@/store/app';
 import {
+  collapseNode,
+  expandNode,
   getNodeIncomers,
   getNodeOutgoers,
-  hideTreeNodes,
-  setNodeExpanded,
-  unhideTreeNodes,
 } from '@/store/flow';
 import NodeMenu from '@/components/node/menu/NodeMenu';
 import Tooltip from '@/components/Tooltip';
@@ -38,14 +38,16 @@ const CustomClassNode = ({
   selected,
   dragging,
 }: NodeProps<ClassNode>) => {
+  const { updateNodeData } = useReactFlow();
   const [tooltipDisabled, setTooltipDisabled] = useState(false);
   const [subtitle, setSubtitle] = useState('');
   const textRef = useRef<HTMLSpanElement | null>(null);
-  const showExpandButton = Object.entries(data.nodeProps).length > 0;
+  const displayPropFieldsToggle = !!Object.entries(data.nodeProps).length;
   const connectionSource = useStore(connectionStartHandleSelector)?.nodeId;
   const connectionEndHandle = useStore(connectionEndHandleSelector);
   const isPotentialConnection = connectionEndHandle?.nodeId === nodeId;
   const draggedPropData = appStore.use.draggedPropData();
+  const isCollapsed = !!data.collapsedPosition;
 
   const isTargetHandleConnectable =
     nodeId !== connectionSource &&
@@ -53,16 +55,6 @@ const CustomClassNode = ({
       data.inheritanceList.includes(
         draggedPropData?.classProperty.targetClass
       ));
-
-  const targetHandle = (
-    <Handle
-      type="target"
-      position={Position.Left}
-      className="targetHandle"
-      isConnectable={isTargetHandleConnectable}
-      hidden
-    ></Handle>
-  );
 
   const menuButton = (
     <div className="min-w-[23px] h-[24px] flex items-center justify-center">
@@ -72,7 +64,7 @@ const CustomClassNode = ({
 
   const expandButton = (
     <div className="min-w-[23px] h-[24px] flex items-center justify-center">
-      {showExpandButton && (
+      {displayPropFieldsToggle && (
         <Collapsible.Trigger asChild>
           <button
             className="nopan outline-none p-1 rounded text-spdx-dark
@@ -94,10 +86,10 @@ const CustomClassNode = ({
   }, [data.cls.name, selected]);
 
   useEffect(() => {
-    if (!showExpandButton && data.expanded) {
-      setNodeExpanded(nodeId, false);
+    if (!displayPropFieldsToggle && data.showPropFields) {
+      updateNodeData(nodeId, { showPropFields: false });
     }
-  }, [showExpandButton, data.expanded, nodeId]);
+  }, [displayPropFieldsToggle, data.showPropFields, nodeId, updateNodeData]);
 
   useEffect(() => {
     if (!data.nodeProps) return;
@@ -147,6 +139,11 @@ const CustomClassNode = ({
 
   useOnSelectionChange({ onChange });
 
+  const toggleCollapsed = useCallback(() => {
+    if (data.collapsed) expandNode(nodeId);
+    else collapseNode(nodeId);
+  }, [nodeId, data.collapsed]);
+
   if (!data.cls) {
     return null;
   }
@@ -155,18 +152,14 @@ const CustomClassNode = ({
       className={`
         relative p-1 font-lato rounded
         ${dimNode && !isTargetHandleConnectable && !isPotentialConnection ? 'opacity-10 transition-none' : 'transition-opacity'}
-        ${data.hiddenNodes.length ? 'stock-effect' : ''}
+        ${isCollapsed ? 'stock-effect' : ''}
         ${selected ? 'stock-effect-selected' : ''}
       `}
-      onDoubleClick={() =>
-        data.hiddenNodes.length
-          ? unhideTreeNodes(nodeId)
-          : hideTreeNodes(nodeId)
-      }
+      onDoubleClick={toggleCollapsed}
     >
       <Collapsible.Root
-        open={data.expanded}
-        onOpenChange={open => setNodeExpanded(nodeId, open)}
+        open={data.showPropFields}
+        onOpenChange={open => updateNodeData(nodeId, { showPropFields: open })}
         className={`
           cursor-move rounded w-64 min-h-20 bg-white shadow-2 outline outline-spdx-dark outline-1 p-2
           ${selected && 'outline-[3px]'}
@@ -212,9 +205,14 @@ const CustomClassNode = ({
             <PropFields />
           </div>
         </Collapsible.Content>
-        <Handle type="source" position={Position.Right} hidden />
-        {targetHandle}
       </Collapsible.Root>
+      <Handle type="source" position={Position.Right} hidden />
+      <Handle
+        type="target"
+        position={Position.Left}
+        className="targetHandle"
+        isConnectable={isTargetHandleConnectable}
+      ></Handle>
     </div>
   );
 };

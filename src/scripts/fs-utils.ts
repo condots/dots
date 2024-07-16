@@ -11,10 +11,10 @@ import { getItem, ontoStore } from '@/store/onto';
 import {
   addNode,
   addNodeProperty,
+  collapseNode,
   flowStore,
   getNode,
   getNodeOutEdges,
-  hideTreeNodes,
   selectNode,
   setNodeProperty,
 } from '@/store/flow';
@@ -202,7 +202,7 @@ export async function importSpdxJsonLd(
       classIRI: classIRI!,
       position: positions[s.value] ?? refPos,
     };
-    addNode('inst', impNode.id, impNode.classIRI, impNode.position);
+    addNode(impNode.id, impNode.classIRI, impNode.position);
     impNodes[s.value] = impNode;
   }
 
@@ -249,6 +249,6 @@ export async function importSpdxJsonLd(
   const collapsedNode =
     Object.values(impNodes).find(n => n.classIRI.endsWith('/SpdxDocument')) ??
     impNodes[0];
-  hideTreeNodes(collapsedNode.id);
+  collapseNode(collapsedNode.id);
   selectNode(collapsedNode.id);
 }

@@ -94,25 +94,22 @@ export type NodeProperty = {
 
 export type NodeData = {
   active: boolean;
-  expanded: boolean;
+  showPropFields: boolean;
   cls: Class;
   inheritanceList: string[];
   nodeProps: Record<string, NodeProperty>;
   recClsProps: Map<string, ClassProperties>;
-  hiddenNodes: string[];
-  initialHidePosition?: XYPosition;
-};
-
-export type EdgeData = {
-  nodeProperty?: NodeProperty;
+  collapsed: boolean;
+  collapsedNodes: string[];
+  collapsedPosition?: XYPosition;
 };
 
 export type ClsPropMin = Record<string, number>;
 
-export type ClassNode = Node<NodeData, 'class'>;
+export type ClassNode = Node<NodeData, 'inst'>;
 export type InternalClassNode = InternalNode<ClassNode>;
 
-export type PropertyEdge = Edge<EdgeData, 'property'>;
+export type PropertyEdge = Edge<DraggedPropData, 'inst'>;
 
 export type InputProperties = Map<LiteralPropertyTypes, InputProperty>;
 
@@ -139,10 +136,10 @@ export interface DraggedClassData {
   classProperty?: ClassProperty;
 }
 
-export interface DraggedPropData {
+export type DraggedPropData = {
   classProperty: ClassProperty;
   sourceNodeId: string;
-}
+};
 
 export type OntologyMetadata = Record<string, string>;
 // export interface OntologyMetadata {

@@ -5,19 +5,20 @@ import { generateURN, parseIRI } from '@/scripts/app-utils';
 import { addNode, screenToCanvas } from '@/store/flow';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import { Separator } from '@radix-ui/react-separator';
+import { XYPosition } from '@xyflow/react';
 
 const DraggedClass = () => {
   const data = appStore.use.draggedClassData();
   const [dragging, setDragging] = useState(false);
-  const [position, setPosition] = useState({});
-  const [offset, setOffset] = useState({});
-  const draggableRef = useRef(null);
+  const [position, setPosition] = useState<XYPosition | null>(null);
+  const [offset, setOffset] = useState<XYPosition | null>(null);
+  const draggableRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!data) return;
 
     const handleMouseMove = e => {
-      if (dragging) {
+      if (dragging && offset) {
         setPosition({
           x: e.clientX - offset.x,
           y: e.clientY - offset.y,
@@ -28,15 +29,14 @@ const DraggedClass = () => {
     const handleMouseUp = e => {
       if (dragging) {
         addNode(
-          'inst',
           generateURN(),
           data.targetClass,
           screenToCanvas(e.clientX - 128, e.clientY - 26)
         );
       }
       setDragging(false);
-      setOffset({});
-      setPosition({});
+      setOffset(null);
+      setPosition(null);
       appStore.setState(state => (state.draggedClassData = undefined));
     };
 
@@ -68,10 +68,11 @@ const DraggedClass = () => {
         className="p-1 rounded font-lato"
         style={{
           position: 'absolute',
-          left: `${position.x + 4}px`,
-          top: `${position.y - 2}px`,
+          left: position ? `${position.x + 4}px` : '',
+          top: position ? `${position.y - 2}px` : '',
           cursor: dragging ? 'grabbing' : 'grab',
           userSelect: 'none',
+          opacity: position ? 1 : 0,
         }}
       >
         <div className="cursor-move rounded w-64 min-h-20 bg-white outline-spdx-dark outline shadow-4">

@@ -2,10 +2,10 @@ import React, { useMemo } from 'react';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
-import { useNodeId } from '@xyflow/react';
+import { useNodeId, useReactFlow } from '@xyflow/react';
 
 import { ClassProperty, IRI } from '@/types';
-import { addNodeProperty, useNode, setNodeExpanded } from '@/store/flow';
+import { addNodeProperty, useNode } from '@/store/flow';
 import {
   contentClass,
   getClassPropertyIcon,
@@ -15,6 +15,7 @@ import {
 import { ontoStore } from '@/store/onto';
 
 const NodeMenuProp = () => {
+  const { updateNodeData } = useReactFlow();
   const nodeId = useNodeId()!;
   const node = useNode(nodeId);
 
@@ -38,7 +39,7 @@ const NodeMenuProp = () => {
     ) => {
       if (event.metaKey) event.preventDefault();
       addNodeProperty(node.id, classProperty);
-      setNodeExpanded(node.id, true);
+      updateNodeData(node.id, { showPropFields: true });
     };
 
     const recClsProps = ontoStore.getState().allRecClsProps![node.data.cls.iri];
@@ -82,7 +83,7 @@ const NodeMenuProp = () => {
       }
     }
     return classItems;
-  }, [node]);
+  }, [node, updateNodeData]);
 
   return items.length > 0 ? (
     <DropdownMenu.Sub>

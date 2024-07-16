@@ -45,7 +45,6 @@ const Canvas = () => {
       const data = appStore.getState().draggedPropData;
       if (data && !getItem(data.classProperty.targetClass)!.abstract) {
         const targetNodeId = addNode(
-          'inst',
           generateURN(),
           data.classProperty.targetClass,
           screenToCanvas(e.clientX - 128, e.clientY - 26)
@@ -127,6 +126,7 @@ const Canvas = () => {
       snapToGrid={true}
       snapGrid={snapGrid}
       onNodesDelete={flowStore.getState().onNodesDelete}
+      onBeforeDelete={flowStore.getState().onBeforeDelete}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
     >

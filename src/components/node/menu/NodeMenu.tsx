@@ -3,35 +3,36 @@ import React, { useCallback, useMemo } from 'react';
 import sanitize from 'sanitize-filename';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
-import { useNodeId } from '@xyflow/react';
+import { useInternalNode, useNodeId } from '@xyflow/react';
 
 import { appStore } from '@/store/app';
 import { contentClass, itemClass } from '@/scripts/app-utils';
 import {
   deleteNode,
-  useNode,
   hasUnmetNodeClsProps,
   selectNode,
   selectEdge,
   getNodeTree,
-  unhideTreeNodes,
-  hideTreeNodes,
+  expandNode,
+  collapseNode,
 } from '@/store/flow';
 import NodeMenuClass from '@/components/node/menu/NodeMenuClass';
 import NodeMenuProp from '@/components/node/menu/NodeMenuProp';
 import { exportSpdxJsonLd } from '@/scripts/fs-utils';
+import { InternalClassNode } from '@/types';
 
 const NodeMenu = () => {
   const nodeId = useNodeId()!;
-  const node = useNode(nodeId);
-  const invalidProps = node?.data.nodeProps
-    ? Object.entries(node.data.nodeProps).filter(p => !p[1].valid)
+  const node = useInternalNode(nodeId) as InternalClassNode;
+  const data = node.data;
+  const invalidProps = data.nodeProps
+    ? Object.entries(data.nodeProps).filter(p => !p[1].valid)
     : [];
   const unmetNodeClsProps = hasUnmetNodeClsProps(node);
 
   const Save = useMemo(() => {
-    if (node?.data.cls.name !== 'SpdxDocument') return null;
-    const name = (Object.values(node.data.nodeProps).find(
+    if (data.cls.name !== 'SpdxDocument') return null;
+    const name = (Object.values(data.nodeProps).find(
       p => p.classProperty.name === 'name'
     )?.value ?? `spdx-doc-${~~(Date.now() / 1000)}`) as string;
     const filename = `${sanitize(name)}.json`;
@@ -44,14 +45,14 @@ const NodeMenu = () => {
         {`Save as "${filename}"`}
       </DropdownMenu.Item>
     );
-  }, [node]);
+  }, [node, data.cls.name, data.nodeProps]);
 
   const GetInfo = (
     <DropdownMenu.Item
       className={itemClass}
       onSelect={() => {
         appStore.setState(state => {
-          state.selectedInfoIri = node?.data.cls.iri;
+          state.selectedInfoIri = data?.cls.iri;
           state.showInfoDialog = true;
         });
       }}
@@ -69,27 +70,10 @@ const NodeMenu = () => {
     </DropdownMenu.Item>
   );
 
-  const HideTree = (
-    <DropdownMenu.Item
-      className={itemClass}
-      onSelect={() => {
-        hideTreeNodes(nodeId);
-      }}
-    >
-      Collapse
-    </DropdownMenu.Item>
-  );
-
-  const UnhideTree = (
-    <DropdownMenu.Item
-      className={itemClass}
-      onSelect={() => {
-        unhideTreeNodes(nodeId);
-      }}
-    >
-      Expand
-    </DropdownMenu.Item>
-  );
+  const toggleCollapsed = useCallback(() => {
+    if (data.collapsed) expandNode(nodeId);
+    else collapseNode(nodeId);
+  }, [nodeId, data.collapsed]);
 
   return (
     <DropdownMenu.Root
@@ -122,7 +106,15 @@ const NodeMenu = () => {
         <DropdownMenu.Content className={contentClass + ' p-1'} align="start">
           <NodeMenuProp />
           <NodeMenuClass />
-          {node?.data.hiddenNodes.length == 0 ? HideTree : UnhideTree}
+          <DropdownMenu.Item
+            className={itemClass}
+            onSelect={() => {
+              toggleCollapsed();
+            }}
+          >
+            {data.collapsed ? 'Expand' : 'Collapse'}
+          </DropdownMenu.Item>
+
           {GetInfo}
           {Delete}
           {Save}

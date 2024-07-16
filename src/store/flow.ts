@@ -11,14 +11,12 @@ import createSelectors from '@/store/createSelectors';
 
 import {
   Connection,
-  Edge,
-  EdgeChange,
-  NodeChange,
   OnNodesChange,
   OnEdgesChange,
   OnConnect,
   OnSelectionChangeFunc,
   OnNodesDelete,
+  OnBeforeDelete,
   applyNodeChanges,
   applyEdgeChanges,
   getOutgoers,
@@ -27,7 +25,6 @@ import {
 import type {
   ReactFlowInstance,
   OnInit,
-  OnSelectionChangeParams,
   XYPosition,
   OnNodeDrag,
 } from '@xyflow/react';
@@ -40,6 +37,7 @@ import {
   IRI,
   NodeData,
   NodeProperty,
+  PropertyEdge,
 } from '@/types';
 import { getItem, ontoStore } from '@/store/onto';
 import {
@@ -48,7 +46,7 @@ import {
   isNodePropertyValid,
   generateURN,
 } from '@/scripts/app-utils';
-import { appStore } from './app';
+import { appStore } from '@/store/app';
 
 type DevtoolsActive = {
   nodeInspector: boolean;
@@ -58,19 +56,21 @@ type DevtoolsActive = {
 
 type RFState = {
   nodes: ClassNode[];
-  edges: Edge[];
-  reactFlowInstance: ReactFlowInstance | undefined;
+  edges: PropertyEdge[];
+  reactFlowInstance: ReactFlowInstance<ClassNode, PropertyEdge> | undefined;
   devtoolsActive: DevtoolsActive;
+  nodesToDelete: string[];
   onNodesChange: OnNodesChange<ClassNode>;
-  onEdgesChange: OnEdgesChange;
+  onEdgesChange: OnEdgesChange<PropertyEdge>;
   onConnect: OnConnect;
   onSelectionChange: OnSelectionChangeFunc;
   onNodeDragStart: OnNodeDrag<ClassNode>;
   onNodeDragStop: OnNodeDrag<ClassNode>;
-  onInit: OnInit;
+  onInit: OnInit<ClassNode, PropertyEdge>;
   onNodesDelete: OnNodesDelete<ClassNode>;
+  onBeforeDelete: OnBeforeDelete<ClassNode, PropertyEdge>;
   setNodes: (nodes: ClassNode[]) => void;
-  setEdges: (edges: Edge[]) => void;
+  setEdges: (edges: PropertyEdge[]) => void;
   setDevtoolsActive: (name: keyof DevtoolsActive) => void;
   reset: () => void;
 };
@@ -78,6 +78,7 @@ type RFState = {
 const initialState = {
   nodes: [],
   edges: [],
+  nodesToDelete: [],
   reactFlowInstance: undefined,
   devtoolsActive: {
     nodeInspector: false,
@@ -105,21 +106,20 @@ export const flowStoreBase = create<RFState>()(
         persist(
           (set, get) => ({
             ...initialState,
-            onNodesChange: (changes: NodeChange[]) => {
+            onNodesChange: changes => {
               set(state => {
                 state.nodes = applyNodeChanges(changes, state.nodes);
               });
             },
-            onEdgesChange: (changes: EdgeChange[]) => {
+            onEdgesChange: changes => {
               set({
                 edges: applyEdgeChanges(changes, get().edges),
               });
             },
-            onConnect: (connection: Connection) => {
-              const newEdge = {
+            onConnect: connection => {
+              const newEdge: PropertyEdge = {
                 ...connection,
                 id: generateURN(),
-                type: 'inst',
                 source: connection.source!,
                 target: connection.target!,
                 label: appStore.getState().draggedPropData?.classProperty.name,
@@ -132,12 +132,12 @@ export const flowStoreBase = create<RFState>()(
                 state.edges = [...state.edges, newEdge];
               });
             },
-            onSelectionChange: (params: OnSelectionChangeParams) => {
+            onSelectionChange: params => {
               const selectedNodes = params.nodes.map(param => param.id);
               set(state => {
                 state.nodes.forEach(n => {
                   if (!selectedNodes.includes(n.id)) {
-                    n.data.expanded = false;
+                    n.data.showPropFields = false;
                   }
                 });
               });
@@ -152,28 +152,46 @@ export const flowStoreBase = create<RFState>()(
                 state.nodes.find(n => n.id === node.id)!.data.active = false;
               });
             },
-            onInit: (reactFlowInstance: ReactFlowInstance) => {
+            onInit: reactFlowInstance => {
               set({ reactFlowInstance });
             },
-            onNodesDelete: (nodes: ClassNode[]) => {
-              const nodesToDelete: ClassNode[] = [];
-              for (const node of nodes) {
-                const collapsedNodes = get().nodes.filter(n =>
-                  node.data.hiddenNodes.includes(n.id)
-                );
-                nodesToDelete.push(...collapsedNodes);
+            onNodesDelete: nodes => {
+              const toDelete: ClassNode[] = [];
+              for (const nid of get().nodesToDelete) {
+                const nn = get().nodes.find(n => n.id === nid);
+                nn && toDelete.push(nn);
               }
-              get().reactFlowInstance!.deleteElements({
-                nodes: [...nodesToDelete],
+              set(state => {
+                state.nodesToDelete = [];
               });
+              toDelete.length &&
+                get().reactFlowInstance!.deleteElements({
+                  nodes: toDelete,
+                });
             },
-            setNodes: (nodes: ClassNode[]) => {
+            onBeforeDelete: async ({ nodes, edges }) => {
+              const toDelete = new Set<string>();
+              for (const node of nodes) {
+                if (node.data.collapsed) {
+                  const tree = getNodeTree(node).slice(1);
+                  if (tree.length) {
+                    tree.map(n => n.id).forEach(toDelete.add, toDelete);
+                  }
+                }
+              }
+              toDelete.size &&
+                set(state => {
+                  state.nodesToDelete = [...toDelete];
+                });
+              return true;
+            },
+            setNodes: nodes => {
               set({ nodes: [...nodes] });
             },
-            setEdges: (edges: Edge[]) => {
+            setEdges: edges => {
               set({ edges });
             },
-            setDevtoolsActive: (name: keyof DevtoolsActive) =>
+            setDevtoolsActive: name =>
               set(state => {
                 state.devtoolsActive[name] = !state.devtoolsActive[name];
               }),
@@ -201,7 +219,8 @@ export function getNode(nodeId: string | undefined) {
 }
 
 export function useNodeProperties(nodeId: string | undefined) {
-  if (nodeId) return useNode(nodeId)?.data.nodeProps;
+  const node = useNode(nodeId);
+  if (node) return node.data.nodeProps;
 }
 
 export function useNodeProperty(
@@ -231,24 +250,20 @@ export function selectEdge(edgeId?: string) {
 export const screenToCanvas = (x: number, y: number) =>
   flowStore.getState().reactFlowInstance!.screenToFlowPosition({ x, y });
 
-export function addNode(
-  type: string,
-  id: string,
-  classIRI: IRI,
-  position: XYPosition
-) {
+export function addNode(id: string, classIRI: IRI, position: XYPosition) {
   const recClsProps = ontoStore.getState().allRecClsProps![classIRI];
   const data: NodeData = {
     active: false,
-    expanded: false,
+    showPropFields: false,
     cls: getItem(classIRI) as Class,
     inheritanceList: [...recClsProps.keys()],
     nodeProps: initNodeProps(recClsProps),
     recClsProps: recClsProps,
-    hiddenNodes: [],
+    collapsed: false,
+    collapsedNodes: [],
   };
 
-  const node: ClassNode = { id, position, data, type };
+  const node: ClassNode = { id, position, data, type: 'inst' };
   flowStore.setState(state => {
     state.nodes.push(node);
   });
@@ -319,12 +334,6 @@ export function isValidConnection(connection: Connection) {
   return !hasCycle(target!);
 }
 
-export function setNodeExpanded(nodeId: string, open: boolean) {
-  flowStore.setState(state => {
-    state.nodes.find(n => n.id === nodeId)!.data.expanded = open;
-  });
-}
-
 export function getNodeOutgoers(nodeId: string) {
   const state = flowStore.getState();
   const nodes = state.nodes;
@@ -333,10 +342,15 @@ export function getNodeOutgoers(nodeId: string) {
   return node ? getOutgoers(node, nodes, edges) : [];
 }
 
-export function getNodeIncomers(nodeId: string) {
+export function getNodeIncomers(
+  nodeId: string,
+  onlyFromRelationship: boolean = false
+) {
   const state = flowStore.getState();
   const nodes = state.nodes;
-  const edges = state.edges;
+  const edges = state.edges.filter(
+    e => !onlyFromRelationship || e.data?.classProperty.name === 'from'
+  );
   const node = nodes.find(node => node.id === nodeId);
   return node ? getIncomers(node, nodes, edges) : [];
 }
@@ -345,11 +359,12 @@ export function getNodeOutEdges(nodeId: string) {
   return flowStore.getState().edges.filter(edge => edge.source === nodeId);
 }
 
-export function getNodeTree(node: ClassNode) {
+export function getNodeTree(node: ClassNode, stopAtCollapsed = true) {
   const queue: ClassNode[] = [node];
   const visited = new Set<ClassNode>();
   const result: ClassNode[] = [];
 
+  let isRoot = true;
   while (queue.length) {
     const n = queue.shift()!;
 
@@ -357,7 +372,13 @@ export function getNodeTree(node: ClassNode) {
       visited.add(n);
       result.push(n);
 
-      for (const nn of [...getNodeOutgoers(n.id), ...getNodeIncomers(n.id)]) {
+      if (!isRoot && stopAtCollapsed && n.data.collapsed) continue;
+      isRoot = false;
+
+      const outgoers = getNodeOutgoers(n.id);
+      const incomers = getNodeIncomers(n.id, true);
+
+      for (const nn of [...outgoers, ...incomers]) {
         queue.push(nn);
       }
     }
@@ -369,7 +390,7 @@ export function outEdgeCount(nodeId: string, path: IRI) {
   const edges = flowStore
     .getState()
     .edges.filter(
-      edge => edge.data.classProperty.path === path && edge.source === nodeId
+      edge => edge.data?.classProperty.path === path && edge.source === nodeId
     );
   return edges?.length || 0;
 }
@@ -400,29 +421,37 @@ export function hasUnmetNodeClsProps(node: ClassNode | undefined) {
   return false;
 }
 
-export function hideTreeNodes(nodeId: string) {
+export function collapseNode(nodeId: string) {
   flowStore.setState(state => {
     const node = state.nodes.find(n => n.id === nodeId);
-    if (!node || node.data.hiddenNodes.length > 0) return;
-    node.data.hiddenNodes = getNodeTree(node)
+    if (!node || node.data.collapsed) return;
+    const tree = getNodeTree(node)
+      .slice(1)
       .filter(n => n.id !== node.id)
       .map(n => n.id);
-    for (const hn of node.data.hiddenNodes) {
+    if (tree.length === 0) return;
+    for (const hn of tree) {
       state.nodes.find(n => n.id === hn)!.hidden = true;
     }
-    node.data.initialHidePosition = node.position;
+    node.data.collapsedPosition = node.position;
+    node.data.collapsed = true;
   });
 }
 
-export function unhideTreeNodes(nodeId: string) {
+export function expandNode(nodeId: string) {
   flowStore.setState(state => {
     const node = state.nodes.find(n => n.id === nodeId);
-    if (!node || node.data.hiddenNodes.length === 0) return;
+    if (!node || !node.data.collapsed) return;
+    node.data.collapsed = false;
+    const tree = getNodeTree(node)
+      .slice(1)
+      .map(n => n.id);
+    const { x, y } = node.data.collapsedPosition!;
     const offset = {
-      x: node.position.x - node.data.initialHidePosition!.x,
-      y: node.position.y - node.data.initialHidePosition!.y,
+      x: node.position.x - x,
+      y: node.position.y - y,
     };
-    for (const hn of node.data.hiddenNodes) {
+    for (const hn of tree) {
       const nd = state.nodes.find(n => n.id === hn)!;
       nd.hidden = false;
       nd.position = {
@@ -430,7 +459,67 @@ export function unhideTreeNodes(nodeId: string) {
         y: nd.position.y + offset.y,
       };
     }
-    node.data.hiddenNodes = [];
-    node.selected = false;
+    node.data.collapsedPosition = undefined;
   });
 }
+
+// export function expandNode(nodeId: string) {
+//   flowStore.setState(state => {
+//     const node = state.nodes.find(n => n.id === nodeId);
+//     if (!node || node.data.hiddenNodes.length === 0) return;
+//     const offset = {
+//       x: node.position.x - node.data.initialCollapsedPosition!.x,
+//       y: node.position.y - node.data.initialCollapsedPosition!.y,
+//     };
+//     for (const hn of node.data.hiddenNodes) {
+//       const nd = state.nodes.find(n => n.id === hn)!;
+//       nd.hidden = false;
+//       nd.position = {
+//         x: nd.position.x + offset.x,
+//         y: nd.position.y + offset.y,
+//       };
+//     }
+//     node.data.hiddenNodes = [];
+//     node.selected = false;
+//   });
+// }
+
+// const unsCollapsedNodes = flowStore.subscribe(
+//   state => new Set(state.nodes.filter(n => n.data.collapsed).map(n => n.id)),
+//   (collapsed, prevCollapsed) => {
+//     if (!isEqual(collapsed, prevCollapsed)) {
+//       // console.log('Collapsed added:', collapsed.difference(prevCollapsed));
+//       // console.log('Collapsed removed:', prevCollapsed.difference(collapsed));
+//       for (const nodeId of collapsed.difference(prevCollapsed)) {
+//         const node = getNode(nodeId)!;
+//         const tree = getNodeTree(node)
+//           .slice(1)
+//           .map(n => n.id);
+//         flowStore.setState(state => {
+//           const nodes = [...state.nodes];
+//           nodes.forEach(n => {
+//             if (tree.includes(n.id)) {
+//               n.hidden = true;
+//             }
+//           });
+//           state.nodes = nodes;
+//         });
+//       }
+//       for (const nodeId of prevCollapsed.difference(collapsed)) {
+//         const node = getNode(nodeId)!;
+//         const tree = getNodeTree(node)
+//           .slice(1)
+//           .map(n => n.id);
+//         flowStore.setState(state => {
+//           const nodes = [...state.nodes];
+//           nodes.forEach(n => {
+//             if (tree.includes(n.id)) {
+//               n.hidden = false;
+//             }
+//           });
+//           state.nodes = nodes;
+//         });
+//       }
+//     }
+//   }
+// );
