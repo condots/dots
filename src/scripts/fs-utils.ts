@@ -1,6 +1,6 @@
 import { Store, DataFactory, Quad_Subject, Quad } from 'n3';
 const { namedNode, literal, quad } = DataFactory;
-import { JsonLdSerializer } from 'jsonld-streaming-serializer';
+import SerializerJsonld from '@rdfjs/serializer-jsonld';
 import jsonld, { JsonLdDocument } from 'jsonld';
 import { saveAs } from 'file-saver';
 import { XYPosition } from 'reactflow';
@@ -114,15 +114,12 @@ export async function exportSpdxJsonLd(filename: string, nodes?: FlowNode[]) {
     nodes = flowStore.getState().nodes;
   }
   const { store, subjects } = genSpdxGraph(nodes);
-  const data: string[] = await new Promise((resolve, reject) => {
-    const data: string[] = [];
-    new JsonLdSerializer()
+  const doc: JsonLdDocument = await new Promise((resolve, reject) => {
+    new SerializerJsonld()
       .import(store.match(null, null, null, null))
-      .on('data', d => data.push(d))
       .on('error', reject)
-      .on('end', () => resolve(data));
+      .on('data', resolve);
   });
-  const doc: JsonLdDocument = JSON.parse(data.join(' '));
   const ctx = ontoStore.getState().jsonLdContext!;
   const compacted = await jsonld.compact(doc, ctx);
 

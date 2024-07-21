@@ -49,15 +49,12 @@ const ClassNode = ({
   const connectionEndHandle = useStore(connectionEndHandleSelector);
   const isPotentialConnection = connectionEndHandle?.nodeId === nodeId;
   const draggedPropData = appStore.use.draggedPropData();
+  const targetClass = draggedPropData?.classProperty.targetClass ?? '';
 
   const isTargetHandleConnectable =
     nodeId !== connectionSource &&
-    (draggedPropData?.classProperty.targetClass === data.cls.iri ||
-      // (draggedPropData?.classProperty.targetClass &&
-      data.inheritanceList.includes(
-        draggedPropData?.classProperty.targetClass
-        // )
-      ));
+    (targetClass === data.cls.iri ||
+      data.inheritanceList.includes(targetClass));
 
   const targetHandle = (
     <Handle
