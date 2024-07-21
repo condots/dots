@@ -1,0 +1,15 @@
+# Start webserver on vm (run only once): docker compose -f dots/docker-compose.yml up --watch -d
+# Sync local changes (image will be rebuilt): rsync -e ssh -aF --delete . dots:/home/opc/dots/
+
+services:
+  dots:
+    image: dots:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '80:80'
+    develop:
+      watch:
+        - action: rebuild
+          path: .
