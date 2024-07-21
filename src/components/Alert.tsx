@@ -1,4 +1,3 @@
-import React from 'react';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 
 import { appStore } from '@/store/app';

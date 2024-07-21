@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo, MouseEvent } from 'react';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
@@ -32,10 +32,7 @@ const NodeMenuProp = () => {
       return propertyCount >= maxCount;
     };
 
-    const onSelect = (
-      event: React.MouseEvent,
-      classProperty: ClassProperty
-    ) => {
+    const onSelect = (event: MouseEvent, classProperty: ClassProperty) => {
       if (event.metaKey) event.preventDefault();
       addNodeProperty(node.id, classProperty);
       setNodeExpanded(node.id, true);

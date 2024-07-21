@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import sanitize from 'sanitize-filename';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';

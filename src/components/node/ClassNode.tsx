@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { NodeProps } from 'reactflow';
 import {
@@ -8,6 +8,7 @@ import {
   useOnSelectionChange,
   Edge,
   Node,
+  ReactFlowState,
 } from 'reactflow';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import * as Collapsible from '@radix-ui/react-collapsible';
@@ -29,8 +30,10 @@ import { parseIRI, preferredLabels } from '@/scripts/app-utils';
 
 import '@/components/node/ClassNode.css';
 
-const connectionStartHandleSelector = state => state.connectionStartHandle;
-const connectionEndHandleSelector = state => state.connectionEndHandle;
+const connectionStartHandleSelector = (state: ReactFlowState) =>
+  state.connectionStartHandle;
+const connectionEndHandleSelector = (state: ReactFlowState) =>
+  state.connectionEndHandle;
 
 const ClassNode = ({
   id: nodeId,
@@ -50,8 +53,10 @@ const ClassNode = ({
   const isTargetHandleConnectable =
     nodeId !== connectionSource &&
     (draggedPropData?.classProperty.targetClass === data.cls.iri ||
+      // (draggedPropData?.classProperty.targetClass &&
       data.inheritanceList.includes(
         draggedPropData?.classProperty.targetClass
+        // )
       ));
 
   const targetHandle = (
@@ -130,7 +135,7 @@ const ClassNode = ({
   const [dimNode, setDimNode] = useState(false);
 
   const onChange = useCallback(
-    ({ nodes, edges }: { nodes: Node[]; edges: Edge[] }) => {
+    ({ nodes }: { nodes: Node[]; edges: Edge[] }) => {
       const nodeIds = nodes.map(n => n.id);
       const outgoersIds = getNodeOutgoers(nodeId!).map(node => node.id);
       const incomersIds = getNodeIncomers(nodeId).map(node => node.id);

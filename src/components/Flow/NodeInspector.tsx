@@ -1,7 +1,7 @@
-import React, { useNodes, EdgeLabelRenderer } from 'reactflow';
+import { useNodes, EdgeLabelRenderer } from 'reactflow';
 
 export default function NodeInspector() {
-  const nodes = useNodes([]);
+  const nodes = useNodes();
 
   return (
     <EdgeLabelRenderer>

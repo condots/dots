@@ -1,6 +1,5 @@
 import rdfext from 'rdf-ext';
 import { Parser, Quad, Store, Term } from 'n3';
-import { QueryEngine } from '@comunica/query-sparql-rdfjs';
 import jsonld from 'jsonld';
 
 import {
@@ -26,6 +25,7 @@ import {
   VocabularyEntries,
   nodeKindTypes,
   OntologyMetadata,
+  ModelProfile,
 } from '@/types';
 import { parseIRI } from '@/scripts/app-utils';
 
@@ -135,7 +135,7 @@ export async function enrichModelFromMarkdown(
   } else {
     markdown = await (await fetch(model)).json();
   }
-  const modelProfiles = markdown.namespaces;
+  const modelProfiles = markdown.namespaces as ModelProfile[];
   const enrichedProfiles: EnrichedProfiles = {};
   for (const [profileName, profile] of Object.entries(profiles) as [
     Name,
@@ -161,7 +161,18 @@ export async function enrichModelFromMarkdown(
         }
         section[itemName] = item;
       }
-      enrichedProfile[sectionName] = section;
+
+      if (sectionName === 'classes') {
+        enrichedProfile.classes = section as Classes;
+      } else if (sectionName === 'properties') {
+        enrichedProfile.properties = section as Properties;
+      } else if (sectionName === 'vocabularies') {
+        enrichedProfile.vocabularies = section as Vocabularies;
+      } else if (sectionName === 'individuals') {
+        enrichedProfile.individuals = section as Individuals;
+      } else {
+        throw new Error('Unknown section name');
+      }
     }
     enrichedProfile.iri = modelProfile.iri;
     enrichedProfile.name = parseIRI(modelProfile.iri).name;
@@ -250,7 +261,10 @@ function getDatatypeProperties(graph: Store) {
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
     const datatype = graph.getObjects(node.value, NS.rdfs.range, null)[0].value;
-    items[shared.name] = { ...shared, datatype };
+    items[shared.name] = {
+      ...shared,
+      datatype: datatype as LiteralPropertyTypes,
+    };
   }
   return items;
 }
@@ -395,12 +409,4 @@ function setShaclLists(graph: Store) {
     const list = v.map(v => v.value);
     shaclLists.set(k, list);
   }
-}
-
-const comunicaEngine = new QueryEngine();
-export async function sparql(graph: Store, query: string) {
-  const bindingsStream = await comunicaEngine.queryBindings(query, {
-    sources: [graph],
-  });
-  return await bindingsStream.toArray();
 }

@@ -44,6 +44,7 @@ const storage: PersistStorage<{
   [k: string]:
     | string
     | boolean
+    | AlertMessage
     | DraggedClassData
     | DraggedPropData
     | PropertyOption[]
@@ -61,11 +62,15 @@ const storage: PersistStorage<{
   removeItem: name => localStorage.removeItem(name),
 };
 
+const myPersist: typeof persist = !import.meta.env.PROD
+  ? persist
+  : (fn: any) => fn;
+
 const appStoreBase = create<AppState>()(
-  subscribeWithSelector(
-    immer(
-      devtools(
-        persist(
+  immer(
+    devtools(
+      subscribeWithSelector(
+        myPersist(
           set => ({
             ...initialState,
             reset: () => {
@@ -92,7 +97,8 @@ const appStoreBase = create<AppState>()(
               ),
           }
         )
-      )
+      ),
+      { enabled: !import.meta.env.PROD }
     )
   )
 );

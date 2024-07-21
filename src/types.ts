@@ -12,6 +12,10 @@ export interface EnrichedProfile
   extends Profile,
     Omit<SharedFields, 'profile'> {}
 
+export interface ModelProfile
+  extends EnrichedProfile,
+    Omit<SharedFields, 'profileName'> {}
+
 export interface Profile {
   classes: Classes;
   properties: Properties;
@@ -112,7 +116,7 @@ export type InputProperties = Map<LiteralPropertyTypes, InputProperty>;
 export interface InputProperty {
   icon: string;
   helpText?: string;
-  validator?: (v: string | number | boolean) => boolean;
+  validator?: (v: string) => boolean;
   inputType?: 'text' | 'number' | 'url' | 'datetime-local';
   mask?: string;
   slotChar?: string;
@@ -146,3 +150,9 @@ export interface AlertMessage {
   title: string;
   description?: string;
 }
+
+export type DevtoolsActive = {
+  nodeInspector: boolean;
+  changeLogger: boolean;
+  viewportLogger: boolean;
+};

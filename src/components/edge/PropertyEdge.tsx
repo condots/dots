@@ -1,4 +1,5 @@
-import React, {
+import {
+  CSSProperties,
   useCallback,
   useEffect,
   useMemo,
@@ -7,12 +8,14 @@ import React, {
 } from 'react';
 
 import {
+  Node,
   useStore,
   BaseEdge,
   getSmoothStepPath,
   EdgeLabelRenderer,
   useEdges,
   useOnSelectionChange,
+  ReactFlowState,
 } from 'reactflow';
 
 import type { Edge, EdgeProps } from 'reactflow';
@@ -20,8 +23,10 @@ import type { Edge, EdgeProps } from 'reactflow';
 import { getEdgeParams } from '@/scripts/flow-utils.js';
 import { parseIRI } from '@/scripts/app-utils';
 
-const connectionStartHandleSelector = state => state.connectionStartHandle;
-const connectionEndHandleSelector = state => state.connectionEndHandle;
+const connectionStartHandleSelector = (state: ReactFlowState) =>
+  state.connectionStartHandle;
+const connectionEndHandleSelector = (state: ReactFlowState) =>
+  state.connectionEndHandle;
 
 const PropertyEdge = ({
   id,
@@ -36,7 +41,7 @@ const PropertyEdge = ({
 }: EdgeProps) => {
   const connectionSource = useStore(connectionStartHandleSelector)?.nodeId;
   const connectionTarget = useStore(connectionEndHandleSelector)?.nodeId;
-  const target = edgeTarget ?? connectionTarget;
+  const target = edgeTarget ? edgeTarget : connectionTarget!;
   const labelRef = useRef<HTMLDivElement>(null);
   const edges = useEdges();
   const siblingEdges = edges.filter(
@@ -99,8 +104,8 @@ const PropertyEdge = ({
     animationDirection: label === 'from' ? 'reverse' : 'normal',
   };
 
-  const edgeRef = useRef(null);
-  const [edgeZIndex, setEdgeZIndex] = useState(null);
+  const edgeRef = useRef<HTMLElement | null>(null);
+  const [edgeZIndex, setEdgeZIndex] = useState<string | null>(null);
 
   useEffect(() => {
     const getZIndexOfSvg = () => {
@@ -110,7 +115,7 @@ const PropertyEdge = ({
           currentElement &&
           currentElement.tagName.toLowerCase() !== 'svg'
         ) {
-          currentElement = currentElement.parentElement;
+          currentElement = currentElement.parentElement!;
         }
         if (currentElement) {
           const computedStyles = window.getComputedStyle(currentElement);
@@ -124,7 +129,7 @@ const PropertyEdge = ({
     if (edgeRef.current) {
       let svgElement = edgeRef.current;
       while (svgElement && svgElement.tagName.toLowerCase() !== 'svg') {
-        svgElement = svgElement.parentElement;
+        svgElement = svgElement.parentElement!;
       }
       if (svgElement) {
         observer.observe(svgElement, {
@@ -139,7 +144,7 @@ const PropertyEdge = ({
   const [dimEdge, setDimEdge] = useState(false);
 
   const onChange = useCallback(
-    ({ nodes, edges }: { nodes: Node[]; edges: Edge[] }) => {
+    ({ nodes }: { nodes: Node[]; edges: Edge[] }) => {
       const dim =
         nodes.length > 0 &&
         !!nodes.find(node => node.id !== source && node.id !== target);
@@ -162,21 +167,21 @@ const PropertyEdge = ({
     id !== 'connection' &&
     !selected;
 
-  const pathStyle = {
+  const pathStyle: CSSProperties = {
     ...style,
     ...relationshipStyle,
     visibility: creationInfoHidden ? 'hidden' : 'visible',
-    stroke: dimEdge ? '#d1d5db' : style.stroke,
+    stroke: dimEdge ? '#d1d5db' : style!.stroke,
     opacity: dimEdge ? 0.1 : 1,
   };
 
-  const labelStyle = {
+  const labelStyle: CSSProperties = {
     position: 'absolute',
     transform: `translate(-50%, 0) translate(${labelX}px, ${labelY}px)`,
     height: labelHeight,
     marginTop: marginTop,
     pointerEvents: 'all',
-    zIndex: (edgeZIndex ?? 0) + 1000,
+    zIndex: Number(edgeZIndex ?? 0) + 1000,
     visibility: creationInfoHidden ? 'hidden' : 'visible',
     opacity: dimEdge ? 0.1 : 1,
   };
@@ -186,7 +191,7 @@ const PropertyEdge = ({
       <BaseEdge
         id={id}
         path={edgePath}
-        markerEnd={isRelationshipEdge ? null : markerEnd}
+        markerEnd={isRelationshipEdge ? '' : markerEnd}
         style={pathStyle}
         interactionWidth={0}
       />

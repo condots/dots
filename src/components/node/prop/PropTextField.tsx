@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo, ChangeEvent, MouseEvent } from 'react';
 
 import { useNodeId } from 'reactflow';
 
@@ -10,7 +10,7 @@ const PropTextField = ({ propertyId }: { propertyId: string }) => {
   const nodeProperty = useNodeProperty(nodeId, propertyId)!;
   const p = inputProperties.get(nodeProperty.classProperty.datatype)!;
 
-  const hadnleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const hadnleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     let v = e.target.value;
     if (nodeProperty.classProperty.datatype === 'dateTimeStamp' && !!v) {
       if (v.length === 16) {
@@ -55,7 +55,7 @@ const PropTextField = ({ propertyId }: { propertyId: string }) => {
           ${!nodeProperty.valid && 'border-red-400'}
         `}
       onChange={e => hadnleOnChange(e)}
-      onClick={(e: React.MouseEvent<HTMLInputElement>) =>
+      onClick={(e: MouseEvent<HTMLInputElement>) =>
         p.inputType === 'datetime-local' &&
         (e.target as HTMLInputElement).showPicker()
       }

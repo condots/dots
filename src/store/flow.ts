@@ -37,6 +37,7 @@ import {
   Class,
   ClassProperties,
   ClassProperty,
+  DevtoolsActive,
   FlowNode,
   IRI,
   NodeData,
@@ -50,12 +51,6 @@ import {
   generateURN,
 } from '@/scripts/app-utils';
 import { appStore } from './app';
-
-type DevtoolsActive = {
-  nodeInspector: boolean;
-  changeLogger: boolean;
-  viewportLogger: boolean;
-};
 
 type RFState = {
   nodes: FlowNode[];
@@ -99,11 +94,15 @@ const storage: PersistStorage<RFState> = {
   removeItem: name => localStorage.removeItem(name),
 };
 
+const myPersist: typeof persist = !import.meta.env.PROD
+  ? persist
+  : (fn: any) => fn;
+
 export const flowStoreBase = create<RFState>()(
   immer(
     devtools(
       subscribeWithSelector(
-        persist(
+        myPersist(
           (set, get) => ({
             ...initialState,
             onNodesChange: (changes: NodeChange[]) => {
@@ -143,12 +142,12 @@ export const flowStoreBase = create<RFState>()(
                 });
               });
             },
-            onNodeDragStart: (event, node) => {
+            onNodeDragStart: (_, node) => {
               set(state => {
                 state.nodes.find(n => n.id === node.id)!.data.active = true;
               });
             },
-            onNodeDragStop: (event, node) => {
+            onNodeDragStop: (_, node) => {
               set(state => {
                 state.nodes.find(n => n.id === node.id)!.data.active = false;
               });
@@ -184,7 +183,8 @@ export const flowStoreBase = create<RFState>()(
             storage,
           }
         )
-      )
+      ),
+      { enabled: !import.meta.env.PROD }
     )
   )
 );

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, MouseEvent } from 'react';
 
 import { Tree, TreeNodeTemplateOptions } from 'primereact/tree';
 import { TreeNode } from 'primereact/treenode';
@@ -49,7 +49,7 @@ const ProfileMenu = () => {
   }, [profiles]);
 
   const handleMouseDown = useCallback(
-    (event: React.MouseEvent, targetClass: string) => {
+    (event: MouseEvent, targetClass: string) => {
       appStore.setState(state => {
         state.draggedClassData = {
           clientX: event.clientX,

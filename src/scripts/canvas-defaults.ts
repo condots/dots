@@ -6,12 +6,10 @@ import {
 } from 'reactflow';
 
 import ClassNode from '@/components/node/ClassNode';
-import Origin from '@/components/Origin';
 import PropertyEdge from '@/components/edge/PropertyEdge';
 
 export const nodeTypes = {
   inst: ClassNode,
-  origin: Origin,
 } satisfies NodeTypes;
 
 export const edgeTypes = {

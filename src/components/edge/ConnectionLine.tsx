@@ -1,6 +1,4 @@
-import React from 'react';
-
-import type { ConnectionLineComponentProps } from 'reactflow';
+import { Position, type ConnectionLineComponentProps } from 'reactflow';
 
 import { appStore } from '@/store/app';
 import PropertyEdge from '@/components/edge/PropertyEdge';
@@ -20,6 +18,12 @@ function ConnectionLine({
       style={style}
       label={appStore.getState().draggedPropData?.classProperty.name}
       selected={false}
+      // below dummy props are required by reactflow
+      target=""
+      sourceX={0}
+      sourceY={0}
+      sourcePosition={Position.Top}
+      targetPosition={Position.Top}
     />
   );
 }

@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { ArrowRightIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { Handle, Position, useNodeId } from 'reactflow';
 
-import { ClassProperty, IRI } from '@/types';
+import { Class, ClassProperty, IRI } from '@/types';
 import {
   outEdgeCount,
   useNode,
@@ -102,7 +102,7 @@ const NodeMenuClass = () => {
                       <ArrowRightIcon />
                       <div
                         className={`mr-2
-                        ${getItem(clsProp.targetClass)!.abstract ? 'text-spdx-dark bg-white rounded px-1 box-border' : ''}
+                        ${(getItem(clsProp.targetClass) as Class)!.abstract ? 'text-spdx-dark bg-white rounded px-1 box-border' : ''}
                       `}
                       >
                         {parseIRI(clsProp.targetClass).name}

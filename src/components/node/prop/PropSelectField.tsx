@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { useNodeId } from 'reactflow';
 

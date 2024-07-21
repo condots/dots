@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
@@ -6,6 +6,7 @@ import { Cross2Icon } from '@radix-ui/react-icons';
 import { advisoryText } from '@/scripts/app-utils';
 import { appStore } from '@/store/app';
 import { getItem } from '@/store/onto';
+import { Class } from '@/types';
 
 const InfoDialog = () => {
   const showInfoDialog = appStore.use.showInfoDialog();
@@ -78,17 +79,17 @@ const InfoDialog = () => {
                   </p>
                 </div>
                 <div>
-                  <table className="table-auto  w-fit">
+                  <table className="table-auto w-fit">
                     <tbody className="font-lato bg-[#f3f6f6]">
-                      {item.abstract !== undefined && (
+                      {(item as Class).abstract !== undefined && (
                         <tr className="font-lato bg-[#f3f6f6]">
                           <td className="px-3 border">Instantiability</td>
                           <td className="px-3 border">
-                            {item.abstract ? 'Abstract' : 'Concrete'}
+                            {(item as Class).abstract ? 'Abstract' : 'Concrete'}
                           </td>
                         </tr>
                       )}
-                      {item.subClassOf && (
+                      {(item as Class).subClassOf && (
                         <tr className="font-lato bg-[#f3f6f6]">
                           <td className="px-3 border">SubclassOf</td>
                           <td className="px-3 border">
@@ -96,12 +97,14 @@ const InfoDialog = () => {
                               className="text-spdx-dark underline outline-none"
                               onClick={() =>
                                 appStore.setState(state => {
-                                  state.selectedInfoIri = item.subClassOf;
+                                  state.selectedInfoIri = (
+                                    item as Class
+                                  ).subClassOf;
                                   state.showInfoDialog = true;
                                 })
                               }
                             >
-                              {item.subClassOf.split('/').pop()}
+                              {(item as Class).subClassOf!.split('/').pop()}
                             </button>
                           </td>
                         </tr>

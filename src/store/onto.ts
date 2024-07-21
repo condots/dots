@@ -66,11 +66,15 @@ const storage: PersistStorage<OntoState> = {
   removeItem: name => localStorage.removeItem(name),
 };
 
+const myPersist: typeof persist = !import.meta.env.PROD
+  ? persist
+  : (fn: any) => fn;
+
 const ontoStoreBase = create<OntoState>()(
-  subscribeWithSelector(
-    immer(
-      devtools(
-        persist(
+  immer(
+    devtools(
+      subscribeWithSelector(
+        myPersist(
           set => ({
             ...initialState,
             reset: () => {
@@ -82,7 +86,8 @@ const ontoStoreBase = create<OntoState>()(
             storage,
           }
         )
-      )
+      ),
+      { enabled: !import.meta.env.PROD }
     )
   )
 );

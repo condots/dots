@@ -1,4 +1,3 @@
-import React from 'react';
 import { Panel, useStore } from 'reactflow';
 
 export default function ViewportLogger() {

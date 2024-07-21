@@ -46,7 +46,6 @@ export const inputProperties: InputProperties = new Map([
     'boolean',
     {
       icon: 'toggle_off',
-      validator: (v: boolean) => typeof v === 'boolean',
     },
   ],
   [
@@ -91,7 +90,7 @@ export const inputProperties: InputProperties = new Map([
       icon: 'numbers',
       inputType: 'number',
       helpText: 'Enter a positive integer...',
-      validator: (v: number) => {
+      validator: (v: string) => {
         const num = Number(v);
         return Number.isInteger(num) && num > 0 && num.toString() === v.trim();
       },
@@ -140,9 +139,15 @@ export const preferredLabels: Record<string, string[]> = {
 export const isNodePropertyValid = (nodeProperty: NodeProperty) => {
   if (nodeProperty.value === undefined) return false;
   const cp = nodeProperty.classProperty;
-  return cp.nodeKind === 'Literal'
-    ? inputProperties.get(cp.datatype)!.validator(nodeProperty.value)
-    : !!nodeProperty.value;
+  if (typeof nodeProperty.value === 'boolean') {
+    return true;
+  } else {
+    return cp.nodeKind === 'Literal'
+      ? inputProperties.get(cp.datatype)!.validator!(
+          nodeProperty.value.toString()
+        )
+      : !!nodeProperty.value;
+  }
 };
 
 export const getClassPropertyIcon = (classProperty: ClassProperty) => {
@@ -160,9 +165,7 @@ export async function getMediaTypes() {
   const csv = (await (await fetch(url)).text()) ?? '';
   const mediaTypes: PropertyOption[] = await new Promise(resolve =>
     Papa.parse(csv, {
-      config: {
-        skipEmptyLines: true,
-      },
+      skipEmptyLines: true,
       complete: function (res) {
         resolve(
           res.data.slice(1).map(row => {

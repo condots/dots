@@ -5,7 +5,7 @@ import jsonld, { JsonLdDocument } from 'jsonld';
 import { saveAs } from 'file-saver';
 import { XYPosition } from 'reactflow';
 
-import { ClassProperty, FlowNode, Property } from '@/types';
+import { ClassProperty, FlowNode, NodeProperty, Property } from '@/types';
 import { appStore } from '@/store/app';
 import { getItem, ontoStore } from '@/store/onto';
 import {
@@ -56,12 +56,14 @@ function genPropQuads(store: Store, subject: Quad_Subject, node: FlowNode) {
     if (!nodeProp.valid) throw new Error('propQuad is null');
 
     const predicate = namedNode(nodeProp.classProperty.path);
-    let object = nodeProp.value;
+    let object = nodeProp.value!;
     const clsProp = nodeProp.classProperty;
     if (clsProp.nodeKind === 'Literal') {
       const dt = (getItem(nodeProp.classProperty.path) as Property).datatype!;
-      object = literal(object, namedNode(dt));
+      // @ts-expect-error:2769
+      object = literal(object, namedNode(dt)) as keyof NodeProperty['value'];
     }
+    // @ts-expect-error:2769
     const q = quad(subject, predicate, object);
     store.add(q);
   }
@@ -95,12 +97,6 @@ function canvasToRelativePosition(refPos: XYPosition, nodePos: XYPosition) {
   return { x, y };
 }
 
-function relativeToCanvasPosition(refPos: XYPosition, relPos: XYPosition) {
-  const x = relPos.x * snapGrid[0] + refPos.x;
-  const y = relPos.y * snapGrid[1] + refPos.y;
-  return { x, y };
-}
-
 function getRelativePositions(nodes: FlowNode[], subjects: SubjectMap) {
   const id = subjects.get(nodes[0].id)!.id;
   const positions: NamedPositions = {
@@ -109,14 +105,6 @@ function getRelativePositions(nodes: FlowNode[], subjects: SubjectMap) {
   for (const node of nodes.slice(1)) {
     const id = subjects.get(node.id)!.id;
     positions[id] = canvasToRelativePosition(nodes[0].position, node.position);
-  }
-  return positions;
-}
-
-function getCanvasPositions(relPositions: NamedPositions, refPos: XYPosition) {
-  const positions: NamedPositions = {};
-  for (const [nodeId, relPos] of Object.entries(relPositions)) {
-    positions[nodeId] = relativeToCanvasPosition(refPos, relPos);
   }
   return positions;
 }
@@ -139,12 +127,27 @@ export async function exportSpdxJsonLd(filename: string, nodes?: FlowNode[]) {
   const compacted = await jsonld.compact(doc, ctx);
 
   compacted['@context'] = ontoStore.getState().jsonLdContextUrl;
-  compacted.dots = getRelativePositions(nodes, subjects);
+  const positions = getRelativePositions(nodes, subjects);
+  compacted.dots = JSON.parse(JSON.stringify(positions));
 
   const blob = new Blob([JSON.stringify(compacted, null, 2)], {
     type: 'application/ld+json;charset=utf-8',
   });
   saveAs(blob, filename);
+}
+
+function relativeToCanvasPosition(refPos: XYPosition, relPos: XYPosition) {
+  const x = relPos.x * snapGrid[0] + refPos.x;
+  const y = relPos.y * snapGrid[1] + refPos.y;
+  return { x, y };
+}
+
+function getCanvasPositions(relPositions: NamedPositions, refPos: XYPosition) {
+  const positions: NamedPositions = {};
+  for (const [nodeId, relPos] of Object.entries(relPositions)) {
+    positions[nodeId] = relativeToCanvasPosition(refPos, relPos);
+  }
+  return positions;
 }
 
 export async function importSpdxJsonLd(

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useNodeId } from 'reactflow';
 
 import { useNodeProperty, setNodeProperty } from '@/store/flow';
