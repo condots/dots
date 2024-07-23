@@ -109,11 +109,34 @@ function getRelativePositions(nodes: FlowNode[], subjects: SubjectMap) {
   return positions;
 }
 
+function checkInvalidProp(nodes: FlowNode[]) {
+  for (const node of nodes) {
+    for (const nodeProp of Object.values(node.data.nodeProps)) {
+      if (!nodeProp.valid) {
+        return { node, nodeProp };
+      }
+    }
+  }
+}
+
 export async function exportSpdxJsonLd(filename: string, nodes?: FlowNode[]) {
   if (!nodes) {
     nodes = flowStore.getState().nodes;
   }
+
+  const invalidProp = checkInvalidProp(nodes);
+  if (invalidProp) {
+    appStore.setState(state => {
+      state.alertMessage = {
+        title: 'Invalid property',
+        description: `"${invalidProp.node.data.cls.name}" has an invalid "${invalidProp.nodeProp.classProperty.name}" value.`,
+      };
+    });
+    return;
+  }
+
   const { store, subjects } = genSpdxGraph(nodes);
+
   const doc: JsonLdDocument = await new Promise((resolve, reject) => {
     new SerializerJsonld()
       .import(store.match(null, null, null, null))
@@ -147,9 +170,20 @@ function getCanvasPositions(relPositions: NamedPositions, refPos: XYPosition) {
   return positions;
 }
 
+function checkDuplicatedNodeIds(store: Store) {
+  const existingIds = flowStore.getState().nodes.map(n => n.id);
+  const subjectIds = store.getSubjects(null, null, null).map(s => s.id);
+  for (const sid of subjectIds) {
+    if (existingIds.includes(sid)) {
+      return sid;
+    }
+  }
+}
+
 export async function importSpdxJsonLd(
   source: string | File,
-  refPos: XYPosition
+  refPos: XYPosition,
+  collapsed: boolean = true
 ) {
   let data: string;
   if (typeof source === 'string') {
@@ -179,6 +213,17 @@ export async function importSpdxJsonLd(
   const expanded = await jsonld.flatten(doc, ctx);
   const quads = (await jsonld.toRDF(expanded)) as Quad[];
   const store = new Store(quads);
+
+  const sid = checkDuplicatedNodeIds(store);
+  if (sid) {
+    appStore.setState(state => {
+      state.alertMessage = {
+        title: 'Existing node ID',
+        description: `A node with ID "${sid}" already exists. Please remove bofore importing.`,
+      };
+    });
+    return;
+  }
 
   const positions: NamedPositions = doc.dots
     ? getCanvasPositions(doc.dots, refPos)
@@ -249,6 +294,9 @@ export async function importSpdxJsonLd(
   const collapsedNode =
     Object.values(impNodes).find(n => n.classIRI.endsWith('/SpdxDocument')) ??
     impNodes[0];
-  hideTreeNodes(collapsedNode.id);
-  selectNode(collapsedNode.id);
+
+  if (collapsed) {
+    hideTreeNodes(collapsedNode.id);
+    selectNode(collapsedNode.id);
+  }
 }

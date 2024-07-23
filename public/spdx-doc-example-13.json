@@ -1,0 +1,215 @@
+{
+  "@context": "https://spdx.org/rdf/3.0.0/spdx-context.jsonld",
+  "@graph": [
+    {
+      "spdxId": "urn:nanoid:5uUlahHiRSRG2c9pTFvqJ",
+      "type": "SpdxDocument",
+      "creationInfo": "_:b0",
+      "profileConformance": ["core", "software"],
+      "rootElement": "urn:nanoid:kMuuWYeSugx5xUhWrqXiI"
+    },
+    {
+      "@id": "_:b0",
+      "type": "CreationInfo",
+      "created": "2024-05-02T00:00:00Z",
+      "createdBy": [
+        "urn:nanoid:N4nXnJ_aV-906oMFoFrId",
+        "urn:nanoid:m_6pT9znU7RsQcYBOYC19"
+      ],
+      "specVersion": "3.0.0"
+    },
+    {
+      "spdxId": "urn:nanoid:kMuuWYeSugx5xUhWrqXiI",
+      "type": "software_Sbom",
+      "creationInfo": "_:b0",
+      "profileConformance": ["core", "software"],
+      "rootElement": "urn:nanoid:7EyxhDgviWzNqDYJoG1Fq"
+    },
+    {
+      "spdxId": "urn:nanoid:N4nXnJ_aV-906oMFoFrId",
+      "type": "Person",
+      "creationInfo": "_:b0",
+      "externalIdentifier": "_:b1",
+      "name": "Application Owner Jane Doe"
+    },
+    {
+      "spdxId": "urn:nanoid:m_6pT9znU7RsQcYBOYC19",
+      "type": "Organization",
+      "creationInfo": "_:b0",
+      "name": "Acme Company"
+    },
+    {
+      "spdxId": "urn:nanoid:3pURq3N5XINd-sdaeGut5",
+      "type": "Relationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:7EyxhDgviWzNqDYJoG1Fq",
+      "relationshipType": "dependsOn",
+      "to": "urn:nanoid:hxTv3IJG-iPd3yC-dUZt8"
+    },
+    {
+      "spdxId": "urn:nanoid:7EyxhDgviWzNqDYJoG1Fq",
+      "type": "software_Package",
+      "creationInfo": "_:b0",
+      "name": "Acme Application",
+      "suppliedBy": "urn:nanoid:m_6pT9znU7RsQcYBOYC19",
+      "packageVersion": "1.3",
+      "software_primaryPurpose": "application"
+    },
+    {
+      "spdxId": "urn:nanoid:hxTv3IJG-iPd3yC-dUZt8",
+      "type": "software_Package",
+      "creationInfo": "_:b0",
+      "name": "alpine:latest",
+      "suppliedBy": "urn:nanoid:6gKIXh9cLk4rWUZORZXaT",
+      "packageVersion": "69665d02cb32192e52e07644d76bc6f25abeb5410edc1c7a81a10ba3f0efb90a",
+      "software_primaryPurpose": "container"
+    },
+    {
+      "spdxId": "urn:nanoid:6gKIXh9cLk4rWUZORZXaT",
+      "type": "Organization",
+      "creationInfo": "_:b0",
+      "name": "Alpine Linux"
+    },
+    {
+      "spdxId": "urn:nanoid:IMd4vuVPjeKmtBWktKC7C",
+      "type": "software_Package",
+      "creationInfo": "_:b0",
+      "externalIdentifier": "_:b2",
+      "name": "npm-elliptic",
+      "suppliedBy": "urn:nanoid:pYSbiXvatb4p9JyOt66Ds",
+      "packageVersion": "6.5.2",
+      "software_primaryPurpose": "library"
+    },
+    {
+      "spdxId": "urn:nanoid:pYSbiXvatb4p9JyOt66Ds",
+      "type": "Person",
+      "creationInfo": "_:b0",
+      "externalIdentifier": "_:b3",
+      "name": "Fedor Indutny"
+    },
+    {
+      "spdxId": "urn:nanoid:Ndt_OTFB4Vd1XKzEnvn5a",
+      "type": "Relationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:7EyxhDgviWzNqDYJoG1Fq",
+      "relationshipType": "availableFrom",
+      "to": "urn:nanoid:N4nXnJ_aV-906oMFoFrId"
+    },
+    {
+      "spdxId": "urn:nanoid:X27d1TZJBmSHtLehHDqYo",
+      "type": "software_Package",
+      "creationInfo": "_:b0",
+      "name": "openssl",
+      "packageVersion": "3.0.4",
+      "software_primaryPurpose": "library"
+    },
+    {
+      "spdxId": "urn:nanoid:mws9te1FB4d3yDJzR6GIf",
+      "type": "Relationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:hxTv3IJG-iPd3yC-dUZt8",
+      "relationshipType": "contains",
+      "to": "urn:nanoid:X27d1TZJBmSHtLehHDqYo"
+    },
+    {
+      "spdxId": "urn:nanoid:r2XGfmhiqXAFIIossCKCQ",
+      "type": "Relationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:7EyxhDgviWzNqDYJoG1Fq",
+      "relationshipType": "contains",
+      "to": "urn:nanoid:IMd4vuVPjeKmtBWktKC7C"
+    },
+    {
+      "@id": "_:b1",
+      "type": "ExternalIdentifier",
+      "externalIdentifierType": "email",
+      "identifier": "jane-doe-1@acme.com"
+    },
+    {
+      "@id": "_:b2",
+      "type": "ExternalIdentifier",
+      "externalIdentifierType": "other",
+      "identifier": "https://github.com/indutny/elliptic/releases/tag/v6.5.2"
+    },
+    {
+      "@id": "_:b3",
+      "type": "ExternalIdentifier",
+      "externalIdentifierType": "other",
+      "identifier": "https://github.com/indutny"
+    }
+  ],
+  "dots": {
+    "urn:nanoid:5uUlahHiRSRG2c9pTFvqJ": {
+      "x": 0,
+      "y": 0
+    },
+    "_:b0": {
+      "x": -3,
+      "y": 2
+    },
+    "urn:nanoid:kMuuWYeSugx5xUhWrqXiI": {
+      "x": 1,
+      "y": 2
+    },
+    "urn:nanoid:N4nXnJ_aV-906oMFoFrId": {
+      "x": -3,
+      "y": 6
+    },
+    "urn:nanoid:m_6pT9znU7RsQcYBOYC19": {
+      "x": -2,
+      "y": 0
+    },
+    "urn:nanoid:3pURq3N5XINd-sdaeGut5": {
+      "x": 0,
+      "y": 4
+    },
+    "urn:nanoid:7EyxhDgviWzNqDYJoG1Fq": {
+      "x": -1,
+      "y": 2
+    },
+    "urn:nanoid:hxTv3IJG-iPd3yC-dUZt8": {
+      "x": 1,
+      "y": 6
+    },
+    "urn:nanoid:6gKIXh9cLk4rWUZORZXaT": {
+      "x": 2,
+      "y": 4
+    },
+    "urn:nanoid:IMd4vuVPjeKmtBWktKC7C": {
+      "x": -2,
+      "y": 8
+    },
+    "urn:nanoid:pYSbiXvatb4p9JyOt66Ds": {
+      "x": -1,
+      "y": 10
+    },
+    "urn:nanoid:Ndt_OTFB4Vd1XKzEnvn5a": {
+      "x": -2,
+      "y": 4
+    },
+    "urn:nanoid:X27d1TZJBmSHtLehHDqYo": {
+      "x": 1,
+      "y": 10
+    },
+    "urn:nanoid:mws9te1FB4d3yDJzR6GIf": {
+      "x": 2,
+      "y": 8
+    },
+    "urn:nanoid:r2XGfmhiqXAFIIossCKCQ": {
+      "x": -1,
+      "y": 6
+    },
+    "_:b1": {
+      "x": -4,
+      "y": 4
+    },
+    "_:b2": {
+      "x": -3,
+      "y": 10
+    },
+    "_:b3": {
+      "x": 0,
+      "y": 8
+    }
+  }
+}

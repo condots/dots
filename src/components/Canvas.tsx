@@ -78,7 +78,7 @@ const Canvas = () => {
     }
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleImportFile = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     const refPos = screenToCanvas(
       window.innerWidth / 2 - 128,
@@ -86,6 +86,14 @@ const Canvas = () => {
     );
     handleImport(file, refPos);
     e.target.value = '';
+  };
+
+  const handleImportExample = () => {
+    const refPos = screenToCanvas(
+      window.innerWidth / 2 - 128,
+      window.innerHeight / 2 - 26
+    );
+    importSpdxJsonLd('spdx-doc-example-13.json', refPos, false);
   };
 
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
@@ -151,7 +159,7 @@ const Canvas = () => {
         </ControlButton>
         <ControlButton
           onClick={() => flowStore.getState().reset()}
-          title="clear"
+          title="clear canvas"
           className="text-black"
         >
           <span className="material-symbols-outlined text-base">
@@ -160,10 +168,19 @@ const Canvas = () => {
         </ControlButton>
         <ControlButton
           onClick={() => importJsonLdRef.current?.click()}
-          title="import"
+          title="upload spdx document"
           className="text-black"
         >
           <span className="material-symbols-outlined text-xl">upload</span>
+        </ControlButton>
+        <ControlButton
+          onClick={() => handleImportExample()}
+          title="load example"
+          className="text-black"
+        >
+          <span className="material-symbols-outlined text-xl">
+            receipt_long
+          </span>
         </ControlButton>
         <ControlButton
           onClick={() => handleShowHelp()}
@@ -202,7 +219,7 @@ const Canvas = () => {
         ref={importJsonLdRef}
         type="file"
         accept="application/ld+json, application/json"
-        onChange={handleFileChange}
+        onChange={handleImportFile}
         hidden
       />
     </ReactFlow>

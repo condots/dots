@@ -13,8 +13,10 @@ const Alert = () => {
           <AlertDialog.Title className="text-mauve12 m-0 text-[17px] font-medium">
             {alertMessage?.title}
           </AlertDialog.Title>
-          <AlertDialog.Description className="text-mauve11 mt-4 mb-5 text-[15px] leading-normal">
-            {alertMessage?.description}
+          <AlertDialog.Description asChild>
+            <p className="text-mauve11 mt-4 mb-5 text-[15px] prose">
+              {alertMessage?.description}
+            </p>
           </AlertDialog.Description>
           <div className="flex justify-end gap-[25px]">
             <AlertDialog.Cancel asChild>
