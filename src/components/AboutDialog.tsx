@@ -43,19 +43,21 @@ const AboutDialog = () => {
             target="_blank"
             rel="noreferrer"
           >
-            <Dialog.Title className="px-5">
-              <img src="/dots-no-bg.svg" className="px-6" />
-              {/* <span className="flex ml-2 w-full text-center justify-center text-sky-800 font-varela font-normal text-6xl leading-4">
-                Connecting the dots
-              </span> */}
-            </Dialog.Title>
-            <Dialog.Description className="" asChild>
-              <p className="flex w-full text-center justify-center font-varela font-bold text-5xl tracking-widest gap-3">
-                <span>V</span>
-                <span>{version}</span>
-                <GitHubLogoIcon className="w-auto h-[38px]" />
-              </p>
-            </Dialog.Description>
+            <div className="mt-2 mb-1 mx-1 p-1 rounded-md hover:bg-gray-50">
+              <Dialog.Title className="px-5">
+                <img src="/dots-no-bg.svg" className="px-6" />
+                {/* <span className="flex ml-2 w-full text-center justify-center text-sky-800 font-varela font-normal text-6xl leading-4">
+                  Connecting the dots
+                </span> */}
+              </Dialog.Title>
+              <Dialog.Description className="" asChild>
+                <p className="flex w-full text-center justify-center font-varela font-bold text-5xl tracking-widest gap-3">
+                  <span>V</span>
+                  <span>{version}</span>
+                  <GitHubLogoIcon className="w-auto h-[38px]" />
+                </p>
+              </Dialog.Description>
+            </div>
           </a>
           <Dialog.Close asChild>
             <button className="absolute top-4 right-4 items-center justify-center rounded text-spdx-dark hover:bg-spdx-dark/5">
