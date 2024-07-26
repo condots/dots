@@ -107,12 +107,6 @@ const Canvas = () => {
     e.preventDefault();
   };
 
-  const handleShowHelp = () => {
-    appStore.setState(state => {
-      state.showHelpDialog = true;
-    });
-  };
-
   return (
     <ReactFlow
       proOptions={{ hideAttribution: true }}
@@ -174,6 +168,17 @@ const Canvas = () => {
           <span className="material-symbols-outlined text-xl">upload</span>
         </ControlButton>
         <ControlButton
+          onClick={() => {
+            appStore.setState(state => {
+              state.showHelpDialog = true;
+            });
+          }}
+          title="help"
+          className="text-black"
+        >
+          <span className="material-symbols-outlined text-lg">help</span>
+        </ControlButton>
+        <ControlButton
           onClick={() => handleImportExample()}
           title="load example"
           className="text-black"
@@ -181,13 +186,6 @@ const Canvas = () => {
           <span className="material-symbols-outlined text-xl">
             receipt_long
           </span>
-        </ControlButton>
-        <ControlButton
-          onClick={() => handleShowHelp()}
-          title="help"
-          className="text-black"
-        >
-          <span className="material-symbols-outlined text-lg">help</span>
         </ControlButton>
       </Controls>
       <Panel position="top-right" className="drop-shadow">
@@ -212,6 +210,19 @@ const Canvas = () => {
           >
             keyboard_arrow_left
           </span>
+        </ControlButton>
+      </Panel>
+      <Panel position="bottom-right">
+        <ControlButton
+          onClick={() => {
+            appStore.setState(state => {
+              state.showAboutDialog = true;
+            });
+          }}
+          title="about dots"
+          className="w-full h-full drop-shadow-xl rounded hover:bg-gray-50 pb-2"
+        >
+          <img src="/dots-no-bg.svg" width={60} alt="" className="" />
         </ControlButton>
       </Panel>
       <DraggedClass />

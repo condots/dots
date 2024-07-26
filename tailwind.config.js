@@ -13,6 +13,11 @@ export default {
       fontFamily: {
         lato: ['Lato', 'sans-serif'],
         roboto: ['Roboto Slab', 'sans-serif'],
+        montserrat: ['Montserrat', 'sans-serif'],
+        josefin: ['Josefin Sans', 'sans'],
+        playwrite: ['Playwrite PL', 'sans-serif'],
+        sacramento: ['Sacramento', 'cursive'],
+        varela: ['Varela Round', 'sans-serif'],
       },
       typography: {
         DEFAULT: {

@@ -21,6 +21,7 @@ type AppState = {
   showClassesMenu: boolean;
   showInfoDialog: boolean;
   showHelpDialog: boolean;
+  showAboutDialog: boolean;
   alertMessage: AlertMessage | undefined;
   selectedInfoIri: string | undefined;
   draggedClassData: DraggedClassData | undefined;
@@ -33,6 +34,7 @@ const initialState = {
   showClassesMenu: false,
   showInfoDialog: false,
   showHelpDialog: false,
+  showAboutDialog: false,
   alertMessage: undefined,
   selectedInfoIri: undefined,
   draggedClassData: undefined,
@@ -88,6 +90,7 @@ const appStoreBase = create<AppState>()(
                       'showClassesMenu',
                       'showInfoDialog',
                       'showHelpDialog',
+                      'showAboutDialog',
                       'alertMessage',
                       'selectedInfoIri',
                       'draggedClassData',

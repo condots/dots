@@ -3,17 +3,19 @@ import { Cross2Icon } from '@radix-ui/react-icons';
 
 import { appStore } from '@/store/app';
 
-const HelpDialog = () => {
-  const showHelpDialog = appStore.use.showHelpDialog();
+const version = import.meta.env.PACKAGE_VERSION?.replace('1', 'I');
+
+const AboutDialog = () => {
+  const showAboutDialog = appStore.use.showAboutDialog();
 
   const handleOpenChange = (open: boolean) => {
     appStore.setState(state => {
-      state.showHelpDialog = open;
+      state.showAboutDialog = open;
     });
   };
 
   return (
-    <Dialog.Root open={showHelpDialog} onOpenChange={handleOpenChange}>
+    <Dialog.Root open={showAboutDialog} onOpenChange={handleOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="bg-blackA7 data-[state=open]:animate-overlayShow fixed inset-0 DialogOverlay" />
         <Dialog.Content
@@ -33,10 +35,19 @@ const HelpDialog = () => {
           focus:outline-none
           prose
           overflow-auto
-          pt-5 pb-3"
+          pb-6"
         >
-          <Dialog.Title className="font-roboto text-spdx-dark text-3xl"></Dialog.Title>
-          <Dialog.Description></Dialog.Description>
+          <Dialog.Title className="px-5">
+            <img src="/dots-no-bg.svg" className="px-6" />
+            {/* <span className="flex ml-2 w-full text-center justify-center text-sky-800 font-varela font-normal text-6xl leading-4">
+              Connecting the dots
+            </span> */}
+          </Dialog.Title>
+          <Dialog.Description className="">
+            <span className="flex py-3 w-full text-center justify-center text-sky-800 font-varela font-bold text-5xl tracking-widest">
+              Ver {version}
+            </span>
+          </Dialog.Description>
           <Dialog.Close asChild>
             <button className="absolute top-4 right-4 items-center justify-center rounded text-spdx-dark hover:bg-spdx-dark/5">
               <Cross2Icon />
@@ -48,4 +59,4 @@ const HelpDialog = () => {
   );
 };
 
-export default HelpDialog;
+export default AboutDialog;
