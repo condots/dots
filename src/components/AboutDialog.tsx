@@ -1,5 +1,5 @@
 import * as Dialog from '@radix-ui/react-dialog';
-import { Cross2Icon } from '@radix-ui/react-icons';
+import { Cross2Icon, GitHubLogoIcon } from '@radix-ui/react-icons';
 
 import { appStore } from '@/store/app';
 
@@ -35,19 +35,28 @@ const AboutDialog = () => {
           focus:outline-none
           prose
           overflow-auto
-          pb-6"
+          "
         >
-          <Dialog.Title className="px-5">
-            <img src="/dots-no-bg.svg" className="px-6" />
-            {/* <span className="flex ml-2 w-full text-center justify-center text-sky-800 font-varela font-normal text-6xl leading-4">
-              Connecting the dots
-            </span> */}
-          </Dialog.Title>
-          <Dialog.Description className="">
-            <span className="flex py-3 w-full text-center justify-center text-sky-800 font-varela font-bold text-5xl tracking-widest">
-              Ver {version}
-            </span>
-          </Dialog.Description>
+          <a
+            className="text-sky-800 no-underline"
+            href="https://github.com/condots/dots"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Dialog.Title className="px-5">
+              <img src="/dots-no-bg.svg" className="px-6" />
+              {/* <span className="flex ml-2 w-full text-center justify-center text-sky-800 font-varela font-normal text-6xl leading-4">
+                Connecting the dots
+              </span> */}
+            </Dialog.Title>
+            <Dialog.Description className="" asChild>
+              <p className="flex w-full text-center justify-center font-varela font-bold text-5xl tracking-widest gap-3">
+                <span>V</span>
+                <span>{version}</span>
+                <GitHubLogoIcon className="w-auto h-[38px]" />
+              </p>
+            </Dialog.Description>
+          </a>
           <Dialog.Close asChild>
             <button className="absolute top-4 right-4 items-center justify-center rounded text-spdx-dark hover:bg-spdx-dark/5">
               <Cross2Icon />
