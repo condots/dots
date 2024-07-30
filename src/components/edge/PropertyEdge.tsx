@@ -22,6 +22,7 @@ import type { Edge, EdgeProps } from 'reactflow';
 
 import { getEdgeParams } from '@/scripts/flow-utils.js';
 import { parseIRI } from '@/scripts/app-utils';
+import { appStore } from '@/store/app';
 
 const connectionStartHandleSelector = (state: ReactFlowState) =>
   state.connectionStartHandle;
@@ -38,6 +39,7 @@ const PropertyEdge = ({
   style,
   label,
   selected,
+  data,
 }: EdgeProps) => {
   const connectionSource = useStore(connectionStartHandleSelector)?.nodeId;
   const connectionTarget = useStore(connectionEndHandleSelector)?.nodeId;
@@ -207,8 +209,14 @@ const PropertyEdge = ({
             className={`flex px-1.5 py-0.5 border-1 bg-white border-1 border-spdx-dark rounded-md font-medium
               ${(selected || id === 'connection') && 'border-3'}
             `}
+            onDoubleClick={() =>
+              appStore.setState({
+                selectedInfoIri: data?.classProperty.path,
+                showInfoDialog: true,
+              })
+            }
           >
-            {label}
+            {data?.classProperty.name}
           </div>
         </div>
       </EdgeLabelRenderer>
