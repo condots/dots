@@ -229,7 +229,7 @@ const Canvas = () => {
       <input
         ref={importJsonLdRef}
         type="file"
-        accept="application/ld+json, application/json"
+        accept=".jsonld,.json-ld,.json"
         onChange={handleImportFile}
         hidden
       />

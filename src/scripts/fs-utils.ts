@@ -199,7 +199,12 @@ export async function importSpdxJsonLd(
 
   const doc = JSON.parse(data);
   const expectedContext = ontoStore.getState().jsonLdContextUrl;
-  if (doc['@context'] !== expectedContext) {
+  if (
+    !doc['@context'] ||
+    (Array.isArray(doc['@context']) &&
+      !doc['@context'].includes(expectedContext)) ||
+    (typeof doc['@context'] === 'string' && doc['@context'] !== expectedContext)
+  ) {
     appStore.setState(state => {
       state.alertMessage = {
         title: 'Context mismatch',
@@ -276,6 +281,9 @@ export async function importSpdxJsonLd(
         addNodeProperty(source, clsProp!, p.value);
       }
     } else {
+      if (!impNodes[p.value as string]?.id) {
+        throw new Error('No target node found with spdxId: ' + p.value);
+      }
       const target = impNodes[p.value as string].id;
       const newEdge = {
         id: generateURN(),
