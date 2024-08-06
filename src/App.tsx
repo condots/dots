@@ -9,9 +9,11 @@ import { updateMediaTypes } from '@/store/app';
 import InfoDialog from '@/components/InfoDialog';
 import ProfileMenu from '@/components/ProfileMenu';
 import Canvas from '@/components/Canvas';
-import Alert from '@/components/Alert';
+import AlertDialog from '@/components/AlertDialog';
 import HelpDialog from '@/components/HelpDialog';
+import AlertToast from '@/components/AlertToast';
 import AboutDialog from '@/components/AboutDialog';
+import Loader from '@/components/Loader';
 
 export default function App() {
   useEffect(() => {
@@ -27,11 +29,13 @@ export default function App() {
 
   return (
     <div className="fixed h-screen w-screen bg-[#fafafa]">
-      <Alert />
+      <AlertDialog />
+      <AlertToast />
       <InfoDialog />
-      <ProfileMenu />
+      <Loader />
       <HelpDialog />
       <AboutDialog />
+      <ProfileMenu />
       <Canvas />
     </div>
   );

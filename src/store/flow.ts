@@ -237,11 +237,14 @@ export function addNode(
   position: XYPosition
 ) {
   const recClsProps = ontoStore.getState().allRecClsProps![classIRI];
+  const inheritanceList = [...recClsProps.keys()];
+  const isElement = !!inheritanceList.find(c => c.endsWith('/Core/Element'));
   const data: NodeData = {
     active: false,
     expanded: false,
+    isElement: isElement,
     cls: getItem(classIRI) as Class,
-    inheritanceList: [...recClsProps.keys()],
+    inheritanceList: inheritanceList,
     nodeProps: initNodeProps(recClsProps),
     recClsProps: recClsProps,
     hiddenNodes: [],

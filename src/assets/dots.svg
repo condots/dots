@@ -8,7 +8,7 @@
    version="1.1"
    id="svg1"
    sodipodi:docname="dots.svg"
-   inkscape:export-filename="dots.png"
+   inkscape:export-filename="dots/dots-page.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    inkscape:version="1.3.2 (091e20e, 2023-11-25)"
@@ -27,9 +27,9 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showguides="true"
-     inkscape:zoom="0.21770103"
-     inkscape:cx="1708.7654"
-     inkscape:cy="1079.462"
+     inkscape:zoom="0.12924831"
+     inkscape:cx="1338.5088"
+     inkscape:cy="340.42998"
      inkscape:window-width="2560"
      inkscape:window-height="1387"
      inkscape:window-x="0"
@@ -480,60 +480,62 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
+    <rect
+       style="display:none;fill:#ffffff;stroke:#ffffff;stroke-width:166.936"
+       id="rect4"
+       width="1058.3333"
+       height="1058.3333"
+       x="2.3107514e-05"
+       y="-243.41664"
+       inkscape:label="white-rect-bg" />
     <g
        id="g57"
        transform="matrix(152.59073,0,0,153.42443,-202.15218,-461.68283)"
        inkscape:label="dots"
-       inkscape:export-filename="dots.png"
+       inkscape:export-filename="../../../../Pictures/dots/dots-for-github.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96">
       <g
-         id="g58"
-         transform="translate(0.1779746)"
-         inkscape:export-filename="s-bg.svg"
-         inkscape:export-xdpi="3.1497478"
-         inkscape:export-ydpi="3.1497478"
-         inkscape:label="s">
-        <rect
-           style="display:none;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:3.04204;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-           id="rect3"
-           width="2.3936043"
-           height="2.3806002"
-           x="5.6959214"
-           y="4.2474608"
-           ry="0.45625067"
-           inkscape:label="bg" />
-        <ellipse
-           style="display:inline;fill:none;fill-opacity:1;stroke:#00416b;stroke-width:0.222539;stroke-dasharray:none;stroke-opacity:1"
-           id="ellipse1"
-           cx="5.034677"
-           cy="7.1773725"
-           rx="0.73389173"
-           ry="0.73055726"
-           inkscape:label="O"
-           transform="matrix(0.95848968,-0.28512722,0.28799356,0.95763235,0,0)" />
+         id="g166-9"
+         inkscape:label="s"
+         transform="matrix(0.00655321,0,0,0.0065176,6.2187804,4.5904397)"
+         inkscape:export-filename="dots/s.png"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96"
+         sodipodi:insensitive="true">
         <path
-           style="color:#000000;fill:#00416b;fill-opacity:1;stroke-width:1.05827;stroke-dasharray:none"
-           d="M 7.0367048,4.608717 C 6.8333773,4.5756898 6.5918693,4.6043096 6.4386311,4.7684561 6.2809721,4.9373381 6.2934974,5.2338809 6.5130401,5.3906008 6.622813,5.4689618 6.75918,5.5044248 6.8871539,5.5414863 7.0151278,5.5785493 7.1369266,5.6167423 7.1971928,5.6593012 7.3177251,5.7444202 7.3152749,5.885298 7.2281958,5.9548716 7.1256314,6.0368175 6.9436383,6.0670384 6.8064679,6.0494217 6.6800013,6.0331796 6.624962,6.000386 6.4890637,5.911043 c 0,0 -0.029691,-0.036554 -0.1116799,0.056983 -0.050832,0.06887 -0.016471,0.12241 -0.016471,0.12241 0.1113242,0.0907 0.2545138,0.1731384 0.4623713,0.1860525 0.205342,0.012758 0.3787238,-0.02846 0.5619594,-0.1531402 C 7.5762804,5.9933602 7.5368387,5.6414805 7.3191417,5.4877463 7.2102931,5.4108792 7.0747814,5.3759065 6.9470951,5.3389276 6.8194086,5.3019488 6.6988877,5.2631842 6.6370561,5.219046 6.5133922,5.130769 6.5222025,4.9896751 6.5936506,4.9131408 c 0.075869,-0.08127 0.2694881,-0.1116345 0.4077873,-0.084744 0.1624087,0.031578 0.2458672,0.0934 0.3168426,0.1540572 0,0 0.039418,0.029758 0.1102583,-0.043165 C 7.4910458,4.874698 7.4650758,4.8191657 7.4650758,4.8191657 7.3553034,4.7213801 7.2462848,4.6427597 7.0367048,4.608717 Z"
-           id="path50"
-           sodipodi:nodetypes="ssssssscccssssssscccs"
-           inkscape:label="S" />
+           id="ellipse162-2"
+           style="display:inline;fill:none;stroke:#ff3bf3;stroke-width:34.0157;stroke-dasharray:none"
+           inkscape:label="O"
+           transform="rotate(-43.090129)"
+           d="m 118.16209,183.74565 c 0,61.87519 -50.159751,112.03494 -112.034939,112.03494 -59.972337,0 -108.938731,-47.12206 -111.893741,-106.36074 -0.0938,-1.87958 -0.1412,-3.77135 -0.1412,-5.6742 0,-61.87519 50.159751,-112.034942 112.034941,-112.034941 61.875189,1e-6 112.034939,50.159751 112.034939,112.034941 z"
+           sodipodi:nodetypes="ssssss"
+           sodipodi:insensitive="true" />
+        <path
+           style="display:inline;fill:none;fill-opacity:0.492754;stroke:#0000dc;stroke-width:34.0498;stroke-linecap:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.368116"
+           d="M 210.70727,52.293428 C 203.57188,44.654892 176.83354,18.744299 131.29557,17.96444 106.4944,17.539708 65.086019,29.684593 61.56699,63.47924 c -9.455503,90.80498 142.72701,40.06599 147.47281,120.2052 1.64493,27.77679 -26.3964,56.99536 -77.18977,58.34051 -12.58411,0.33326 -48.196295,-1.6983 -78.552227,-30.35137"
+           id="path166-2"
+           sodipodi:nodetypes="csssss"
+           inkscape:label="S"
+           sodipodi:insensitive="true" />
       </g>
       <g
          id="g52"
          transform="matrix(1.0722918,0,0,1.0664651,-0.53353648,-1.9061122)"
-         inkscape:label="t">
+         inkscape:label="t"
+         sodipodi:insensitive="true">
         <rect
-           style="fill:#00416b;fill-opacity:1;stroke-width:0.207622"
+           style="fill:#a125ea;fill-opacity:1;stroke-width:0.207622"
            id="rect12"
            width="0.2"
            height="2.7551591"
            x="5.8908677"
            y="4.9174786"
            ry="0.091838643"
-           inkscape:label="|" />
+           inkscape:label="|"
+           sodipodi:insensitive="true" />
         <rect
-           style="fill:#00416b;fill-opacity:1;stroke-width:0.0973411"
+           style="fill:#a125ea;fill-opacity:1;stroke-width:0.0973411"
            id="rect2"
            width="0.19999999"
            height="0.605609"
@@ -541,48 +543,55 @@
            y="-6.2936721"
            ry="0.099565566"
            inkscape:label="-"
-           transform="rotate(90)" />
+           transform="rotate(90)"
+           sodipodi:insensitive="true" />
       </g>
       <g
          id="g2"
          inkscape:label="o"
-         transform="translate(0.09815594)">
+         transform="translate(0.09815594)"
+         sodipodi:insensitive="true">
         <ellipse
-           style="fill:none;stroke:#00416b;stroke-width:0.222538;stroke-dasharray:none;stroke-opacity:1"
+           style="fill:none;stroke:#ff3bf3;stroke-width:0.222538;stroke-dasharray:none;stroke-opacity:1"
            id="circle14"
            cx="4.5921073"
            cy="5.4377604"
            rx="0.73421854"
            ry="0.73022884"
-           inkscape:label="O" />
+           inkscape:label="O"
+           sodipodi:insensitive="true" />
       </g>
       <g
          id="g53"
          transform="matrix(1.0722918,0,0,1.0664651,-0.83624645,-2.006088)"
-         inkscape:label="d">
+         inkscape:label="d"
+         sodipodi:insensitive="true">
         <rect
-           style="fill:#00416b;fill-opacity:1;stroke-width:0.164736;stroke-dasharray:none"
+           style="fill:#a125ea;fill-opacity:1;stroke-width:0.164736;stroke-dasharray:none"
            id="rect1"
            width="0.2"
            height="2.7551613"
            x="3.8137374"
            y="5.0112238"
            ry="0.09183871"
-           inkscape:label="|" />
+           inkscape:label="|"
+           sodipodi:insensitive="true" />
         <circle
-           style="fill:none;stroke:#00416b;stroke-width:0.208101;stroke-dasharray:none;stroke-opacity:1"
+           style="fill:none;stroke:#ff3bf3;stroke-width:0.208101;stroke-dasharray:none;stroke-opacity:1"
            id="circle15"
            cx="3.1499093"
            cy="6.9799285"
            r="0.68471891"
-           inkscape:label="O" />
+           inkscape:label="O"
+           sodipodi:insensitive="true" />
         <circle
-           style="fill:#00416b;fill-opacity:1;stroke:none;stroke-width:0.0482797;stroke-dasharray:none;stroke-opacity:1"
+           style="fill:#0000dc;fill-opacity:0.368627;stroke:none;stroke-width:0.0482797;stroke-dasharray:none;stroke-opacity:1"
            id="ellipse2"
            cx="3.1499093"
            cy="6.9799285"
            inkscape:label="o"
-           r="0.12287483" />
+           r="0.12287483"
+           sodipodi:insensitive="true" />
       </g>
     </g>
   </g>

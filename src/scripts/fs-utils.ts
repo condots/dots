@@ -40,9 +40,7 @@ interface ImportedNode {
 type ImportedNodes = Record<string, ImportedNode>;
 
 function genNodeQuad(store: Store, subjects: SubjectMap, node: FlowNode) {
-  const subject = node.data.inheritanceList.includes(
-    'https://spdx.org/rdf/3.0.0/terms/Core/Element'
-  )
+  const subject = node.data.isElement
     ? namedNode(node.id)
     : store.createBlankNode();
   const q = quad(subject, NS.rdf.type, namedNode(node.data.cls.iri));
@@ -185,126 +183,137 @@ export async function importSpdxJsonLd(
   refPos: XYPosition,
   collapsed: boolean = true
 ) {
-  let data: string;
-  if (typeof source === 'string') {
-    data = await (await fetch(source)).text();
-  } else {
-    data = await new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = () => reject(reader.error);
-      reader.readAsText(source);
-    });
-  }
+  appStore.setState(state => {
+    state.showLoader = true;
+  });
 
-  const doc = JSON.parse(data);
-  const expectedContext = ontoStore.getState().jsonLdContextUrl;
-  if (
-    !doc['@context'] ||
-    (Array.isArray(doc['@context']) &&
-      !doc['@context'].includes(expectedContext)) ||
-    (typeof doc['@context'] === 'string' && doc['@context'] !== expectedContext)
-  ) {
-    appStore.setState(state => {
-      state.alertMessage = {
-        title: 'Context mismatch',
-        description: `The URL of the context in the imported document has to match "${expectedContext}"`,
-      };
-    });
-    return;
-  }
-
-  const ctx = ontoStore.getState().jsonLdContext!;
-  const expanded = await jsonld.flatten(doc, ctx);
-  const quads = (await jsonld.toRDF(expanded)) as Quad[];
-  const store = new Store(quads);
-
-  const sid = checkDuplicatedNodeIds(store);
-  if (sid) {
-    appStore.setState(state => {
-      state.alertMessage = {
-        title: 'Existing node ID',
-        description: `A node with ID "${sid}" already exists. Please remove bofore importing.`,
-      };
-    });
-    return;
-  }
-
-  const positions: NamedPositions = doc.dots
-    ? getCanvasPositions(doc.dots, refPos)
-    : {};
-
-  const impProps: ImportedProperties = [];
-  const impNodes: ImportedNodes = {};
-  for (const s of store.getSubjects(null, null, null)) {
-    let classIRI: string;
-    for (const q of store.getQuads(s, null, null, null)) {
-      const path = q.predicate.value;
-      const value = q.object.value;
-      if (path === NS.rdf.type.value) {
-        classIRI = value;
-      } else {
-        impProps.push({ id: s.value, path, value });
-      }
-    }
-    const impNode: ImportedNode = {
-      id: s.value.startsWith('_:') ? generateURN() : s.value,
-      classIRI: classIRI!,
-      position: positions[s.value] ?? refPos,
-    };
-    addNode('inst', impNode.id, impNode.classIRI, impNode.position);
-    impNodes[s.value] = impNode;
-  }
-
-  for (const p of impProps) {
-    const source = impNodes[p.id].id;
-    const data = getNode(source)!.data;
-    const recClsProps = data.recClsProps;
-    let clsProp: ClassProperty;
-    for (const clsProps of recClsProps.values()) {
-      for (const cp of Object.values(clsProps)) {
-        if (cp.path === p.path) {
-          clsProp = cp;
-          break;
-        }
-      }
-    }
-    if (clsProp!.nodeKind === 'Literal' || clsProp!.options) {
-      const existingProp = Object.entries(data.nodeProps).find(
-        np =>
-          np[1].classProperty === clsProp! &&
-          (!np[1].valid || np[1].value === p.value)
-      );
-      if (existingProp) {
-        setNodeProperty(source, existingProp[0], p.value);
-      } else {
-        addNodeProperty(source, clsProp!, p.value);
-      }
+  try {
+    let data: string;
+    if (typeof source === 'string') {
+      data = await (await fetch(source)).text();
     } else {
-      if (!impNodes[p.value as string]?.id) {
-        throw new Error('No target node found with spdxId: ' + p.value);
-      }
-      const target = impNodes[p.value as string].id;
-      const newEdge = {
-        id: generateURN(),
-        source,
-        target,
-        data: { classProperty: clsProp! },
-        label: clsProp!.name,
-        selected: false,
-      };
-      flowStore.setState(state => {
-        state.edges = [...state.edges, newEdge];
+      data = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsText(source);
       });
     }
-  }
 
-  const collapsedNode =
-    Object.values(impNodes).find(n => n.classIRI.endsWith('/SpdxDocument')) ??
-    impNodes[0];
+    const doc = JSON.parse(data);
+    const expectedContext = ontoStore.getState().jsonLdContextUrl;
+    if (
+      !doc['@context'] ||
+      (Array.isArray(doc['@context']) &&
+        !doc['@context'].includes(expectedContext)) ||
+      (typeof doc['@context'] === 'string' &&
+        doc['@context'] !== expectedContext)
+    ) {
+      appStore.setState(state => {
+        state.alertMessage = {
+          title: 'Context mismatch',
+          description: `The URL of the context in the imported document has to match "${expectedContext}"`,
+        };
+      });
+      return;
+    }
 
-  if (collapsed) {
-    hideTreeNodes(collapsedNode.id);
-    selectNode(collapsedNode.id);
+    const ctx = ontoStore.getState().jsonLdContext!;
+    const expanded = await jsonld.flatten(doc, ctx);
+    const quads = (await jsonld.toRDF(expanded)) as Quad[];
+    const store = new Store(quads);
+
+    const sid = checkDuplicatedNodeIds(store);
+    if (sid) {
+      appStore.setState(state => {
+        state.alertMessage = {
+          title: 'Existing node ID',
+          description: `A node with ID "${sid}" already exists. Please remove bofore importing.`,
+        };
+      });
+      return;
+    }
+
+    const positions: NamedPositions = doc.dots
+      ? getCanvasPositions(doc.dots, refPos)
+      : {};
+
+    const impProps: ImportedProperties = [];
+    const impNodes: ImportedNodes = {};
+    for (const s of store.getSubjects(null, null, null)) {
+      let classIRI: string;
+      for (const q of store.getQuads(s, null, null, null)) {
+        const path = q.predicate.value;
+        const value = q.object.value;
+        if (path === NS.rdf.type.value) {
+          classIRI = value;
+        } else {
+          impProps.push({ id: s.value, path, value });
+        }
+      }
+      const impNode: ImportedNode = {
+        id: s.value.startsWith('_:') ? generateURN() : s.value,
+        classIRI: classIRI!,
+        position: positions[s.value] ?? refPos,
+      };
+      addNode('inst', impNode.id, impNode.classIRI, impNode.position);
+      impNodes[s.value] = impNode;
+    }
+
+    for (const p of impProps) {
+      const source = impNodes[p.id].id;
+      const data = getNode(source)!.data;
+      const recClsProps = data.recClsProps;
+      let clsProp: ClassProperty;
+      for (const clsProps of recClsProps.values()) {
+        for (const cp of Object.values(clsProps)) {
+          if (cp.path === p.path) {
+            clsProp = cp;
+            break;
+          }
+        }
+      }
+      if (clsProp!.nodeKind === 'Literal' || clsProp!.options) {
+        const existingProp = Object.entries(data.nodeProps).find(
+          np =>
+            np[1].classProperty === clsProp! &&
+            (!np[1].valid || np[1].value === p.value)
+        );
+        if (existingProp) {
+          setNodeProperty(source, existingProp[0], p.value);
+        } else {
+          addNodeProperty(source, clsProp!, p.value);
+        }
+      } else {
+        if (!impNodes[p.value as string]?.id) {
+          throw new Error('No target node found with spdxId: ' + p.value);
+        }
+        const target = impNodes[p.value as string].id;
+        const newEdge = {
+          id: generateURN(),
+          source,
+          target,
+          data: { classProperty: clsProp! },
+          label: clsProp!.name,
+          selected: false,
+        };
+        flowStore.setState(state => {
+          state.edges = [...state.edges, newEdge];
+        });
+      }
+    }
+
+    const collapsedNode =
+      Object.values(impNodes).find(n => n.classIRI.endsWith('/SpdxDocument')) ??
+      impNodes[0];
+
+    if (collapsed) {
+      hideTreeNodes(collapsedNode.id);
+      selectNode(collapsedNode.id);
+    }
+  } finally {
+    appStore.setState(state => {
+      state.showLoader = false;
+    });
   }
 }

@@ -29,6 +29,7 @@ import {
 } from '@/scripts/canvas-defaults';
 import { importSpdxJsonLd } from '@/scripts/fs-utils';
 import { Class } from '@/types';
+import sLogoBlack from '@/assets/s-black.svg';
 
 const Canvas = () => {
   const nodes = flowStore.use.nodes();
@@ -187,6 +188,16 @@ const Canvas = () => {
             receipt_long
           </span>
         </ControlButton>
+        <ControlButton
+          onClick={() => {
+            appStore.setState(state => {
+              state.showAboutDialog = true;
+            });
+          }}
+          title="about dots"
+        >
+          <img src={sLogoBlack} width={14} />
+        </ControlButton>
       </Controls>
       <Panel position="top-right" className="drop-shadow">
         <ControlButton
@@ -210,19 +221,6 @@ const Canvas = () => {
           >
             keyboard_arrow_left
           </span>
-        </ControlButton>
-      </Panel>
-      <Panel position="bottom-right">
-        <ControlButton
-          onClick={() => {
-            appStore.setState(state => {
-              state.showAboutDialog = true;
-            });
-          }}
-          title="about dots"
-          className="w-full h-full drop-shadow-xl rounded hover:bg-gray-50 pb-2"
-        >
-          <img src="/dots-no-bg.svg" width={60} alt="" className="" />
         </ControlButton>
       </Panel>
       <DraggedClass />

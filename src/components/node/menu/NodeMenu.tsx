@@ -20,6 +20,7 @@ import {
 import NodeMenuClass from '@/components/node/menu/NodeMenuClass';
 import NodeMenuProp from '@/components/node/menu/NodeMenuProp';
 import { exportSpdxJsonLd } from '@/scripts/fs-utils';
+import NodeSpdxId from '@/components/node/menu/NodeSpdxId';
 
 const NodeMenu = () => {
   const nodeId = useNodeId()!;
@@ -66,6 +67,7 @@ const NodeMenu = () => {
       onSelect={() => deleteNode(nodeId)}
     >
       Delete
+      <span className="material-symbols-outlined text-sm">backspace</span>
     </DropdownMenu.Item>
   );
 
@@ -122,6 +124,7 @@ const NodeMenu = () => {
         <DropdownMenu.Content className={contentClass + ' p-1'} align="start">
           <NodeMenuProp />
           <NodeMenuClass />
+          <NodeSpdxId />
           {node?.data.hiddenNodes.length == 0 ? HideTree : UnhideTree}
           {GetInfo}
           {Delete}

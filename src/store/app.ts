@@ -18,10 +18,12 @@ import {
 import { getMediaTypes } from '@/scripts/app-utils';
 
 type AppState = {
+  showLoader: boolean;
   showClassesMenu: boolean;
   showInfoDialog: boolean;
   showHelpDialog: boolean;
   showAboutDialog: boolean;
+  alertToast: string | undefined;
   alertMessage: AlertMessage | undefined;
   selectedInfoIri: string | undefined;
   draggedClassData: DraggedClassData | undefined;
@@ -31,10 +33,12 @@ type AppState = {
 };
 
 const initialState = {
+  showLoader: false,
   showClassesMenu: false,
   showInfoDialog: false,
   showHelpDialog: false,
   showAboutDialog: false,
+  alertToast: undefined,
   alertMessage: undefined,
   selectedInfoIri: undefined,
   draggedClassData: undefined,
@@ -87,10 +91,12 @@ const appStoreBase = create<AppState>()(
                 Object.entries(state).filter(
                   ([key]) =>
                     ![
+                      'showLoader',
                       'showClassesMenu',
                       'showInfoDialog',
                       'showHelpDialog',
                       'showAboutDialog',
+                      'alertToast',
                       'alertMessage',
                       'selectedInfoIri',
                       'draggedClassData',

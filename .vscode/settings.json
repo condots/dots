@@ -24,5 +24,6 @@
     },
     "editor.quickSuggestions": {
         "strings": "on"
-    }
+    },
+    "svg.preview.background": "custom"
 }

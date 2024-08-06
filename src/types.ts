@@ -99,6 +99,7 @@ export type NodeProperty = {
 export type NodeData = {
   active: boolean;
   expanded: boolean;
+  isElement: boolean;
   cls: Class;
   inheritanceList: string[];
   nodeProps: Record<string, NodeProperty>;

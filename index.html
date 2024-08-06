@@ -9,11 +9,20 @@
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+HR+Lijeva:wght@100..400&family=Playwrite+PL:wght@100..400&family=Roboto+Slab:wght@100..900&family=Sacramento&family=Varela+Round&display=swap"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/s-bg.svg" />
+    <link rel="icon" type="image/svg+xml" href="/src/assets/s-bg-rect-black.svg" />
     <title>Connecting the dots</title>
+    <link rel="stylesheet" href="/src/index.css" />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="loader">
+        <div class="relative">
+          <div class="loader absolute loader-size">
+            <img src="/src/assets/circle-grad.svg" class="absolute loader-size animate-spin" />
+            <img src="/src/assets/s-grad.svg" class="absolute loader-size" />
+          </div>
+        </div>
+      </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

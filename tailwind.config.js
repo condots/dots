@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 import typography from '@tailwindcss/typography';
-import { blackA, mauve, violet, blue } from '@radix-ui/colors';
+import { blackA, mauve } from '@radix-ui/colors';
 
 export default {
   content: [
@@ -71,6 +71,7 @@ export default {
         slideUpAndFade: 'slideUpAndFade 300ms cubic-bezier(0.16, 1, 0.3, 1)',
         slideRightAndFade:
           'slideRightAndFade 300ms cubic-bezier(0.16, 1, 0.3, 1)',
+        spinSlow: 'spin 5s linear infinite',
       },
     },
   },
