@@ -118,5 +118,7 @@ export async function updateMediaTypes() {
   // if (appStore.getState().mediaTypes) return;
   const mediaTypes = await getMediaTypes();
   appStore.setState({ mediaTypes });
-  console.log(`loaded MediaTypes`);
+  if (!import.meta.env.PROD) {
+    console.log(`loaded MediaTypes`);
+  }
 }

@@ -119,7 +119,9 @@ export async function updateOntology(
     jsonLdContextUrl,
     jsonLdContext,
   });
-  console.log(`loaded SPDX ${ontologyMetadata?.specVersion}`);
+  if (!import.meta.env.PROD) {
+    console.log(`loaded SPDX ${ontologyMetadata?.specVersion}`);
+  }
 }
 
 export const getItem = (iri: IRI | undefined) => {
