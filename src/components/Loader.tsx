@@ -2,6 +2,9 @@ import * as Dialog from '@radix-ui/react-dialog';
 
 import { appStore } from '@/store/app';
 
+import circleGrad from '@/assets/circle-grad.svg';
+import sGrad from '@/assets/s-grad.svg';
+
 const Loader = () => {
   const showLoader = appStore.use.showLoader();
 
@@ -13,13 +16,10 @@ const Loader = () => {
           <div className="relative">
             <div className="loader absolute loader-size">
               <img
-                src="/src/assets/circle-grad.svg"
+                src={circleGrad}
                 className="absolute loader-size animate-spin"
               />
-              <img
-                src="/src/assets/s-grad.svg"
-                className="absolute loader-size"
-              />
+              <img src={sGrad} className="absolute loader-size" />
             </div>
           </div>
         </Dialog.Content>
