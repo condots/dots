@@ -29,7 +29,7 @@ import {
 } from '@/scripts/canvas-defaults';
 import { importSpdxJsonLd } from '@/scripts/fs-utils';
 import { Class } from '@/types';
-import sLogoBlack from '@/assets/s-black.svg';
+import sLogo from '@/assets/s.svg';
 
 const Canvas = () => {
   const nodes = flowStore.use.nodes();
@@ -196,7 +196,7 @@ const Canvas = () => {
           }}
           title="about dots"
         >
-          <img src={sLogoBlack} width={14} />
+          <img src={sLogo} />
         </ControlButton>
       </Controls>
       <Panel position="top-right" className="drop-shadow">

@@ -253,6 +253,8 @@ export async function importSpdxJsonLd(
       return;
     }
 
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     const positions: NamedPositions = doc.dots
       ? getCanvasPositions(doc.dots, refPos)
       : {};

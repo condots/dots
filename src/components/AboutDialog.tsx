@@ -2,7 +2,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
 
 import { appStore } from '@/store/app';
-import dotsNoBg from '@/assets/dots-no-bg.svg';
+import logo from '@/assets/logo.svg';
 
 const AboutDialog = () => {
   const showAboutDialog = appStore.use.showAboutDialog();
@@ -40,7 +40,7 @@ const AboutDialog = () => {
           >
             <div className="rounded-lg hover:bg-gray-50">
               <Dialog.Title className="px-6 py-5">
-                <img src={dotsNoBg} className="" />
+                <img src={logo} className="" width={600} />
               </Dialog.Title>
             </div>
           </a>

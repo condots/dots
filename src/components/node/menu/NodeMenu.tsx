@@ -35,7 +35,7 @@ const NodeMenu = () => {
     const name = (Object.values(node.data.nodeProps).find(
       p => p.classProperty.name === 'name'
     )?.value ?? `spdx-doc-${~~(Date.now() / 1000)}`) as string;
-    const filename = `${sanitize(name)}`;
+    const filename = `${sanitize(name)}.jsonld`;
 
     return (
       <DropdownMenu.Item
