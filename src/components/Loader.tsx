@@ -14,18 +14,11 @@ const Loader = () => {
         <Dialog.Overlay className="data-[state=open]:animate-overlayShow fixed inset-0 DialogOverlay" />
         <Dialog.Content className="loader">
           <div className="relative">
-            <div className="loader absolute loader-size">
-              <img
-                src={S}
-                className="absolute"
-                style={{ width: '100%', height: '100%' }}
-              />
-            </div>
-            <div
-              className="loader absolute"
-              style={{ width: '201px', paddingRight: '3px' }}
-            >
+            <div className="loader absolute grad-spin">
               <img src={O} />
+            </div>
+            <div className="loader absolute loader-size">
+              <img src={S} className="absolute loader-size" />
             </div>
           </div>
         </Dialog.Content>

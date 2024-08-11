@@ -22,6 +22,6 @@
 
   <!-- highlight-start -->
   <animateTransform from="135 0 0" to="495 0 0" attributeName="transform" type="rotate" repeatCount="indefinite"
-    dur="1200ms" />
+    dur="1000ms" />
   <!-- highlight-end -->
 </svg>

@@ -94,6 +94,11 @@ div.targetHandle {
   width: 280px;
 }
 
+.grad-spin {
+  width: 201px;
+  padding-right: 3px;
+}
+
 .animate-spin {
   animation: spin 1s linear infinite;
 }
