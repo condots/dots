@@ -117,25 +117,6 @@ function checkInvalidProp(nodes: FlowNode[]) {
   }
 }
 
-async function saveFile(filename: string, blob: Blob) {
-  if (window.showSaveFilePicker) {
-    const handle = await window.showSaveFilePicker({
-      suggestedName: filename,
-      types: [
-        {
-          description: 'JSON-LD File',
-          accept: { 'application/ld+json': ['.jsonld'] },
-        },
-      ],
-    });
-    const writable = await handle.createWritable();
-    await writable.write(blob);
-    await writable.close();
-  } else {
-    saveAs(blob, filename);
-  }
-}
-
 export async function exportSpdxJsonLd(filename: string, nodes?: FlowNode[]) {
   if (!nodes) {
     nodes = flowStore.getState().nodes;
@@ -170,7 +151,7 @@ export async function exportSpdxJsonLd(filename: string, nodes?: FlowNode[]) {
   const blob = new Blob([JSON.stringify(compacted, null, 2)], {
     type: 'application/ld+json;charset=utf-8',
   });
-  saveFile(filename, blob);
+  saveAs(blob, filename);
 }
 
 function relativeToCanvasPosition(refPos: XYPosition, relPos: XYPosition) {
