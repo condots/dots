@@ -1,5 +1,5 @@
 {
-  "@context": "https://spdx.org/rdf/3.0.0/spdx-context.jsonld",
+  "@context": "https://raw.githubusercontent.com/spdx/spdx-spec/development/v3.0.1/rdf/spdx-context.jsonld",
   "@graph": [
     {
       "spdxId": "urn:nanoid:5uUlahHiRSRG2c9pTFvqJ",
@@ -16,7 +16,7 @@
         "urn:nanoid:N4nXnJ_aV-906oMFoFrId",
         "urn:nanoid:m_6pT9znU7RsQcYBOYC19"
       ],
-      "specVersion": "3.0.0"
+      "specVersion": "3.0.1"
     },
     {
       "spdxId": "urn:nanoid:kMuuWYeSugx5xUhWrqXiI",

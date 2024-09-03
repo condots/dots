@@ -18,10 +18,15 @@ import Loader from '@/components/Loader';
 export default function App() {
   useEffect(() => {
     updateMediaTypes().then(() => {
-      const source = 'spdx-model.ttl';
+      const source =
+        // 'https://raw.githubusercontent.com/spdx/spdx-spec/development/v3.0.1/rdf/spdx-model.ttl';
+        'https://spdx.github.io/spdx-spec/v3.0/model/spdx-model.ttl';
       const jsonLdContextSource =
+        // 'https://raw.githubusercontent.com/spdx/spdx-spec/development/v3.0.1/rdf/spdx-context.jsonld';
         'https://spdx.github.io/spdx-spec/v3.0/model/spdx-context.jsonld';
-      const jsonLdContextUrl = 'https://spdx.org/rdf/3.0.0/spdx-context.jsonld';
+      const jsonLdContextUrl =
+        // 'https://raw.githubusercontent.com/spdx/spdx-spec/development/v3.0.1/rdf/spdx-context.jsonld';
+        'https://spdx.org/rdf/3.0.0/spdx-context.jsonld';
       const model = 'model.json';
       updateOntology(source, jsonLdContextSource, jsonLdContextUrl, model);
     });

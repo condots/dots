@@ -102,12 +102,12 @@ export async function updateOntology(
 ) {
   // if (ontoStore.getState().source === source) return;
   const graph = await createGraph(source);
-  const ontologyMetadata = getOntologyMetadata(graph);
   const graphProfiles = createModel(graph);
   const profiles = await enrichModelFromMarkdown(graphProfiles, model);
   const iris = mapIRIs(profiles);
   const allRecClsProps = getAllRecClsProps(profiles, iris);
   const jsonLdContext = await getJsonLdContext(jsonLdContextSource);
+  const ontologyMetadata = getOntologyMetadata(graph);
   ontoStore.setState({
     source,
     graph,

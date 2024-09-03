@@ -161,5 +161,6 @@ cython_debug/
 
 
 spdx/ontologies/*/docs
-node_modules
+node_modules/
 .DS_Store
+spec-parser-output/

@@ -1,5 +1,5 @@
 import rdfext from 'rdf-ext';
-import { Parser, Quad, Store, Term } from 'n3';
+import { Parser, Quad, Store, Term, DataFactory } from 'n3';
 import jsonld from 'jsonld';
 
 import {
@@ -156,7 +156,7 @@ export async function enrichModelFromMarkdown(
           v => v.name === itemName
         )!;
         item.description = modelItem.description;
-        if (sectionName === 'classes') {
+        if (sectionName === 'classes' && item.abstract === undefined) {
           item.abstract = modelItem.metadata.Instantiability === 'Abstract';
         }
         section[itemName] = item;
@@ -233,15 +233,33 @@ function groupByProfile(section: Section) {
 }
 
 function getClasses(graph: Store) {
+  // classes that don't have labeled NamedIndividuals
   const nodes = graph
     .getSubjects(NS.rdf.type, NS.owl.Class, null)
-    .filter(o => !graph.countQuads(null, NS.rdf.type, o, null));
+    .filter(
+      o =>
+        !graph
+          .getSubjects(NS.rdf.type, o, null)
+          .filter(s => graph.countQuads(s, NS.rdfs.label, null, null)).length
+    )
+    .filter(o => !o.value.endsWith('AbstractClass')); //workaround for invalid AbstractClass
   const items: Classes = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
     items[shared.name] = {
       ...shared,
       subClassOf: graph.getObjects(node, NS.rdfs.subClassOf, null)[0]?.value,
+      // nodeKind: graph
+      //   .getObjects(node, NS.sh.nodeKind, null)[0]
+      //   .value.split('#')
+      //   .pop() as nodeKindTypes,
+      // abstract: graph.has(
+      //   DataFactory.quad(
+      //     node,
+      //     NS.rdf.type,
+      //     DataFactory.namedNode('http://spdx.invalid./AbstractClass')
+      //   )
+      // ),
       properties: extractNodeShape(graph, node),
     };
   }
@@ -281,9 +299,16 @@ function getObjectProperties(graph: Store) {
 }
 
 function getVocabularies(graph: Store) {
+  // classes that have labeled NamedIndividuals
   const nodes = graph
     .getSubjects(NS.rdf.type, NS.owl.Class, null)
-    .filter(o => graph.countQuads(null, NS.rdf.type, o, null));
+    .filter(
+      o =>
+        graph
+          .getSubjects(NS.rdf.type, o, null)
+          .filter(s => graph.countQuads(s, NS.rdfs.label, null, null)).length
+    )
+    .filter(o => !o.value.endsWith('AbstractClass')); //workaround for invalid AbstractClass
   const items: Vocabularies = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
