@@ -15,6 +15,7 @@ import {
   getNode,
   getNodeOutEdges,
   hideTreeNodes,
+  isUnmetClsProp,
   selectNode,
   setNodeProperty,
 } from '@/store/flow';
@@ -117,6 +118,18 @@ function checkInvalidProp(nodes: FlowNode[]) {
   }
 }
 
+function checkMissingProp(nodes: FlowNode[]) {
+  for (const node of nodes) {
+    for (const clsProps of node.data.recClsProps.values()) {
+      for (const clsProp of Object.values(clsProps).sort()) {
+        if (isUnmetClsProp(node, clsProp)) {
+          return { node, clsProp };
+        }
+      }
+    }
+  }
+}
+
 export async function generateSpdxJsonLd(nodes?: FlowNode[]) {
   if (!nodes) {
     nodes = flowStore.getState().nodes;
@@ -126,8 +139,19 @@ export async function generateSpdxJsonLd(nodes?: FlowNode[]) {
   if (invalidProp) {
     appStore.setState(state => {
       state.alertMessage = {
-        title: 'Invalid property',
-        description: `"${invalidProp.node.data.cls.name}" has an invalid "${invalidProp.nodeProp.classProperty.name}" value.`,
+        title: 'Invalid Value',
+        description: `"${invalidProp.node.data.cls.name}" has an invalid "${invalidProp.nodeProp.classProperty.name}" value`,
+      };
+    });
+    return;
+  }
+
+  const missingProp = checkMissingProp(nodes);
+  if (missingProp) {
+    appStore.setState(state => {
+      state.alertMessage = {
+        title: 'Missing Edge',
+        description: `"${missingProp.node.data.cls.name}" has a missing "${missingProp.clsProp.name}" edge`,
       };
     });
     return;
