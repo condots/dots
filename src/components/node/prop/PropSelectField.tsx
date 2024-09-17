@@ -37,13 +37,15 @@ const PropSelectField = ({ propertyId }: { propertyId: string }) => {
       value={nodeProperty.value as string}
       onChange={(e: DropdownChangeEvent) => setValue(e.value)}
       options={options}
-      virtualScrollerOptions={{
-        itemSize: 25,
-        scrollHeight: scrollHeight,
-      }}
+      // filter
+      // virtualScrollerOptions={{
+      //   itemSize: 25,
+      //   scrollHeight: scrollHeight,
+      // }}
       placeholder="Select..."
       dropdownIcon={dropdownIcon}
       unstyled
+      filterMatchMode="startsWith"
       className={`
           items-center
           justify-between
@@ -59,7 +61,10 @@ const PropSelectField = ({ propertyId }: { propertyId: string }) => {
           p-dropdown
           truncate
         `}
-      panelClassName={contentClass + ' p-1'}
+      panelClassName={
+        contentClass +
+        ` p-1 max-h-[${scrollHeight}px] max-w-[240px] overflow-auto`
+      }
       pt={{
         input: {
           className: `truncate ${inputColor}`,

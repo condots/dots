@@ -1,6 +1,6 @@
 import { Store, DataFactory, Quad_Subject, Quad } from 'n3';
 const { namedNode, literal, quad } = DataFactory;
-import SerializerJsonld from '@rdfjs/serializer-jsonld';
+import { JsonLdSerializer } from 'jsonld-streaming-serializer';
 import jsonld, { JsonLdDocument } from 'jsonld';
 import { saveAs } from 'file-saver';
 import { XYPosition } from 'reactflow';
@@ -117,7 +117,7 @@ function checkInvalidProp(nodes: FlowNode[]) {
   }
 }
 
-export async function exportSpdxJsonLd(filename: string, nodes?: FlowNode[]) {
+export async function generateSpdxJsonLd(nodes?: FlowNode[]) {
   if (!nodes) {
     nodes = flowStore.getState().nodes;
   }
@@ -135,20 +135,39 @@ export async function exportSpdxJsonLd(filename: string, nodes?: FlowNode[]) {
 
   const { store, subjects } = genSpdxGraph(nodes);
 
-  const doc: JsonLdDocument = await new Promise((resolve, reject) => {
-    new SerializerJsonld()
+  const data: string[] = await new Promise((resolve, reject) => {
+    const data: string[] = [];
+    new JsonLdSerializer()
       .import(store.match(null, null, null, null))
+      .on('data', d => data.push(d))
       .on('error', reject)
-      .on('data', resolve);
+      .on('end', () => resolve(data));
   });
+  const doc: JsonLdDocument = JSON.parse(data.join(' '));
   const ctx = ontoStore.getState().jsonLdContext!;
   const compacted = await jsonld.compact(doc, ctx);
+  if (compacted['@graph'] && Array.isArray(compacted['@graph'])) {
+    compacted['@graph'].forEach(n => {
+      if ((n['spdxId'] as string).startsWith('_:')) {
+        n['@id'] = n['spdxId'] as string;
+        delete n['spdxId'];
+      }
+    });
+  } else {
+    throw new Error('@graph is undefined or not an array');
+  }
 
   compacted['@context'] = ontoStore.getState().jsonLdContextUrl;
   const positions = getRelativePositions(nodes, subjects);
   compacted.dots = JSON.parse(JSON.stringify(positions));
 
-  const blob = new Blob([JSON.stringify(compacted, null, 2)], {
+  return { compacted, subjects };
+}
+
+export async function exportSpdxJsonLd(filename: string, nodes?: FlowNode[]) {
+  const data = await generateSpdxJsonLd(nodes);
+  if (!data) return;
+  const blob = new Blob([JSON.stringify(data.compacted, null, 2)], {
     type: 'application/ld+json;charset=utf-8',
   });
   saveAs(blob, filename);
@@ -219,6 +238,7 @@ export async function importSpdxJsonLd(
     }
 
     const ctx = ontoStore.getState().jsonLdContext!;
+    doc['@context'] = ctx;
     const expanded = await jsonld.flatten(doc, ctx);
     const quads = (await jsonld.toRDF(expanded)) as Quad[];
     const store = new Store(quads);
@@ -233,8 +253,6 @@ export async function importSpdxJsonLd(
       });
       return;
     }
-
-    await new Promise(resolve => setTimeout(resolve, 1000));
 
     const positions: NamedPositions = doc.dots
       ? getCanvasPositions(doc.dots, refPos)
@@ -307,7 +325,7 @@ export async function importSpdxJsonLd(
 
     const collapsedNode =
       Object.values(impNodes).find(n => n.classIRI.endsWith('/SpdxDocument')) ??
-      impNodes[0];
+      Object.values(impNodes)[0];
 
     if (collapsed) {
       hideTreeNodes(collapsedNode.id);

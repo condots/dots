@@ -1,0 +1,477 @@
+{
+  "@context": "https://spdx.org/rdf/3.0.0/spdx-context.jsonld",
+  "@graph": [
+    {
+      "spdxId": "urn:nanoid:iGssXfcLExlNVoLh-OYz6",
+      "type": "SpdxDocument",
+      "creationInfo": "_:b0",
+      "spdx:Core/name": "build-workflow-example",
+      "rootElement": "urn:nanoid:bymCRmVMkX1Iv8VBWM9Rx"
+    },
+    {
+      "type": "CreationInfo",
+      "created": "2024-09-04T20:25:34Z",
+      "createdBy": "urn:nanoid:4ilKMdQr3P7d88OeM8mEq",
+      "spdx:Core/specVersion": "3.0.0",
+      "@id": "_:b0"
+    },
+    {
+      "spdxId": "urn:nanoid:bymCRmVMkX1Iv8VBWM9Rx",
+      "type": "software_Sbom",
+      "creationInfo": "_:b0",
+      "profileConformance": [
+        "core",
+        "software"
+      ],
+      "rootElement": [
+        "urn:nanoid:1k-rpO9qQ4QPYHlP9ENx6",
+        "urn:nanoid:s9B92nt7thHsQbtHkuh1o"
+      ],
+      "software_sbomType": "build"
+    },
+    {
+      "spdxId": "urn:nanoid:4ilKMdQr3P7d88OeM8mEq",
+      "type": "SoftwareAgent",
+      "creationInfo": "_:b0",
+      "spdx:Core/name": "GitHub actions"
+    },
+    {
+      "spdxId": "urn:nanoid:1k-rpO9qQ4QPYHlP9ENx6",
+      "type": "build_Build",
+      "spdx:Build/buildId": "1",
+      "build_buildType": "https://slsa-framework.github.io/github-actions-buildtypes/workflow/v1",
+      "creationInfo": "_:b0",
+      "spdx:Core/name": "workflow"
+    },
+    {
+      "spdxId": "urn:nanoid:2HSdfXW96pUyb_OLvVb8X",
+      "type": "software_Package",
+      "creationInfo": "_:b0",
+      "spdx:Core/name": "gcc",
+      "software_primaryPurpose": "application"
+    },
+    {
+      "spdxId": "urn:nanoid:3n0adkQ9dRJLMQwI41Lsc",
+      "type": "LifecycleScopedRelationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:1k-rpO9qQ4QPYHlP9ENx6",
+      "relationshipType": "hasHost",
+      "to": "urn:nanoid:iI6mAPokA-dkxMXaaKWdN"
+    },
+    {
+      "spdxId": "urn:nanoid:iI6mAPokA-dkxMXaaKWdN",
+      "type": "software_Package",
+      "creationInfo": "_:b0",
+      "spdx:Core/name": "alpine-container",
+      "software_additionalPurpose": "container"
+    },
+    {
+      "spdxId": "urn:nanoid:3y7wJJyNmblyn1PBSZh9z",
+      "type": "LifecycleScopedRelationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:1k-rpO9qQ4QPYHlP9ENx6",
+      "relationshipType": "invokedBy",
+      "scope": "build",
+      "to": "urn:nanoid:4ilKMdQr3P7d88OeM8mEq"
+    },
+    {
+      "spdxId": "urn:nanoid:7BsE9zh53qN4ARUCo50Gd",
+      "type": "LifecycleScopedRelationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:voFcuAe0lWZzBIL-wsSJt",
+      "relationshipType": "hasTest",
+      "to": "urn:nanoid:E2PEpPb_w-uqv_m62vf15"
+    },
+    {
+      "spdxId": "urn:nanoid:voFcuAe0lWZzBIL-wsSJt",
+      "type": "build_Build",
+      "build_buildType": "aaa:",
+      "creationInfo": "_:b0",
+      "spdx:Core/name": "test step"
+    },
+    {
+      "spdxId": "urn:nanoid:E2PEpPb_w-uqv_m62vf15",
+      "type": "software_File",
+      "creationInfo": "_:b0",
+      "spdx:Core/name": "test result"
+    },
+    {
+      "spdxId": "urn:nanoid:7dSPU5WCso8j6gT6Idn43",
+      "type": "software_File",
+      "creationInfo": "_:b0",
+      "spdx:Core/name": "config.yml"
+    },
+    {
+      "spdxId": "urn:nanoid:CJozJN3Xkzs76lvvDGG8H",
+      "type": "software_File",
+      "creationInfo": "_:b0",
+      "spdx:Core/name": "test",
+      "suppliedBy": "urn:nanoid:rHeA69PYflltKwL3RVgFs"
+    },
+    {
+      "spdxId": "urn:nanoid:rHeA69PYflltKwL3RVgFs",
+      "type": "Person",
+      "creationInfo": "_:b0",
+      "spdx:Core/name": "Mrs. Qa Eng"
+    },
+    {
+      "spdxId": "urn:nanoid:DKmMIW73YPnGQf4iNVX-c",
+      "type": "LifecycleScopedRelationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:voFcuAe0lWZzBIL-wsSJt",
+      "relationshipType": "hasInputs",
+      "to": [
+        "urn:nanoid:CJozJN3Xkzs76lvvDGG8H",
+        "urn:nanoid:vBvt7xSTS9vJq0cp7xJga"
+      ]
+    },
+    {
+      "spdxId": "urn:nanoid:vBvt7xSTS9vJq0cp7xJga",
+      "type": "software_File",
+      "creationInfo": "_:b0",
+      "spdx:Core/name": "container image",
+      "verifiedUsing": "_:b1",
+      "software_fileKind": "file",
+      "software_primaryPurpose": "container"
+    },
+    {
+      "spdxId": "urn:nanoid:FKMVAEiW77Dwvipb6BXNf",
+      "type": "LifecycleScopedRelationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:XgktdCZLq5ScpUarmxFys",
+      "relationshipType": "hasInputs",
+      "scope": "build",
+      "to": "urn:nanoid:pgUoqAkuoI-u9jQNPWTnd"
+    },
+    {
+      "spdxId": "urn:nanoid:XgktdCZLq5ScpUarmxFys",
+      "type": "build_Build",
+      "build_buildType": "a:sdfsg",
+      "creationInfo": "_:b0",
+      "spdx:Core/name": "image build step"
+    },
+    {
+      "spdxId": "urn:nanoid:pgUoqAkuoI-u9jQNPWTnd",
+      "type": "software_File",
+      "creationInfo": "_:b0",
+      "spdx:Core/name": "myapp.exe",
+      "verifiedUsing": "_:b2",
+      "software_primaryPurpose": "executable"
+    },
+    {
+      "spdxId": "urn:nanoid:IXmCTnm0dRY-kU7TWvIPV",
+      "type": "LifecycleScopedRelationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:fdkbeWhwT9Bm-1f97OKKD",
+      "relationshipType": "delegatedTo",
+      "scope": "build",
+      "to": "urn:nanoid:3y7wJJyNmblyn1PBSZh9z"
+    },
+    {
+      "spdxId": "urn:nanoid:fdkbeWhwT9Bm-1f97OKKD",
+      "type": "Person",
+      "creationInfo": "_:b0",
+      "spdx:Core/name": "Mr. Sw Dev"
+    },
+    {
+      "spdxId": "urn:nanoid:JreJzoBhR_CsUFTdP2PIj",
+      "type": "LifecycleScopedRelationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:7dSPU5WCso8j6gT6Idn43",
+      "relationshipType": "configures",
+      "scope": "build",
+      "to": "urn:nanoid:1k-rpO9qQ4QPYHlP9ENx6"
+    },
+    {
+      "spdxId": "urn:nanoid:KtSDE-GGhMzlnK1961gmZ",
+      "type": "LifecycleScopedRelationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:knJWVurnGZ5xFRHF71ysW",
+      "relationshipType": "hasStaticLink",
+      "scope": "build",
+      "to": "urn:nanoid:NEhBh7HbE1xsJwYIUGvyh"
+    },
+    {
+      "spdxId": "urn:nanoid:knJWVurnGZ5xFRHF71ysW",
+      "type": "build_Build",
+      "spdx:Build/buildId": "12345",
+      "build_buildType": "https://github/actions",
+      "creationInfo": "_:b0",
+      "spdx:Core/name": "linking step"
+    },
+    {
+      "spdxId": "urn:nanoid:NEhBh7HbE1xsJwYIUGvyh",
+      "type": "software_File",
+      "creationInfo": "_:b0",
+      "spdx:Core/name": "static.dll"
+    },
+    {
+      "spdxId": "urn:nanoid:NEmM5PxfVff77sDiM1Ad8",
+      "type": "LifecycleScopedRelationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:XgktdCZLq5ScpUarmxFys",
+      "relationshipType": "dependsOn",
+      "scope": "build",
+      "to": "urn:nanoid:knJWVurnGZ5xFRHF71ysW"
+    },
+    {
+      "spdxId": "urn:nanoid:O_P3OYSOln7F3-_25noQ0",
+      "type": "LifecycleScopedRelationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:XgktdCZLq5ScpUarmxFys",
+      "relationshipType": "hasOutputs",
+      "to": "urn:nanoid:vBvt7xSTS9vJq0cp7xJga"
+    },
+    {
+      "spdxId": "urn:nanoid:ZCwhpqPWR1O9KHYJ0EaTa",
+      "type": "LifecycleScopedRelationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:knJWVurnGZ5xFRHF71ysW",
+      "relationshipType": "hasOutputs",
+      "scope": "build",
+      "to": "urn:nanoid:pgUoqAkuoI-u9jQNPWTnd"
+    },
+    {
+      "spdxId": "urn:nanoid:_JbQ2qAN9zkHrm0mTLDp0",
+      "type": "Relationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:1k-rpO9qQ4QPYHlP9ENx6",
+      "relationshipType": "ancestorOf",
+      "to": [
+        "urn:nanoid:voFcuAe0lWZzBIL-wsSJt",
+        "urn:nanoid:XgktdCZLq5ScpUarmxFys",
+        "urn:nanoid:knJWVurnGZ5xFRHF71ysW",
+        "urn:nanoid:qztDV06yPtpNgw8NW4MjC"
+      ]
+    },
+    {
+      "spdxId": "urn:nanoid:qztDV06yPtpNgw8NW4MjC",
+      "type": "build_Build",
+      "spdx:Build/buildId": "12345",
+      "build_buildType": "https://github/actions",
+      "creationInfo": "_:b0",
+      "spdx:Core/name": "compilation step"
+    },
+    {
+      "spdxId": "urn:nanoid:s9B92nt7thHsQbtHkuh1o",
+      "type": "software_Package",
+      "creationInfo": "_:b0",
+      "spdx:Core/name": "myapp",
+      "software_primaryPurpose": "application"
+    },
+    {
+      "spdxId": "urn:nanoid:hoInShvENXcTrdgLvwlC_",
+      "type": "LifecycleScopedRelationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:voFcuAe0lWZzBIL-wsSJt",
+      "relationshipType": "dependsOn",
+      "scope": "build",
+      "to": "urn:nanoid:XgktdCZLq5ScpUarmxFys"
+    },
+    {
+      "spdxId": "urn:nanoid:qnk-glt8gRl_r_TAtZfS8",
+      "type": "LifecycleScopedRelationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:knJWVurnGZ5xFRHF71ysW",
+      "relationshipType": "dependsOn",
+      "scope": "build",
+      "to": "urn:nanoid:qztDV06yPtpNgw8NW4MjC"
+    },
+    {
+      "spdxId": "urn:nanoid:s_-JQJjbFqxb_JRKOp4dc",
+      "type": "Relationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:s9B92nt7thHsQbtHkuh1o",
+      "relationshipType": "contains",
+      "to": "urn:nanoid:pgUoqAkuoI-u9jQNPWTnd"
+    },
+    {
+      "spdxId": "urn:nanoid:trDk1ZLPntJd3EZW8haAd",
+      "type": "LifecycleScopedRelationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:qztDV06yPtpNgw8NW4MjC",
+      "relationshipType": "usesTool",
+      "scope": "build",
+      "to": "urn:nanoid:2HSdfXW96pUyb_OLvVb8X"
+    },
+    {
+      "spdxId": "urn:nanoid:yHENaOgZ_ndaHuR34XGQK",
+      "type": "LifecycleScopedRelationship",
+      "creationInfo": "_:b0",
+      "from": "urn:nanoid:knJWVurnGZ5xFRHF71ysW",
+      "relationshipType": "usesTool",
+      "scope": "build",
+      "to": "urn:nanoid:2HSdfXW96pUyb_OLvVb8X"
+    },
+    {
+      "type": "Hash",
+      "algorithm": "sha256",
+      "spdx:Core/hashValue": "0xABABAB",
+      "@id": "_:b1"
+    },
+    {
+      "type": "Hash",
+      "algorithm": "sha256",
+      "spdx:Core/hashValue": "0x121212",
+      "@id": "_:b2"
+    }
+  ],
+  "dots": {
+    "urn:nanoid:iGssXfcLExlNVoLh-OYz6": {
+      "x": 0,
+      "y": 0
+    },
+    "_:b0": {
+      "x": 4,
+      "y": 8
+    },
+    "urn:nanoid:bymCRmVMkX1Iv8VBWM9Rx": {
+      "x": -1,
+      "y": 2
+    },
+    "urn:nanoid:4ilKMdQr3P7d88OeM8mEq": {
+      "x": 3,
+      "y": 6
+    },
+    "urn:nanoid:1k-rpO9qQ4QPYHlP9ENx6": {
+      "x": 0,
+      "y": 4
+    },
+    "urn:nanoid:2HSdfXW96pUyb_OLvVb8X": {
+      "x": -6,
+      "y": 4
+    },
+    "urn:nanoid:3n0adkQ9dRJLMQwI41Lsc": {
+      "x": 1,
+      "y": 2
+    },
+    "urn:nanoid:iI6mAPokA-dkxMXaaKWdN": {
+      "x": 3,
+      "y": 2
+    },
+    "urn:nanoid:3y7wJJyNmblyn1PBSZh9z": {
+      "x": 4,
+      "y": 4
+    },
+    "urn:nanoid:7BsE9zh53qN4ARUCo50Gd": {
+      "x": 1,
+      "y": 10
+    },
+    "urn:nanoid:voFcuAe0lWZzBIL-wsSJt": {
+      "x": 0,
+      "y": 8
+    },
+    "urn:nanoid:E2PEpPb_w-uqv_m62vf15": {
+      "x": 3,
+      "y": 10
+    },
+    "urn:nanoid:7dSPU5WCso8j6gT6Idn43": {
+      "x": 2,
+      "y": 8
+    },
+    "urn:nanoid:CJozJN3Xkzs76lvvDGG8H": {
+      "x": 2,
+      "y": 12
+    },
+    "urn:nanoid:rHeA69PYflltKwL3RVgFs": {
+      "x": 4,
+      "y": 12
+    },
+    "urn:nanoid:DKmMIW73YPnGQf4iNVX-c": {
+      "x": 0,
+      "y": 12
+    },
+    "urn:nanoid:vBvt7xSTS9vJq0cp7xJga": {
+      "x": 1,
+      "y": 14
+    },
+    "urn:nanoid:FKMVAEiW77Dwvipb6BXNf": {
+      "x": -3,
+      "y": 14
+    },
+    "urn:nanoid:XgktdCZLq5ScpUarmxFys": {
+      "x": -2,
+      "y": 12
+    },
+    "urn:nanoid:pgUoqAkuoI-u9jQNPWTnd": {
+      "x": -5,
+      "y": 14
+    },
+    "urn:nanoid:IXmCTnm0dRY-kU7TWvIPV": {
+      "x": 5,
+      "y": 6
+    },
+    "urn:nanoid:fdkbeWhwT9Bm-1f97OKKD": {
+      "x": 5,
+      "y": 10
+    },
+    "urn:nanoid:JreJzoBhR_CsUFTdP2PIj": {
+      "x": 1,
+      "y": 6
+    },
+    "urn:nanoid:KtSDE-GGhMzlnK1961gmZ": {
+      "x": -5,
+      "y": 10
+    },
+    "urn:nanoid:knJWVurnGZ5xFRHF71ysW": {
+      "x": -4,
+      "y": 8
+    },
+    "urn:nanoid:NEhBh7HbE1xsJwYIUGvyh": {
+      "x": -6,
+      "y": 8
+    },
+    "urn:nanoid:NEmM5PxfVff77sDiM1Ad8": {
+      "x": -3,
+      "y": 10
+    },
+    "urn:nanoid:O_P3OYSOln7F3-_25noQ0": {
+      "x": -1,
+      "y": 14
+    },
+    "urn:nanoid:ZCwhpqPWR1O9KHYJ0EaTa": {
+      "x": -4,
+      "y": 12
+    },
+    "urn:nanoid:_JbQ2qAN9zkHrm0mTLDp0": {
+      "x": -2,
+      "y": 8
+    },
+    "urn:nanoid:qztDV06yPtpNgw8NW4MjC": {
+      "x": -2,
+      "y": 4
+    },
+    "urn:nanoid:s9B92nt7thHsQbtHkuh1o": {
+      "x": -7,
+      "y": 2
+    },
+    "urn:nanoid:hoInShvENXcTrdgLvwlC_": {
+      "x": -1,
+      "y": 10
+    },
+    "urn:nanoid:qnk-glt8gRl_r_TAtZfS8": {
+      "x": -3,
+      "y": 6
+    },
+    "urn:nanoid:s_-JQJjbFqxb_JRKOp4dc": {
+      "x": -7,
+      "y": 14
+    },
+    "urn:nanoid:trDk1ZLPntJd3EZW8haAd": {
+      "x": -4,
+      "y": 4
+    },
+    "urn:nanoid:yHENaOgZ_ndaHuR34XGQK": {
+      "x": -5,
+      "y": 6
+    },
+    "_:b1": {
+      "x": 3,
+      "y": 14
+    },
+    "_:b2": {
+      "x": -6,
+      "y": 12
+    }
+  }
+}

@@ -14,13 +14,14 @@ import HelpDialog from '@/components/HelpDialog';
 import AlertToast from '@/components/AlertToast';
 import AboutDialog from '@/components/AboutDialog';
 import Loader from '@/components/Loader';
+import PreviewDialog from '@/components/PreviewDialog';
 
 export default function App() {
   useEffect(() => {
     updateMediaTypes().then(() => {
       const source = 'spdx-model.ttl';
       const jsonLdContextSource =
-        'https://spdx.github.io/spdx-spec/v3.0/model/spdx-context.jsonld';
+        'https://spdx.github.io/spdx-spec/v3.0.0/rdf/spdx-context.jsonld';
       const jsonLdContextUrl = 'https://spdx.org/rdf/3.0.0/spdx-context.jsonld';
       const model = 'model.json';
       updateOntology(source, jsonLdContextSource, jsonLdContextUrl, model);
@@ -35,6 +36,7 @@ export default function App() {
       <Loader />
       <HelpDialog />
       <AboutDialog />
+      <PreviewDialog />
       <ProfileMenu />
       <Canvas />
     </div>

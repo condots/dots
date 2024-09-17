@@ -110,6 +110,7 @@ const ClassNode = ({
         break;
       }
     }
+    labels.push('comment');
     labels.push('name');
     const values = Object.values(data.nodeProps);
     for (const p of Object.values(data.nodeProps).filter(p => p.required)) {

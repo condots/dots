@@ -136,6 +136,7 @@ const Canvas = () => {
       onNodesDelete={flowStore.getState().onNodesDelete}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
+      minZoom={0.05}
     >
       {/* <DevTools /> */}
       <Background color="#00416b" variant={BackgroundVariant.Dots} />

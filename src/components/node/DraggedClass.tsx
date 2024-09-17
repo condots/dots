@@ -66,7 +66,7 @@ const DraggedClass = () => {
     data && (
       <div
         ref={draggableRef}
-        className="p-1 rounded font-lato"
+        className="p-1 rounded font-lato opacity-50 z-[2000]"
         style={{
           position: 'absolute',
           left: position && `${position.x + 4}px`,

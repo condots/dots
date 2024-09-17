@@ -154,7 +154,7 @@ const NodeMenuClass = () => {
     <DropdownMenu.Sub>
       <DropdownMenu.SubTrigger className={itemClass}>
         <div className="flex justify-between">
-          <span className="pr-2">Add Class</span>
+          <span className="pr-2">Add Edge</span>
           {hasUnmetNodeClsProps(node) && (
             <div className="w-[16px] flex items-center pr-2">
               <span
