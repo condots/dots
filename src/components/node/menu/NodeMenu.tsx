@@ -16,6 +16,7 @@ import {
   getNodeTree,
   unhideTreeNodes,
   hideTreeNodes,
+  flowStore,
 } from '@/store/flow';
 import NodeMenuClass from '@/components/node/menu/NodeMenuClass';
 import NodeMenuProp from '@/components/node/menu/NodeMenuProp';
@@ -28,7 +29,8 @@ const NodeMenu = () => {
   const invalidProps = node?.data.nodeProps
     ? Object.entries(node.data.nodeProps).filter(p => !p[1].valid)
     : [];
-  const unmetNodeClsProps = hasUnmetNodeClsProps(node);
+  const edges = flowStore.use.edges();
+  const unmetNodeClsProps = hasUnmetNodeClsProps(node, edges);
 
   const Save = useMemo(() => {
     if (!node) return null;
