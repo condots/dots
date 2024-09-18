@@ -16,6 +16,8 @@ import {
   PropertyOption,
 } from '@/types';
 import { ontoStore } from '@/store/onto';
+import { screenToCanvas } from '@/store/flow';
+import { importSpdxJsonLd } from '@/scripts/fs-utils';
 
 export const advisoryText = (text: string | undefined) => {
   if (!text) return '';
@@ -234,6 +236,14 @@ export function initNodeProps(recClsProps: NodeData['recClsProps']) {
     }
   }
   return nodeProperties;
+}
+
+export async function importExample() {
+  const refPos = screenToCanvas(
+    window.innerWidth / 2 - 128,
+    window.innerHeight / 2 - 26
+  );
+  await importSpdxJsonLd('spdx-doc-example-13.json', refPos, false);
 }
 
 export function generateURN(): string {
