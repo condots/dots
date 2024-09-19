@@ -37,11 +37,6 @@ const PropSelectField = ({ propertyId }: { propertyId: string }) => {
       value={nodeProperty.value as string}
       onChange={(e: DropdownChangeEvent) => setValue(e.value)}
       options={options}
-      // filter
-      // virtualScrollerOptions={{
-      //   itemSize: 25,
-      //   scrollHeight: scrollHeight,
-      // }}
       placeholder="Select..."
       dropdownIcon={dropdownIcon}
       unstyled
@@ -69,14 +64,15 @@ const PropSelectField = ({ propertyId }: { propertyId: string }) => {
         input: {
           className: `truncate ${inputColor}`,
         },
-        item: {
+        item: ops => ({
           className: `
               ${itemClass}
               hover:bg-spdx-dark
               hover:text-mauve1
               truncate
+              ${ops?.context.selected ? 'text-mauve1 bg-spdx-dark/20' : ''}
             `,
-        },
+        }),
       }}
     />
   );
