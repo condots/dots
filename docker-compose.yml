@@ -1,13 +1,22 @@
-# Start webserver on vm as root (run only once): docker compose -f /home/opc/dots/docker-compose.yml watch &
-# Sync local changes (image will be rebuilt): rsync -e ssh -aF --delete . dots:/home/opc/dots/
+######   LOCAL   ######
 
-# ONLY ON FIRST DEPLOYMENT !!!
-# Generate the initial certificates:
-# docker compose -f dots/docker-compose.yml run --rm --entrypoint "certbot certonly --webroot -w /usr/share/nginx/html -d condots.duckdns.org" certbot
+# Sync changes to REMOTE (will trigger image rebuild on REMOTE):
+# rsync -e ssh -aF --delete . dots:/home/opc/dots/
+
+######   REMOTE   ######
+
+# ONLY RUN ON FIRST DEPLOYMENT !!!
+# Generate certificates:
+# docker compose -f /home/opc/dots/docker-compose.yml run --rm --entrypoint \
+#   "certbot certonly --webroot -w /usr/share/nginx/html -d condots.duckdns.org" \
+#   certbot
+
+# Trigger rebuild on changes (run once):
+# nohup docker compose -f /home/opc/dots/docker-compose.yml watch > /tmp/docker-compose.log 2>&1 &
 
 services:
   dots:
-    image: dots:latest
+    image: dots
     build:
       context: .
       dockerfile: Dockerfile
@@ -26,6 +35,7 @@ services:
     volumes:
       - certs:/etc/letsencrypt
       - certs-data:/data/letsencrypt
+      - certs-lib:/var/lib/letsencrypt
       - letsencrypt-renewal:/etc/letsencrypt-renewal
       - ./renewal-script.sh:/etc/renewal-script.sh
     entrypoint: /bin/sh -c '/etc/renewal-script.sh'
@@ -33,4 +43,5 @@ services:
 volumes:
   certs:
   certs-data:
+  certs-lib:
   letsencrypt-renewal:
