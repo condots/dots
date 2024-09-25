@@ -3,7 +3,7 @@ import { parse } from 'marked';
 import HTMLReactParser from 'html-react-parser';
 import Papa from 'papaparse';
 import { isIri } from '@hyperjump/uri';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import semver from 'semver';
 import { nanoid } from 'nanoid';
 
@@ -56,7 +56,7 @@ export const inputProperties: InputProperties = new Map([
       icon: 'calendar_today',
       inputType: 'datetime-local',
       validator: (v: string) =>
-        moment(v, 'YYYY-MM-DDTHH:mm:ssZ', true).isValid(),
+        dayjs(v, 'YYYY-MM-DDTHH:mm:ssZ', true).isValid(),
       step: 1,
     },
   ],
@@ -227,7 +227,7 @@ export function initNodeProps(recClsProps: NodeData['recClsProps']) {
         if (clsProp.name === 'specVersion') {
           value = ontoStore.getState().ontologyMetadata?.specVersion;
           // } else if (clsProp.name === 'created') {
-          //   value = moment.utc().format();
+          //   value = dayjs.utc().format();
         }
       }
       const nodeProp = generateNodeProperty(clsProp, value);

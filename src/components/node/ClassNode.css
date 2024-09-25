@@ -17,8 +17,3 @@
 .stock-effect-selected::after {
   outline: #00416b 2.5px solid;
 }
-
-.p-dropdown-panel .p-dropdown-items .p-dropdown-item:not(.p-disabled).p-focus {
-  background-color: #00416baa;
-  color: #fdfcfd;
-}

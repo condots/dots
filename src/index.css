@@ -1,6 +1,6 @@
 @layer tailwind-base, primereact, tailwind-utilities;
 
-@import 'primereact/resources/themes/mira/theme.css' layer(primereact);
+@import 'primereact/resources/themes/nano/theme.css' layer(primereact);
 
 @layer tailwind-base {
   @tailwind base;
@@ -110,4 +110,14 @@ div.targetHandle {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  color: #2e3440;
+  background: #d8dee9;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item:not(.p-disabled).p-focus {
+  background-color: #00416bbb;
+  color: #fdfcfd;
 }

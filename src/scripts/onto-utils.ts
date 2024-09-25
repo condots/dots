@@ -1,5 +1,5 @@
-import rdfext from 'rdf-ext';
-import { Parser, Quad, Store, Term } from 'n3';
+import { Parser, Quad, Store, Term, DataFactory } from 'n3';
+const { namedNode } = DataFactory;
 import jsonld from 'jsonld';
 
 import {
@@ -29,13 +29,21 @@ import {
 } from '@/types';
 import { parseIRI } from '@/scripts/app-utils';
 
-export const NS = {
-  rdf: rdfext.namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#'),
-  rdfs: rdfext.namespace('http://www.w3.org/2000/01/rdf-schema#'),
-  owl: rdfext.namespace('http://www.w3.org/2002/07/owl#'),
-  sh: rdfext.namespace('http://www.w3.org/ns/shacl#'),
-  xsd: rdfext.namespace('http://www.w3.org/2001/XMLSchema#'),
+const NS: { [key: string]: string } = {
+  rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+  rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
+  owl: 'http://www.w3.org/2002/07/owl#',
+  sh: 'http://www.w3.org/ns/shacl#',
+  xsd: 'http://www.w3.org/2001/XMLSchema#',
 };
+
+export function getNamedNode(ns: IRI, name: string) {
+  if (Object.keys(NS).includes(ns)) {
+    return namedNode(NS[ns] + name);
+  } else {
+    throw new Error('Unknown namespace');
+  }
+}
 
 const shaclLists: Map<IRI, IRI[]> = new Map();
 
@@ -83,7 +91,11 @@ export async function createGraph(source: string | File) {
 }
 
 export function getOntologyMetadata(graph: Store) {
-  const iri = graph.getSubjects(NS.rdf.type, NS.owl.Ontology, null)[0];
+  const iri = graph.getSubjects(
+    getNamedNode('rdf', 'type'),
+    getNamedNode('owl', 'Ontology'),
+    null
+  )[0];
   const metadata: OntologyMetadata = {};
   graph.getQuads(iri, null, null, null).forEach(o => {
     const k = o.predicate.value.split('#').pop()!.split('/').pop()!;
@@ -215,7 +227,8 @@ function getSharedFields(node: Term, graph: Store) {
     iri,
     name: parseIRI(iri).name,
     profileName: parseIRI(iri).profile,
-    summary: graph.getObjects(node, NS.rdfs.comment, null)[0]?.value,
+    summary: graph.getObjects(node, getNamedNode('rdfs', 'comment'), null)[0]
+      ?.value,
   };
   return shared;
 }
@@ -234,14 +247,22 @@ function groupByProfile(section: Section) {
 
 function getClasses(graph: Store) {
   const nodes = graph
-    .getSubjects(NS.rdf.type, NS.owl.Class, null)
-    .filter(o => !graph.countQuads(null, NS.rdf.type, o, null));
+    .getSubjects(
+      getNamedNode('rdf', 'type'),
+      getNamedNode('owl', 'Class'),
+      null
+    )
+    .filter(o => !graph.countQuads(null, getNamedNode('rdf', 'type'), o, null));
   const items: Classes = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
     items[shared.name] = {
       ...shared,
-      subClassOf: graph.getObjects(node, NS.rdfs.subClassOf, null)[0]?.value,
+      subClassOf: graph.getObjects(
+        node,
+        getNamedNode('rdfs', 'subClassOf'),
+        null
+      )[0]?.value,
       properties: extractNodeShape(graph, node),
     };
   }
@@ -256,11 +277,19 @@ function getProperties(graph: Store) {
 }
 
 function getDatatypeProperties(graph: Store) {
-  const nodes = graph.getSubjects(NS.rdf.type, NS.owl.DatatypeProperty, null);
+  const nodes = graph.getSubjects(
+    getNamedNode('rdf', 'type'),
+    getNamedNode('owl', 'DatatypeProperty'),
+    null
+  );
   const items: Properties = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
-    const datatype = graph.getObjects(node.value, NS.rdfs.range, null)[0].value;
+    const datatype = graph.getObjects(
+      node.value,
+      getNamedNode('rdfs', 'range'),
+      null
+    )[0].value;
     items[shared.name] = {
       ...shared,
       datatype: datatype as LiteralPropertyTypes,
@@ -270,11 +299,19 @@ function getDatatypeProperties(graph: Store) {
 }
 
 function getObjectProperties(graph: Store) {
-  const nodes = graph.getSubjects(NS.rdf.type, NS.owl.ObjectProperty, null);
+  const nodes = graph.getSubjects(
+    getNamedNode('rdf', 'type'),
+    getNamedNode('owl', 'ObjectProperty'),
+    null
+  );
   const items: Properties = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
-    const range = graph.getObjects(node.value, NS.rdfs.range, null)[0].value;
+    const range = graph.getObjects(
+      node.value,
+      getNamedNode('rdfs', 'range'),
+      null
+    )[0].value;
     items[shared.name] = { ...shared, range };
   }
   return items;
@@ -282,13 +319,21 @@ function getObjectProperties(graph: Store) {
 
 function getVocabularies(graph: Store) {
   const nodes = graph
-    .getSubjects(NS.rdf.type, NS.owl.Class, null)
-    .filter(o => graph.countQuads(null, NS.rdf.type, o, null));
+    .getSubjects(
+      getNamedNode('rdf', 'type'),
+      getNamedNode('owl', 'Class'),
+      null
+    )
+    .filter(o => graph.countQuads(null, getNamedNode('rdf', 'type'), o, null));
   const items: Vocabularies = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
     const entries: VocabularyEntries = {};
-    for (const o of graph.getSubjects(NS.rdf.type, node.value, null)) {
+    for (const o of graph.getSubjects(
+      getNamedNode('rdf', 'type'),
+      node.value,
+      null
+    )) {
       entries[o.value] = getSharedFields(o, graph);
     }
     items[shared.name] = {
@@ -301,12 +346,22 @@ function getVocabularies(graph: Store) {
 
 function getIndividuals(graph: Store) {
   const nodes = graph
-    .getSubjects(NS.rdf.type, NS.owl.NamedIndividual, null)
-    .filter(o => graph.countQuads(o, NS.rdfs.range, null, null));
+    .getSubjects(
+      getNamedNode('rdf', 'type'),
+      getNamedNode('owl', 'NamedIndividual'),
+      null
+    )
+    .filter(o =>
+      graph.countQuads(o, getNamedNode('rdfs', 'range'), null, null)
+    );
   const items: Individuals = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
-    const range = graph.getObjects(node.value, NS.rdfs.range, null)[0].value;
+    const range = graph.getObjects(
+      node.value,
+      getNamedNode('rdfs', 'range'),
+      null
+    )[0].value;
     items[shared.name] = { ...shared, range };
   }
   return groupByProfile(items);
@@ -314,7 +369,11 @@ function getIndividuals(graph: Store) {
 
 function extractNodeShape(graph: Store, node: Term) {
   const classProperties: ClassProperties = {};
-  const propertyShapes = graph.getObjects(node, NS.sh.property, null);
+  const propertyShapes = graph.getObjects(
+    node,
+    getNamedNode('sh', 'property'),
+    null
+  );
   for (const pshape of propertyShapes) {
     let path: IRI;
     let name: Name;

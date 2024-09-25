@@ -95,7 +95,10 @@ const ProfileMenu = () => {
       filterPlaceholder="Search..."
       className="h-full w-full overflow-scroll bg-[#e6e5e6] font-lato border-none rounded-none"
       nodeTemplate={nodeTemplate}
-      pt={{ droppoint: { className: 'h-0' } }}
+      pt={{
+        droppoint: { className: 'h-0' },
+        filterContainer: { className: 'shadow-none border-none outline-none' },
+      }}
       expandIcon={
         <span className="material-symbols-outlined text-sm text-gray-500">
           add_box

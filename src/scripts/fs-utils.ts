@@ -19,7 +19,7 @@ import {
   selectNode,
   setNodeProperty,
 } from '@/store/flow';
-import { NS } from '@/scripts/onto-utils';
+import { getNamedNode } from '@/scripts/onto-utils';
 import { snapGrid } from '@/scripts/canvas-defaults';
 import { generateURN } from '@/scripts/app-utils';
 
@@ -44,7 +44,11 @@ function genNodeQuad(store: Store, subjects: SubjectMap, node: FlowNode) {
   const subject = node.data.isElement
     ? namedNode(node.id)
     : store.createBlankNode();
-  const q = quad(subject, NS.rdf.type, namedNode(node.data.cls.iri));
+  const q = quad(
+    subject,
+    getNamedNode('rdf', 'type'),
+    namedNode(node.data.cls.iri)
+  );
   store.add(q);
   genPropQuads(store, subject, node);
   subjects.set(node.id, subject);
@@ -289,7 +293,7 @@ export async function importSpdxJsonLd(
       for (const q of store.getQuads(s, null, null, null)) {
         const path = q.predicate.value;
         const value = q.object.value;
-        if (path === NS.rdf.type.value) {
+        if (path === getNamedNode('rdf', 'type').value) {
           classIRI = value;
         } else {
           impProps.push({ id: s.value, path, value });

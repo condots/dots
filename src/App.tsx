@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { useReactFlow } from 'reactflow';
 
 import 'primereact/resources/primereact.min.css';
-import 'primeicons/primeicons.css';
-import 'primeflex/primeflex.css';
+import 'primeflex/primeflex.min.css';
 
 import { updateOntology } from '@/store/onto';
 import { updateMediaTypes } from '@/store/app';

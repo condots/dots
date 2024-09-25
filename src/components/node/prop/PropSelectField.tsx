@@ -48,8 +48,7 @@ const PropSelectField = ({ propertyId }: { propertyId: string }) => {
       value={nodeProperty.value as string}
       onChange={(e: DropdownChangeEvent) => setValue(e.value)}
       options={options}
-      // placeholder="Select an option..."
-      placeholder="Enter text..."
+      placeholder="Select an option..."
       dropdownIcon={dropdownIcon}
       className={`
           items-center
@@ -65,6 +64,8 @@ const PropSelectField = ({ propertyId }: { propertyId: string }) => {
           h-7
           hover:bg-spdx-dark/5
           truncate
+          ring-inherit
+          shadow-none
         `}
       panelClassName={
         contentClass +
