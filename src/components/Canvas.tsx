@@ -16,7 +16,7 @@ import {
 import { appStore } from '@/store/app';
 import { getItem } from '@/store/onto';
 import { addNode, deselectAll, flowStore, screenToCanvas } from '@/store/flow';
-import { generateURN } from '@/scripts/app-utils';
+import { generateURN, importExample } from '@/scripts/app-utils';
 import DraggedClass from '@/components/node/DraggedClass';
 import ConnectionLine from '@/components/edge/ConnectionLine';
 
@@ -89,14 +89,6 @@ const Canvas = () => {
     e.target.value = '';
   };
 
-  const handleImportExample = () => {
-    const refPos = screenToCanvas(
-      window.innerWidth / 2 - 128,
-      window.innerHeight / 2 - 26
-    );
-    importSpdxJsonLd('spdx-doc-example-13.json', refPos, false);
-  };
-
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
@@ -136,6 +128,7 @@ const Canvas = () => {
       onNodesDelete={flowStore.getState().onNodesDelete}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
+      minZoom={0.05}
     >
       {/* <DevTools /> */}
       <Background color="#00416b" variant={BackgroundVariant.Dots} />
@@ -180,7 +173,7 @@ const Canvas = () => {
           <span className="material-symbols-outlined text-lg">help</span>
         </ControlButton>
         <ControlButton
-          onClick={() => handleImportExample()}
+          onClick={() => importExample()}
           title="load example"
           className="text-black"
         >

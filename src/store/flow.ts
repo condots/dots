@@ -367,37 +367,47 @@ export function getNodeTree(node: FlowNode) {
   return result;
 }
 
-export function outEdgeCount(nodeId: string, path: IRI) {
-  const edges = flowStore
-    .getState()
-    .edges.filter(
-      edge => edge.data.classProperty.path === path && edge.source === nodeId
-    );
-  return edges?.length || 0;
+export function outEdgeCount(
+  nodeId: string,
+  path: IRI,
+  edges: Edge[] | undefined = undefined
+) {
+  if (!edges) {
+    edges = flowStore.getState().edges;
+  }
+  const outEdge = edges.filter(
+    edge => edge.data.classProperty.path === path && edge.source === nodeId
+  );
+  return outEdge?.length || 0;
 }
 
 export function isUnmetClsProp(
   node: FlowNode | undefined,
-  clsProp: ClassProperty
+  clsProp: ClassProperty,
+  edges: Edge[] | undefined = undefined
 ) {
   return node && clsProp.targetClass && clsProp.minCount
-    ? outEdgeCount(node.id, clsProp.path) < clsProp.minCount
+    ? outEdgeCount(node.id, clsProp.path, edges) < clsProp.minCount
     : false;
 }
 
 export function hasUnmetProfileClsProps(
   node: FlowNode | undefined,
-  clsProps: ClassProperties
+  clsProps: ClassProperties,
+  edges: Edge[] | undefined = undefined
 ) {
   for (const clsProp of Object.values(clsProps) || []) {
-    if (isUnmetClsProp(node, clsProp)) return true;
+    if (isUnmetClsProp(node, clsProp, edges)) return true;
   }
   return false;
 }
 
-export function hasUnmetNodeClsProps(node: FlowNode | undefined) {
+export function hasUnmetNodeClsProps(
+  node: FlowNode | undefined,
+  edges: Edge[] | undefined = undefined
+) {
   for (const clsProps of node?.data.recClsProps.values() || []) {
-    if (hasUnmetProfileClsProps(node, clsProps)) return true;
+    if (hasUnmetProfileClsProps(node, clsProps, edges)) return true;
   }
   return false;
 }
@@ -435,4 +445,14 @@ export function unhideTreeNodes(nodeId: string) {
     node.data.hiddenNodes = [];
     node.selected = false;
   });
+}
+
+export function getSelectedNodes() {
+  const state = flowStore.getState();
+  return state.nodes.find(n => n.selected)!;
+}
+
+export function getSelectedEdges() {
+  const state = flowStore.getState();
+  return state.edges.find(n => n.selected)!;
 }

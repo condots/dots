@@ -13,6 +13,7 @@ import {
   AlertMessage,
   DraggedClassData,
   DraggedPropData,
+  PreviewData,
   PropertyOption,
 } from '@/types';
 import { getMediaTypes } from '@/scripts/app-utils';
@@ -25,6 +26,7 @@ type AppState = {
   showAboutDialog: boolean;
   alertToast: string | undefined;
   alertMessage: AlertMessage | undefined;
+  previewData: PreviewData | undefined;
   selectedInfoIri: string | undefined;
   draggedClassData: DraggedClassData | undefined;
   draggedPropData: DraggedPropData | undefined;
@@ -40,6 +42,7 @@ const initialState = {
   showAboutDialog: false,
   alertToast: undefined,
   alertMessage: undefined,
+  previewData: undefined,
   selectedInfoIri: undefined,
   draggedClassData: undefined,
   draggedPropData: undefined,
@@ -51,6 +54,7 @@ const storage: PersistStorage<{
     | string
     | boolean
     | AlertMessage
+    | PreviewData
     | DraggedClassData
     | DraggedPropData
     | PropertyOption[]
@@ -98,6 +102,7 @@ const appStoreBase = create<AppState>()(
                       'showAboutDialog',
                       'alertToast',
                       'alertMessage',
+                      'previewData',
                       'selectedInfoIri',
                       'draggedClassData',
                       'draggedPropData',

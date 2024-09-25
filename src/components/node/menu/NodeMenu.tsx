@@ -16,10 +16,11 @@ import {
   getNodeTree,
   unhideTreeNodes,
   hideTreeNodes,
+  flowStore,
 } from '@/store/flow';
 import NodeMenuClass from '@/components/node/menu/NodeMenuClass';
 import NodeMenuProp from '@/components/node/menu/NodeMenuProp';
-import { exportSpdxJsonLd } from '@/scripts/fs-utils';
+import { exportSpdxJsonLd, generateSpdxJsonLd } from '@/scripts/fs-utils';
 import NodeSpdxId from '@/components/node/menu/NodeSpdxId';
 
 const NodeMenu = () => {
@@ -28,21 +29,22 @@ const NodeMenu = () => {
   const invalidProps = node?.data.nodeProps
     ? Object.entries(node.data.nodeProps).filter(p => !p[1].valid)
     : [];
-  const unmetNodeClsProps = hasUnmetNodeClsProps(node);
+  const edges = flowStore.use.edges();
+  const unmetNodeClsProps = hasUnmetNodeClsProps(node, edges);
 
   const Save = useMemo(() => {
-    if (node?.data.cls.name !== 'SpdxDocument') return null;
+    if (!node) return null;
     const name = (Object.values(node.data.nodeProps).find(
       p => p.classProperty.name === 'name'
     )?.value ?? `spdx-doc-${~~(Date.now() / 1000)}`) as string;
-    const filename = `${sanitize(name)}.jsonld`;
+    const filename = `${sanitize(name)}.json`;
 
     return (
       <DropdownMenu.Item
         className={itemClass}
         onSelect={() => exportSpdxJsonLd(filename, getNodeTree(node))}
       >
-        {`Save As...`}
+        {`Save...`}
       </DropdownMenu.Item>
     );
   }, [node]);
@@ -58,6 +60,35 @@ const NodeMenu = () => {
       }}
     >
       Get Info
+    </DropdownMenu.Item>
+  );
+
+  const Preview = (
+    <DropdownMenu.Item
+      className={itemClass}
+      onSelect={async () => {
+        const nodes = getNodeTree(node!);
+
+        const data = await generateSpdxJsonLd(nodes);
+
+        if (data && data.compacted && Array.isArray(data.compacted['@graph'])) {
+          const graph = data.compacted['@graph'];
+
+          const n = node!.data.isElement
+            ? graph.find(g => g['spdxId'] === nodeId)
+            : graph.find(g => g['@id'] === data.subjects.get(nodeId)?.id);
+
+          const v = JSON.stringify(n || {}, null, 2);
+          appStore.setState(state => {
+            state.previewData = {
+              title: node!.data.cls.name,
+              description: v,
+            };
+          });
+        }
+      }}
+    >
+      Preview
     </DropdownMenu.Item>
   );
 
@@ -127,6 +158,7 @@ const NodeMenu = () => {
           <NodeSpdxId />
           {node?.data.hiddenNodes.length == 0 ? HideTree : UnhideTree}
           {GetInfo}
+          {Preview}
           {Delete}
           {Save}
         </DropdownMenu.Content>

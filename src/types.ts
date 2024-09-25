@@ -153,6 +153,11 @@ export interface AlertMessage {
   description?: string;
 }
 
+export interface PreviewData {
+  title: string;
+  description: string;
+}
+
 export type DevtoolsActive = {
   nodeInspector: boolean;
   changeLogger: boolean;

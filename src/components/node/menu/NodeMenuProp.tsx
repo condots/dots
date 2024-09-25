@@ -84,7 +84,7 @@ const NodeMenuProp = () => {
   return items.length > 0 ? (
     <DropdownMenu.Sub>
       <DropdownMenu.SubTrigger className={itemClass}>
-        <span className="pr-2">Add Datatype</span>
+        <span className="pr-2">Add Value</span>
         <ChevronRightIcon />
       </DropdownMenu.SubTrigger>
       <DropdownMenu.Portal>

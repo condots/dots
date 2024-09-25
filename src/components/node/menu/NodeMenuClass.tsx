@@ -13,6 +13,7 @@ import {
   hasUnmetProfileClsProps,
   hasUnmetNodeClsProps,
   deselectAll,
+  flowStore,
 } from '@/store/flow';
 import {
   contentClass,
@@ -26,12 +27,13 @@ import { appStore } from '@/store/app';
 const NodeMenuClass = () => {
   const nodeId = useNodeId()!;
   const node = useNode(nodeId);
+  const edges = flowStore.use.edges();
 
   const items = useMemo(() => {
     if (!node) return [];
 
     const reachedMaxCount = (path: IRI, maxCount: number | undefined | null) =>
-      maxCount == null ? false : outEdgeCount(node.id, path) >= maxCount;
+      maxCount == null ? false : outEdgeCount(node.id, path, edges) >= maxCount;
 
     const handleMouseDown = (
       event: React.MouseEvent,
@@ -148,13 +150,13 @@ const NodeMenuClass = () => {
       }
     }
     return classItems;
-  }, [node]);
+  }, [node, edges]);
 
   return items.length > 0 ? (
     <DropdownMenu.Sub>
       <DropdownMenu.SubTrigger className={itemClass}>
         <div className="flex justify-between">
-          <span className="pr-2">Add Object</span>
+          <span className="pr-2">Add Edge</span>
           {hasUnmetNodeClsProps(node) && (
             <div className="w-[16px] flex items-center pr-2">
               <span

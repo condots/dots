@@ -3,7 +3,7 @@ import { parse } from 'marked';
 import HTMLReactParser from 'html-react-parser';
 import Papa from 'papaparse';
 import { isIri } from '@hyperjump/uri';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import semver from 'semver';
 import { nanoid } from 'nanoid';
 
@@ -16,6 +16,8 @@ import {
   PropertyOption,
 } from '@/types';
 import { ontoStore } from '@/store/onto';
+import { screenToCanvas } from '@/store/flow';
+import { importSpdxJsonLd } from '@/scripts/fs-utils';
 
 export const advisoryText = (text: string | undefined) => {
   if (!text) return '';
@@ -54,7 +56,7 @@ export const inputProperties: InputProperties = new Map([
       icon: 'calendar_today',
       inputType: 'datetime-local',
       validator: (v: string) =>
-        moment(v, 'YYYY-MM-DDTHH:mm:ssZ', true).isValid(),
+        dayjs(v, 'YYYY-MM-DDTHH:mm:ssZ', true).isValid(),
       step: 1,
     },
   ],
@@ -225,7 +227,7 @@ export function initNodeProps(recClsProps: NodeData['recClsProps']) {
         if (clsProp.name === 'specVersion') {
           value = ontoStore.getState().ontologyMetadata?.specVersion;
           // } else if (clsProp.name === 'created') {
-          //   value = moment.utc().format();
+          //   value = dayjs.utc().format();
         }
       }
       const nodeProp = generateNodeProperty(clsProp, value);
@@ -234,6 +236,14 @@ export function initNodeProps(recClsProps: NodeData['recClsProps']) {
     }
   }
   return nodeProperties;
+}
+
+export async function importExample() {
+  const refPos = screenToCanvas(
+    window.innerWidth / 2 - 128,
+    window.innerHeight / 2 - 26
+  );
+  await importSpdxJsonLd('spdx-doc-example-13.json', refPos, false);
 }
 
 export function generateURN(): string {

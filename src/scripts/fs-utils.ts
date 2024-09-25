@@ -1,6 +1,6 @@
 import { Store, DataFactory, Quad_Subject, Quad } from 'n3';
 const { namedNode, literal, quad } = DataFactory;
-import SerializerJsonld from '@rdfjs/serializer-jsonld';
+import { JsonLdSerializer } from 'jsonld-streaming-serializer';
 import jsonld, { JsonLdDocument } from 'jsonld';
 import { saveAs } from 'file-saver';
 import { XYPosition } from 'reactflow';
@@ -15,10 +15,11 @@ import {
   getNode,
   getNodeOutEdges,
   hideTreeNodes,
+  isUnmetClsProp,
   selectNode,
   setNodeProperty,
 } from '@/store/flow';
-import { NS } from '@/scripts/onto-utils';
+import { getNamedNode } from '@/scripts/onto-utils';
 import { snapGrid } from '@/scripts/canvas-defaults';
 import { generateURN } from '@/scripts/app-utils';
 
@@ -43,7 +44,11 @@ function genNodeQuad(store: Store, subjects: SubjectMap, node: FlowNode) {
   const subject = node.data.isElement
     ? namedNode(node.id)
     : store.createBlankNode();
-  const q = quad(subject, NS.rdf.type, namedNode(node.data.cls.iri));
+  const q = quad(
+    subject,
+    getNamedNode('rdf', 'type'),
+    namedNode(node.data.cls.iri)
+  );
   store.add(q);
   genPropQuads(store, subject, node);
   subjects.set(node.id, subject);
@@ -117,7 +122,19 @@ function checkInvalidProp(nodes: FlowNode[]) {
   }
 }
 
-export async function exportSpdxJsonLd(filename: string, nodes?: FlowNode[]) {
+function checkMissingProp(nodes: FlowNode[]) {
+  for (const node of nodes) {
+    for (const clsProps of node.data.recClsProps.values()) {
+      for (const clsProp of Object.values(clsProps).sort()) {
+        if (isUnmetClsProp(node, clsProp)) {
+          return { node, clsProp };
+        }
+      }
+    }
+  }
+}
+
+export async function generateSpdxJsonLd(nodes?: FlowNode[]) {
   if (!nodes) {
     nodes = flowStore.getState().nodes;
   }
@@ -126,8 +143,19 @@ export async function exportSpdxJsonLd(filename: string, nodes?: FlowNode[]) {
   if (invalidProp) {
     appStore.setState(state => {
       state.alertMessage = {
-        title: 'Invalid property',
-        description: `"${invalidProp.node.data.cls.name}" has an invalid "${invalidProp.nodeProp.classProperty.name}" value.`,
+        title: 'Invalid Value',
+        description: `"${invalidProp.node.data.cls.name}" has an invalid "${invalidProp.nodeProp.classProperty.name}" value`,
+      };
+    });
+    return;
+  }
+
+  const missingProp = checkMissingProp(nodes);
+  if (missingProp) {
+    appStore.setState(state => {
+      state.alertMessage = {
+        title: 'Missing Edge',
+        description: `"${missingProp.node.data.cls.name}" has a missing "${missingProp.clsProp.name}" edge`,
       };
     });
     return;
@@ -135,20 +163,39 @@ export async function exportSpdxJsonLd(filename: string, nodes?: FlowNode[]) {
 
   const { store, subjects } = genSpdxGraph(nodes);
 
-  const doc: JsonLdDocument = await new Promise((resolve, reject) => {
-    new SerializerJsonld()
+  const data: string[] = await new Promise((resolve, reject) => {
+    const data: string[] = [];
+    new JsonLdSerializer()
       .import(store.match(null, null, null, null))
+      .on('data', d => data.push(d))
       .on('error', reject)
-      .on('data', resolve);
+      .on('end', () => resolve(data));
   });
+  const doc: JsonLdDocument = JSON.parse(data.join(' '));
   const ctx = ontoStore.getState().jsonLdContext!;
   const compacted = await jsonld.compact(doc, ctx);
+  if (compacted['@graph'] && Array.isArray(compacted['@graph'])) {
+    compacted['@graph'].forEach(n => {
+      if ((n['spdxId'] as string).startsWith('_:')) {
+        n['@id'] = n['spdxId'] as string;
+        delete n['spdxId'];
+      }
+    });
+  } else {
+    throw new Error('@graph is undefined or not an array');
+  }
 
   compacted['@context'] = ontoStore.getState().jsonLdContextUrl;
   const positions = getRelativePositions(nodes, subjects);
   compacted.dots = JSON.parse(JSON.stringify(positions));
 
-  const blob = new Blob([JSON.stringify(compacted, null, 2)], {
+  return { compacted, subjects };
+}
+
+export async function exportSpdxJsonLd(filename: string, nodes?: FlowNode[]) {
+  const data = await generateSpdxJsonLd(nodes);
+  if (!data) return;
+  const blob = new Blob([JSON.stringify(data.compacted, null, 2)], {
     type: 'application/ld+json;charset=utf-8',
   });
   saveAs(blob, filename);
@@ -219,6 +266,7 @@ export async function importSpdxJsonLd(
     }
 
     const ctx = ontoStore.getState().jsonLdContext!;
+    doc['@context'] = ctx;
     const expanded = await jsonld.flatten(doc, ctx);
     const quads = (await jsonld.toRDF(expanded)) as Quad[];
     const store = new Store(quads);
@@ -234,8 +282,6 @@ export async function importSpdxJsonLd(
       return;
     }
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
     const positions: NamedPositions = doc.dots
       ? getCanvasPositions(doc.dots, refPos)
       : {};
@@ -247,7 +293,7 @@ export async function importSpdxJsonLd(
       for (const q of store.getQuads(s, null, null, null)) {
         const path = q.predicate.value;
         const value = q.object.value;
-        if (path === NS.rdf.type.value) {
+        if (path === getNamedNode('rdf', 'type').value) {
           classIRI = value;
         } else {
           impProps.push({ id: s.value, path, value });
@@ -307,7 +353,7 @@ export async function importSpdxJsonLd(
 
     const collapsedNode =
       Object.values(impNodes).find(n => n.classIRI.endsWith('/SpdxDocument')) ??
-      impNodes[0];
+      Object.values(impNodes)[0];
 
     if (collapsed) {
       hideTreeNodes(collapsedNode.id);

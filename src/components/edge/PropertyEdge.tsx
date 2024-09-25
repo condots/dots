@@ -216,7 +216,7 @@ const PropertyEdge = ({
               })
             }
           >
-            {data?.classProperty.name}
+            {label}
           </div>
         </div>
       </EdgeLabelRenderer>
