@@ -131,11 +131,11 @@ export const inputProperties: InputProperties = new Map([
 ]);
 
 export const preferredLabels: Record<string, string[]> = {
-  'https://spdx.org/rdf/3.0.0/terms/Core/Relationship': ['relationshipType'],
-  'https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifier': ['identifier'],
-  'https://spdx.org/rdf/3.0.0/terms/Core/SpdxDocument': ['profileConformance'],
-  'https://spdx.org/rdf/3.0.0/terms/Core/Bom': ['profileConformance'],
-  'https://spdx.org/rdf/3.0.0/terms/Core/CreationInfo': ['specVersion'],
+  'Core/Relationship': ['relationshipType'],
+  'Core/ExternalIdentifier': ['identifier'],
+  'Core/SpdxDocument': ['profileConformance'],
+  'Core/Bom': ['profileConformance'],
+  'Core/CreationInfo': ['specVersion'],
 };
 
 export const isNodePropertyValid = (nodeProperty: NodeProperty) => {

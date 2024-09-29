@@ -105,7 +105,8 @@ const ClassNode = ({
     let subtitle;
     let labels: string[] = [];
     for (const c in data.inheritanceList) {
-      labels = preferredLabels[data.inheritanceList[c]] || [];
+      const { name, profile } = parseIRI(data.inheritanceList[c]);
+      labels = preferredLabels[`${profile}/${name}`] || [];
       if (labels.length > 0) {
         break;
       }
