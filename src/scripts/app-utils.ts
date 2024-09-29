@@ -160,25 +160,43 @@ export const getClassPropertyIcon = (classProperty: ClassProperty) => {
   }
 };
 
+const mediaTypeFiles = [
+  'application.csv',
+  'audio.csv',
+  'font.csv',
+  'haptics.csv',
+  'image.csv',
+  'message.csv',
+  'model.csv',
+  'multipart.csv',
+  'text.csv',
+  'video.csv',
+];
+
 export async function getMediaTypes() {
-  // Using local copy of "Media Types" to avoid CORS issues with:
-  // "https://www.iana.org/assignments/media-types/application.csv"
-  const url = 'media-types.csv';
-  const csv = (await (await fetch(url)).text()) ?? '';
-  const mediaTypes: PropertyOption[] = await new Promise(resolve =>
-    Papa.parse(csv, {
-      skipEmptyLines: true,
-      complete: function (res) {
-        resolve(
-          res.data.slice(1).map(row => {
-            const [label, value] = row as [string, string];
-            return { label, value };
-          })
-        );
-      },
+  const csvFiles = await Promise.all(
+    mediaTypeFiles.map(async file => {
+      const response = await fetch(file);
+      return response.text();
     })
   );
-  return mediaTypes;
+  const allMediaTypes: PropertyOption[] = [];
+  for (const csv of csvFiles) {
+    await new Promise<void>(resolve => {
+      Papa.parse(csv, {
+        skipEmptyLines: true,
+        complete: function (res) {
+          const mediaTypes = res.data.slice(1).map(row => {
+            const [label, value] = row as [string, string];
+            return { label, value };
+          });
+          allMediaTypes.push(...mediaTypes);
+          resolve();
+        },
+      });
+    });
+  }
+  return allMediaTypes;
 }
 
 export function parseIRI(iri: IRI) {
