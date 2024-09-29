@@ -413,7 +413,6 @@ function extractNodeShape(graph: Store, node: Term) {
     let classIRI: IRI | undefined;
     let options: PropertyOption[] | undefined;
     let pattern: string | undefined;
-    let targetClass: IRI | undefined;
     for (const o of graph.getQuads(pshape, null, null, null)) {
       const field = o.predicate.value.split('#').pop()!;
       switch (field) {
@@ -471,14 +470,6 @@ function extractNodeShape(graph: Store, node: Term) {
       }
     }
 
-    if ((nodeKind! == 'IRI' || nodeKind! == 'BlankNodeOrIRI') && !options) {
-      targetClass = graph.getObjects(
-        path!,
-        getNamedNode('rdfs', 'range'),
-        null
-      )[0].value;
-    }
-
     const classProperty: ClassProperty = {
       parentClass: node.value,
       path: path!,
@@ -490,7 +481,7 @@ function extractNodeShape(graph: Store, node: Term) {
         nodeKind! === 'Literal'
           ? (datatype as LiteralPropertyTypes)
           : undefined,
-      targetClass: targetClass,
+      targetClass: classIRI && !options ? classIRI : undefined,
       options: options,
       pattern: pattern,
     } as ClassProperty;
