@@ -23,11 +23,12 @@ export default function App() {
 
   useEffect(() => {
     updateMediaTypes().then(async () => {
-      const source = 'spdx-model.ttl';
+      const source =
+        'https://spdx.github.io/spdx-spec/v3.0.1/rdf/spdx-model.ttl';
       const jsonLdContextSource =
-        'https://spdx.github.io/spdx-spec/v3.0.0/rdf/spdx-context.jsonld';
-      const jsonLdContextUrl = 'https://spdx.org/rdf/3.0.0/spdx-context.jsonld';
-      const model = 'model.json';
+        'https://spdx.github.io/spdx-spec/v3.0.1/rdf/spdx-context.jsonld';
+      const jsonLdContextUrl = 'https://spdx.org/rdf/3.0.1/spdx-context.jsonld';
+      const model = 'spdx/3.0.1/model.json';
       await updateOntology(
         source,
         jsonLdContextSource,

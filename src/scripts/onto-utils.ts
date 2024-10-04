@@ -168,7 +168,7 @@ export async function enrichModelFromMarkdown(
           v => v.name === itemName
         )!;
         item.description = modelItem.description;
-        if (sectionName === 'classes') {
+        if (sectionName === 'classes' && item.abstract === undefined) {
           item.abstract = modelItem.metadata.Instantiability === 'Abstract';
         }
         section[itemName] = item;
@@ -246,13 +246,22 @@ function groupByProfile(section: Section) {
 }
 
 function getClasses(graph: Store) {
+  // classes that don't have labeled NamedIndividuals
   const nodes = graph
     .getSubjects(
       getNamedNode('rdf', 'type'),
       getNamedNode('owl', 'Class'),
       null
     )
-    .filter(o => !graph.countQuads(null, getNamedNode('rdf', 'type'), o, null));
+    .filter(
+      o =>
+        !graph
+          .getSubjects(getNamedNode('rdf', 'type'), o, null)
+          .filter(s =>
+            graph.countQuads(s, getNamedNode('rdfs', 'label'), null, null)
+          ).length
+    )
+    .filter(o => !o.value.endsWith('AbstractClass')); //workaround for invalid AbstractClass
   const items: Classes = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
@@ -263,6 +272,17 @@ function getClasses(graph: Store) {
         getNamedNode('rdfs', 'subClassOf'),
         null
       )[0]?.value,
+      // nodeKind: graph
+      //   .getObjects(node, NS.sh.nodeKind, null)[0]
+      //   .value.split('#')
+      //   .pop() as nodeKindTypes,
+      // abstract: graph.has(
+      //   DataFactory.quad(
+      //     node,
+      //     NS.rdf.type,
+      //     DataFactory.namedNode('http://spdx.invalid./AbstractClass')
+      //   )
+      // ),
       properties: extractNodeShape(graph, node),
     };
   }
@@ -318,13 +338,22 @@ function getObjectProperties(graph: Store) {
 }
 
 function getVocabularies(graph: Store) {
+  // classes that have labeled NamedIndividuals
   const nodes = graph
     .getSubjects(
       getNamedNode('rdf', 'type'),
       getNamedNode('owl', 'Class'),
       null
     )
-    .filter(o => graph.countQuads(null, getNamedNode('rdf', 'type'), o, null));
+    .filter(
+      o =>
+        graph
+          .getSubjects(getNamedNode('rdf', 'type'), o, null)
+          .filter(s =>
+            graph.countQuads(s, getNamedNode('rdfs', 'label'), null, null)
+          ).length
+    )
+    .filter(o => !o.value.endsWith('AbstractClass')); //workaround for invalid AbstractClass
   const items: Vocabularies = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
@@ -452,8 +481,8 @@ function extractNodeShape(graph: Store, node: Term) {
         nodeKind! === 'Literal'
           ? (datatype as LiteralPropertyTypes)
           : undefined,
-      targetClass: nodeKind! === 'BlankNodeOrIRI' ? classIRI : undefined,
-      options: nodeKind! === 'IRI' ? options : undefined,
+      targetClass: classIRI && !options ? classIRI : undefined,
+      options: options,
       pattern: pattern,
     } as ClassProperty;
 

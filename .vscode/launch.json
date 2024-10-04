@@ -5,9 +5,9 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "chrome",
+      "name": "Launch",
       "request": "launch",
-      "name": "Launch Chrome against localhost",
+      "type": "chrome",
       "url": "http://localhost:5173",
       "webRoot": "${workspaceFolder}"
     }

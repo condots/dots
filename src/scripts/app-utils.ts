@@ -131,11 +131,13 @@ export const inputProperties: InputProperties = new Map([
 ]);
 
 export const preferredLabels: Record<string, string[]> = {
-  'https://spdx.org/rdf/3.0.0/terms/Core/Relationship': ['relationshipType'],
-  'https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifier': ['identifier'],
-  'https://spdx.org/rdf/3.0.0/terms/Core/SpdxDocument': ['profileConformance'],
-  'https://spdx.org/rdf/3.0.0/terms/Core/Bom': ['profileConformance'],
-  'https://spdx.org/rdf/3.0.0/terms/Core/CreationInfo': ['specVersion'],
+  'Core/Relationship': ['relationshipType'],
+  'Core/ExternalIdentifier': ['identifier'],
+  'Core/SpdxDocument': ['profileConformance'],
+  'Core/Bom': ['profileConformance'],
+  'Core/CreationInfo': ['specVersion'],
+  'Core/Hash': ['algorithm', 'hashValue'],
+  'Core/PackageVerificationCode': ['algorithm', 'hashValue'],
 };
 
 export const isNodePropertyValid = (nodeProperty: NodeProperty) => {
@@ -160,25 +162,43 @@ export const getClassPropertyIcon = (classProperty: ClassProperty) => {
   }
 };
 
+const mediaTypeFiles = [
+  'application.csv',
+  'audio.csv',
+  'font.csv',
+  'haptics.csv',
+  'image.csv',
+  'message.csv',
+  'model.csv',
+  'multipart.csv',
+  'text.csv',
+  'video.csv',
+];
+
 export async function getMediaTypes() {
-  // Using local copy of "Media Types" to avoid CORS issues with:
-  // "https://www.iana.org/assignments/media-types/application.csv"
-  const url = 'media-types.csv';
-  const csv = (await (await fetch(url)).text()) ?? '';
-  const mediaTypes: PropertyOption[] = await new Promise(resolve =>
-    Papa.parse(csv, {
-      skipEmptyLines: true,
-      complete: function (res) {
-        resolve(
-          res.data.slice(1).map(row => {
-            const [label, value] = row as [string, string];
-            return { label, value };
-          })
-        );
-      },
+  const csvFiles = await Promise.all(
+    mediaTypeFiles.map(async file => {
+      const response = await fetch(`media-types/${file}`);
+      return response.text();
     })
   );
-  return mediaTypes;
+  const allMediaTypes: PropertyOption[] = [];
+  for (const csv of csvFiles) {
+    await new Promise<void>(resolve => {
+      Papa.parse(csv, {
+        skipEmptyLines: true,
+        complete: function (res) {
+          const mediaTypes = res.data.slice(1).map(row => {
+            const [label, value] = row as [string, string];
+            return { label, value };
+          });
+          allMediaTypes.push(...mediaTypes);
+          resolve();
+        },
+      });
+    });
+  }
+  return allMediaTypes;
 }
 
 export function parseIRI(iri: IRI) {
@@ -243,7 +263,7 @@ export async function importExample() {
     window.innerWidth / 2 - 128,
     window.innerHeight / 2 - 26
   );
-  await importSpdxJsonLd('spdx-doc-example-13.json', refPos, false);
+  await importSpdxJsonLd('examples/spdx-doc.json', refPos, false);
 }
 
 export function generateURN(): string {

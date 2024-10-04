@@ -51,6 +51,7 @@ export interface ClassProperty {
 export interface Class extends SharedFields {
   abstract?: boolean;
   subClassOf?: IRI;
+  nodeKind?: nodeKindTypes;
   properties: ClassProperties;
 }
 

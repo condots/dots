@@ -120,7 +120,6 @@ const appStoreBase = create<AppState>()(
 export const appStore = createSelectors(appStoreBase);
 
 export async function updateMediaTypes() {
-  // if (appStore.getState().mediaTypes) return;
   const mediaTypes = await getMediaTypes();
   appStore.setState({ mediaTypes });
   if (!import.meta.env.PROD) {

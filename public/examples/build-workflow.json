@@ -1,5 +1,5 @@
 {
-  "@context": "https://spdx.org/rdf/3.0.0/spdx-context.jsonld",
+  "@context": "https://spdx.org/rdf/3.0.1/spdx-context.jsonld",
   "@graph": [
     {
       "spdxId": "urn:nanoid:iGssXfcLExlNVoLh-OYz6",
@@ -12,7 +12,7 @@
       "type": "CreationInfo",
       "created": "2024-09-04T20:25:34Z",
       "createdBy": "urn:nanoid:4ilKMdQr3P7d88OeM8mEq",
-      "spdx:Core/specVersion": "3.0.0",
+      "spdx:Core/specVersion": "3.0.1",
       "@id": "_:b0"
     },
     {
@@ -42,6 +42,13 @@
       "build_buildType": "https://slsa-framework.github.io/github-actions-buildtypes/workflow/v1",
       "creationInfo": "_:b0",
       "spdx:Core/name": "workflow"
+    },
+    {
+      "spdxId": "urn:nanoid:s9B92nt7thHsQbtHkuh1o",
+      "type": "software_Package",
+      "creationInfo": "_:b0",
+      "spdx:Core/name": "myapp",
+      "software_primaryPurpose": "application"
     },
     {
       "spdxId": "urn:nanoid:2HSdfXW96pUyb_OLvVb8X",
@@ -253,13 +260,6 @@
       "spdx:Core/name": "compilation step"
     },
     {
-      "spdxId": "urn:nanoid:s9B92nt7thHsQbtHkuh1o",
-      "type": "software_Package",
-      "creationInfo": "_:b0",
-      "spdx:Core/name": "myapp",
-      "software_primaryPurpose": "application"
-    },
-    {
       "spdxId": "urn:nanoid:hoInShvENXcTrdgLvwlC_",
       "type": "LifecycleScopedRelationship",
       "creationInfo": "_:b0",
@@ -336,6 +336,10 @@
     "urn:nanoid:1k-rpO9qQ4QPYHlP9ENx6": {
       "x": 0,
       "y": 4
+    },
+    "urn:nanoid:s9B92nt7thHsQbtHkuh1o": {
+      "x": -7,
+      "y": 2
     },
     "urn:nanoid:2HSdfXW96pUyb_OLvVb8X": {
       "x": -6,
@@ -440,10 +444,6 @@
     "urn:nanoid:qztDV06yPtpNgw8NW4MjC": {
       "x": -2,
       "y": 4
-    },
-    "urn:nanoid:s9B92nt7thHsQbtHkuh1o": {
-      "x": -7,
-      "y": 2
     },
     "urn:nanoid:hoInShvENXcTrdgLvwlC_": {
       "x": -1,
