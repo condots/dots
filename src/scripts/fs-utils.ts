@@ -1,6 +1,8 @@
-import { Store, DataFactory, Quad_Subject, Quad } from 'n3';
+import { Store, DataFactory, Quad_Subject } from 'n3';
 const { namedNode, literal, quad } = DataFactory;
 import { JsonLdSerializer } from 'jsonld-streaming-serializer';
+import { JsonLdParser } from 'jsonld-streaming-parser';
+import { promisifyEventEmitter } from 'event-emitter-promisify';
 import jsonld, { JsonLdDocument } from 'jsonld';
 import { saveAs } from 'file-saver';
 import { XYPosition } from 'reactflow';
@@ -265,11 +267,13 @@ export async function importSpdxJsonLd(
       return;
     }
 
-    const ctx = ontoStore.getState().jsonLdContext!;
-    doc['@context'] = ctx;
-    const expanded = await jsonld.flatten(doc, ctx);
-    const quads = (await jsonld.toRDF(expanded)) as Quad[];
-    const store = new Store(quads);
+    const store = new Store();
+    const parser = new JsonLdParser({
+      context: ontoStore.getState().jsonLdContext! as object,
+    });
+    parser.write(data);
+    parser.end();
+    await promisifyEventEmitter(store.import(parser));
 
     const sid = checkDuplicatedNodeIds(store);
     if (sid) {
@@ -300,9 +304,9 @@ export async function importSpdxJsonLd(
         }
       }
       const impNode: ImportedNode = {
-        id: s.value.startsWith('_:') ? generateURN() : s.value,
+        id: s.id.startsWith('_:') ? generateURN() : s.value,
         classIRI: classIRI!,
-        position: positions[s.value] ?? refPos,
+        position: positions[s.id] ?? refPos,
       };
       addNode('inst', impNode.id, impNode.classIRI, impNode.position);
       impNodes[s.value] = impNode;

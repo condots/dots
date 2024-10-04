@@ -164,3 +164,4 @@ spdx/ontologies/*/docs
 node_modules/
 .DS_Store
 spec-parser-output/
+stats.html

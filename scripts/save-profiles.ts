@@ -26,9 +26,9 @@ const replacer = (key, value) =>
 function saveProfiles(profiles: Profiles, target: string) {
   fs.writeFileSync(target, JSON.stringify(profiles, replacer, 2));
 }
-const source = './public/spdx-model.ttl';
-const model = './public/model.json';
-const target = './public/profiles.json';
+const source = './public/spdx/3.0.1/spdx-model.ttl';
+const model = './public/spdx/3.0.1/model.json';
+const target = './public/spdx/3.0.1/profiles.json';
 const profiles = await updateOntology(source, model);
 // console.log(JSON.stringify(profiles, replacer, 2));
 saveProfiles(profiles, target);

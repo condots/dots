@@ -28,7 +28,7 @@ export default function App() {
       const jsonLdContextSource =
         'https://spdx.github.io/spdx-spec/v3.0.1/rdf/spdx-context.jsonld';
       const jsonLdContextUrl = 'https://spdx.org/rdf/3.0.1/spdx-context.jsonld';
-      const model = 'model.json';
+      const model = 'spdx/3.0.1/model.json';
       await updateOntology(
         source,
         jsonLdContextSource,

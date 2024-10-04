@@ -136,6 +136,8 @@ export const preferredLabels: Record<string, string[]> = {
   'Core/SpdxDocument': ['profileConformance'],
   'Core/Bom': ['profileConformance'],
   'Core/CreationInfo': ['specVersion'],
+  'Core/Hash': ['algorithm', 'hashValue'],
+  'Core/PackageVerificationCode': ['algorithm', 'hashValue'],
 };
 
 export const isNodePropertyValid = (nodeProperty: NodeProperty) => {
@@ -176,7 +178,7 @@ const mediaTypeFiles = [
 export async function getMediaTypes() {
   const csvFiles = await Promise.all(
     mediaTypeFiles.map(async file => {
-      const response = await fetch(file);
+      const response = await fetch(`media-types/${file}`);
       return response.text();
     })
   );
@@ -261,7 +263,7 @@ export async function importExample() {
     window.innerWidth / 2 - 128,
     window.innerHeight / 2 - 26
   );
-  await importSpdxJsonLd('spdx-doc-example-13.json', refPos, false);
+  await importSpdxJsonLd('examples/spdx-doc.json', refPos, false);
 }
 
 export function generateURN(): string {
