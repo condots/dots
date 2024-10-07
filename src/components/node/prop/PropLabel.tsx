@@ -1,24 +1,36 @@
-import { useState } from 'react';
-
+import React, { useState, useCallback, useMemo } from 'react';
 import { useNodeId } from 'reactflow';
-
 import { Property } from '@/types';
 import { appStore } from '@/store/app';
 import { useNodeProperty, deleteNodeProperty } from '@/store/flow';
 import { getItem } from '@/store/onto';
 
-const PropLabel = ({ propertyId }: { propertyId: string }) => {
+const PropLabel = React.memo(({ propertyId }: { propertyId: string }) => {
   const nodeId = useNodeId()!;
   const propertyData = useNodeProperty(nodeId, propertyId)!;
-  const property = getItem(propertyData.classProperty.path) as Property;
+  const property = useMemo(
+    () => getItem(propertyData.classProperty.path) as Property,
+    [propertyData.classProperty.path]
+  );
   const [infoHovered, setInfoHovered] = useState(false);
   const [deleteHovered, setDeleteHovered] = useState(false);
   const buttonClasses = 'flex outline-none rounded-full mt-0.5';
 
+  const handleDeleteClick = useCallback(() => {
+    deleteNodeProperty(nodeId, propertyId);
+  }, [nodeId, propertyId]);
+
+  const handleInfoClick = useCallback(() => {
+    appStore.setState({
+      selectedInfoIri: property.iri,
+      showInfoDialog: true,
+    });
+  }, [property.iri]);
+
   const deleteButton = (
     <button
       className={buttonClasses}
-      onClick={() => deleteNodeProperty(nodeId, propertyId)}
+      onClick={handleDeleteClick}
       onMouseEnter={() => setDeleteHovered(true)}
       onMouseLeave={() => setDeleteHovered(false)}
     >
@@ -36,12 +48,7 @@ const PropLabel = ({ propertyId }: { propertyId: string }) => {
   const infoButton = (
     <button
       className={buttonClasses}
-      onClick={() =>
-        appStore.setState({
-          selectedInfoIri: property.iri,
-          showInfoDialog: true,
-        })
-      }
+      onClick={handleInfoClick}
       onMouseEnter={() => setInfoHovered(true)}
       onMouseLeave={() => setInfoHovered(false)}
     >
@@ -73,6 +80,8 @@ const PropLabel = ({ propertyId }: { propertyId: string }) => {
       )}
     </div>
   );
-};
+});
+
+PropLabel.displayName = 'PropLabel';
 
 export default PropLabel;

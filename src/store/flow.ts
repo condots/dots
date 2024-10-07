@@ -8,6 +8,7 @@ import {
 import { immer } from 'zustand/middleware/immer';
 import superjson from 'superjson';
 import createSelectors from '@/store/createSelectors';
+import { useShallow } from 'zustand/react/shallow';
 
 import {
   Connection,
@@ -52,7 +53,7 @@ import {
 } from '@/scripts/app-utils';
 import { appStore } from './app';
 
-type RFState = {
+export type RFState = {
   nodes: FlowNode[];
   edges: Edge[];
   reactFlowInstance: ReactFlowInstance | undefined;
@@ -195,12 +196,18 @@ export function useNode(nodeId: string | undefined) {
   return flowStore.use.nodes().find(n => n.id === nodeId);
 }
 
+export function useNodeShallow(nodeId: string | undefined) {
+  return flowStore(
+    useShallow((state: RFState) => state.nodes.find(n => n.id === nodeId))
+  );
+}
+
 export function getNode(nodeId: string | undefined) {
   return flowStore.getState().nodes.find(n => n.id === nodeId);
 }
 
 export function useNodeProperties(nodeId: string | undefined) {
-  if (nodeId) return useNode(nodeId)?.data.nodeProps;
+  return useNode(nodeId)?.data.nodeProps;
 }
 
 export function useNodeProperty(
@@ -230,7 +237,7 @@ export function selectEdge(edgeId?: string) {
 export const screenToCanvas = (x: number, y: number) =>
   flowStore.getState().reactFlowInstance!.screenToFlowPosition({ x, y });
 
-export function addNode(
+export function initNode(
   type: string,
   id: string,
   classIRI: IRI,
@@ -251,6 +258,15 @@ export function addNode(
   };
 
   const node: FlowNode = { id, position, data, type };
+  return node;
+}
+export function addNode(
+  type: string,
+  id: string,
+  classIRI: IRI,
+  position: XYPosition
+) {
+  const node = initNode(type, id, classIRI, position);
   flowStore.setState(state => {
     state.nodes.push(node);
   });

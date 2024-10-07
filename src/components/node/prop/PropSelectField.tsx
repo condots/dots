@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { useNodeId } from 'reactflow';
 
@@ -7,14 +7,17 @@ import { useNodeProperty, setNodeProperty } from '@/store/flow';
 import { appStore } from '@/store/app';
 import { orderBy } from 'lodash-es';
 
-const PropSelectField = ({ propertyId }: { propertyId: string }) => {
+const PropSelectField = React.memo(({ propertyId }: { propertyId: string }) => {
   const nodeId = useNodeId()!;
   const nodeProperty = useNodeProperty(nodeId, propertyId)!;
   const mediaTypes = appStore.use.mediaTypes();
 
-  const setValue = (value: string) => {
-    setNodeProperty(nodeId, propertyId, value);
-  };
+  const handleOnChange = useCallback(
+    (e: DropdownChangeEvent) => {
+      setNodeProperty(nodeId, propertyId, e.value);
+    },
+    [nodeId, propertyId]
+  );
 
   const options = useMemo(() => {
     const ops =
@@ -38,7 +41,7 @@ const PropSelectField = ({ propertyId }: { propertyId: string }) => {
   const listHeight = options!.length * itemSize + 2;
   const scrollHeight = listHeight < 300 ? `${listHeight}px` : '300px';
 
-  const borderColor = `border-spdx-dark ${!nodeProperty.valid && 'border-red-400'}`;
+  const borderColor = `border-spdx-dark ${!nodeProperty.valid ? 'border-red-400' : ''}`;
   const inputColor = nodeProperty.valid
     ? 'text-spdx-dark'
     : 'italic text-slate-400';
@@ -46,30 +49,30 @@ const PropSelectField = ({ propertyId }: { propertyId: string }) => {
   return (
     <Dropdown
       value={nodeProperty.value as string}
-      onChange={(e: DropdownChangeEvent) => setValue(e.value)}
+      onChange={handleOnChange}
       options={options}
       placeholder="Select an option..."
       dropdownIcon={dropdownIcon}
       className={`
-          items-center
-          justify-between
-          rounded-sm
-          border-2
-          ${borderColor}
-          w-full
-          px-1
-          outline-none
-          text-sm
-          font-lato
-          h-7
-          hover:bg-spdx-dark/5
-          truncate
-          ring-inherit
-          shadow-none
-        `}
+        items-center
+        justify-between
+        rounded-sm
+        border-2
+        ${borderColor}
+        w-full
+        px-1
+        outline-none
+        text-sm
+        font-lato
+        h-7
+        hover:bg-spdx-dark/5
+        truncate
+        ring-inherit
+        shadow-none
+      `}
       panelClassName={
         contentClass +
-        ` p-1 max-h-[${scrollHeight}px] max-w-[240px] overflow-auto font-lato`
+        ` p-1 max-h-[${scrollHeight}] max-w-[240px] overflow-auto font-lato`
       }
       pt={{
         input: {
@@ -81,6 +84,8 @@ const PropSelectField = ({ propertyId }: { propertyId: string }) => {
       }}
     />
   );
-};
+});
+
+PropSelectField.displayName = 'PropSelectField';
 
 export default PropSelectField;

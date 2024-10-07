@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useReactFlow } from 'reactflow';
 
 import 'primereact/resources/primereact.min.css';
@@ -21,26 +21,28 @@ export default function App() {
   const { fitView } = useReactFlow();
   const [exampleLoaded, setExampleLoaded] = useState(false);
 
+  const updateOntologyCallback = useCallback(async () => {
+    const source = 'https://spdx.github.io/spdx-spec/v3.0.1/rdf/spdx-model.ttl';
+    const jsonLdContextSource =
+      'https://spdx.github.io/spdx-spec/v3.0.1/rdf/spdx-context.jsonld';
+    const jsonLdContextUrl = 'https://spdx.org/rdf/3.0.1/spdx-context.jsonld';
+    const model = 'spdx/3.0.1/model.json';
+    await updateOntology(source, jsonLdContextSource, jsonLdContextUrl, model);
+  }, []);
+
+  const importExampleCallback = useCallback(async () => {
+    if (import.meta.env.PROD) {
+      await importExample();
+      setExampleLoaded(true);
+    }
+  }, []);
+
   useEffect(() => {
     updateMediaTypes().then(async () => {
-      const source =
-        'https://spdx.github.io/spdx-spec/v3.0.1/rdf/spdx-model.ttl';
-      const jsonLdContextSource =
-        'https://spdx.github.io/spdx-spec/v3.0.1/rdf/spdx-context.jsonld';
-      const jsonLdContextUrl = 'https://spdx.org/rdf/3.0.1/spdx-context.jsonld';
-      const model = 'spdx/3.0.1/model.json';
-      await updateOntology(
-        source,
-        jsonLdContextSource,
-        jsonLdContextUrl,
-        model
-      );
-      if (import.meta.env.PROD) {
-        await importExample();
-        setExampleLoaded(true);
-      }
+      await updateOntologyCallback();
+      await importExampleCallback();
     });
-  }, []);
+  }, [updateOntologyCallback, importExampleCallback]);
 
   useEffect(() => {
     if (exampleLoaded) {
@@ -48,17 +50,22 @@ export default function App() {
     }
   }, [exampleLoaded, fitView]);
 
-  return (
-    <div className="fixed h-screen w-screen bg-[#fafafa]">
-      <AlertDialog />
-      <AlertToast />
-      <InfoDialog />
-      <Loader />
-      <HelpDialog />
-      <AboutDialog />
-      <PreviewDialog />
-      <ProfileMenu />
-      <Canvas />
-    </div>
+  const appContent = useMemo(
+    () => (
+      <div className="fixed h-screen w-screen bg-[#fafafa]">
+        <AlertDialog />
+        <AlertToast />
+        <InfoDialog />
+        <Loader />
+        <HelpDialog />
+        <AboutDialog />
+        <PreviewDialog />
+        <ProfileMenu />
+        <Canvas />
+      </div>
+    ),
+    []
   );
+
+  return appContent;
 }

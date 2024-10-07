@@ -1,14 +1,15 @@
+import { useMemo } from 'react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { useNodeId } from 'reactflow';
 
 import { appStore } from '@/store/app';
-import { useNode } from '@/store/flow';
+import { useNodeShallow } from '@/store/flow';
 import { itemClass, targetClsTooltipClass } from '@/scripts/app-utils';
 
 const NodeSpdxId = () => {
   const nodeId = useNodeId()!;
-  const node = useNode(nodeId);
+  const node = useNodeShallow(nodeId);
 
   const handleCopy = async () => {
     try {
@@ -18,10 +19,17 @@ const NodeSpdxId = () => {
       });
     } catch (error) {
       console.error('Unable to copy to clipboard:', error);
+      appStore.setState(state => {
+        state.alertToast = 'Copy failed!';
+      });
     }
   };
 
-  return node?.data.isElement ? (
+  const isElement = useMemo(() => node?.data.isElement, [node]);
+
+  if (!isElement) return null;
+
+  return (
     <DropdownMenu.Sub>
       <Tooltip.Provider delayDuration={1000}>
         <Tooltip.Root>
@@ -38,9 +46,7 @@ const NodeSpdxId = () => {
               sideOffset={-5}
               side="right"
             >
-              <div
-                className={`mx-2 bg-spdx-dark text-white rounded px-1 box-border`}
-              >
+              <div className="mx-2 bg-spdx-dark text-white rounded px-1 box-border">
                 {nodeId}
               </div>
             </Tooltip.Content>
@@ -48,7 +54,7 @@ const NodeSpdxId = () => {
         </Tooltip.Root>
       </Tooltip.Provider>
     </DropdownMenu.Sub>
-  ) : null;
+  );
 };
 
 export default NodeSpdxId;

@@ -1,25 +1,26 @@
-import { useMemo, ChangeEvent, MouseEvent } from 'react';
-
+import React, { useMemo, useCallback, ChangeEvent, MouseEvent } from 'react';
 import { useNodeId } from 'reactflow';
-
 import { inputProperties } from '@/scripts/app-utils';
 import { useNodeProperty, setNodeProperty } from '@/store/flow';
 
-const PropTextField = ({ propertyId }: { propertyId: string }) => {
+const PropTextField = React.memo(({ propertyId }: { propertyId: string }) => {
   const nodeId = useNodeId()!;
   const nodeProperty = useNodeProperty(nodeId, propertyId)!;
   const p = inputProperties.get(nodeProperty.classProperty.datatype)!;
 
-  const hadnleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    let v = e.target.value;
-    if (nodeProperty.classProperty.datatype === 'dateTimeStamp' && !!v) {
-      if (v.length === 16) {
-        v = `${v}:00`;
+  const handleOnChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      let v = e.target.value;
+      if (nodeProperty.classProperty.datatype === 'dateTimeStamp' && !!v) {
+        if (v.length === 16) {
+          v = `${v}:00`;
+        }
+        v = `${v}Z`;
       }
-      v = `${v}Z`;
-    }
-    setNodeProperty(nodeId, propertyId, v);
-  };
+      setNodeProperty(nodeId, propertyId, v);
+    },
+    [nodeId, propertyId, nodeProperty.classProperty.datatype]
+  );
 
   const value = useMemo(() => {
     let v = nodeProperty.value;
@@ -50,17 +51,19 @@ const PropTextField = ({ propertyId }: { propertyId: string }) => {
       formNoValidate={true}
       value={value as string}
       className={`
-          h-7 pl-1 pr-0.5 rounded-sm border-2 w-full outline-none bg-white border-inherit
-          text-sm placeholder:italic placeholder:text-slate-400 overflow-ellipsis
-          ${!nodeProperty.valid && 'border-red-400'}
-        `}
-      onChange={e => hadnleOnChange(e)}
+        h-7 pl-1 pr-0.5 rounded-sm border-2 w-full outline-none bg-white border-inherit
+        text-sm placeholder:italic placeholder:text-slate-400 overflow-ellipsis
+        ${!nodeProperty.valid && 'border-red-400'}
+      `}
+      onChange={handleOnChange}
       onClick={(e: MouseEvent<HTMLInputElement>) =>
         p.inputType === 'datetime-local' &&
         (e.target as HTMLInputElement).showPicker()
       }
     />
   );
-};
+});
+
+PropTextField.displayName = 'PropTextField';
 
 export default PropTextField;

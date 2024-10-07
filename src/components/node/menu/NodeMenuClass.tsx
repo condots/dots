@@ -8,7 +8,7 @@ import { Handle, Position, useNodeId } from 'reactflow';
 import { Class, ClassProperty, IRI } from '@/types';
 import {
   outEdgeCount,
-  useNode,
+  useNodeShallow,
   isUnmetClsProp,
   hasUnmetProfileClsProps,
   hasUnmetNodeClsProps,
@@ -26,7 +26,7 @@ import { appStore } from '@/store/app';
 
 const NodeMenuClass = () => {
   const nodeId = useNodeId()!;
-  const node = useNode(nodeId);
+  const node = useNodeShallow(nodeId);
   const edges = flowStore.use.edges();
 
   const items = useMemo(() => {

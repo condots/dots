@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
@@ -21,11 +21,11 @@ const InfoDialog = () => {
     }
   }, [showInfoDialog, item]);
 
-  const handleOpenChange = (open: boolean) => {
+  const handleOpenChange = useCallback((open: boolean) => {
     appStore.setState(state => {
       state.showInfoDialog = open;
     });
-  };
+  }, []);
 
   return item ? (
     <Dialog.Root open={showInfoDialog} onOpenChange={handleOpenChange}>
@@ -74,9 +74,9 @@ const InfoDialog = () => {
                   Metadata
                 </div>
                 <div className="font-mono text-spdx-dark">
-                  <p className="text-xs border my-4 px-1 py-0.5 flex w-fit">
+                  <div className="text-xs border my-4 px-1 py-0.5 flex w-fit">
                     {item.iri}
-                  </p>
+                  </div>
                 </div>
                 <div>
                   <table className="table-auto w-fit">

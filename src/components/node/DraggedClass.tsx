@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 
 import { appStore } from '@/store/app';
 import { generateURN, parseIRI } from '@/scripts/app-utils';
@@ -14,20 +14,21 @@ const DraggedClass = () => {
   const [offset, setOffset] = useState<XYPosition>();
   const draggableRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!data) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
       if (dragging && offset) {
         setPosition({
           x: e.clientX - offset.x,
           y: e.clientY - offset.y,
         });
       }
-    };
+    },
+    [dragging, offset]
+  );
 
-    const handleMouseUp = (e: MouseEvent) => {
-      if (dragging) {
+  const handleMouseUp = useCallback(
+    (e: MouseEvent) => {
+      if (dragging && data) {
         addNode(
           'inst',
           generateURN(),
@@ -39,7 +40,12 @@ const DraggedClass = () => {
       setOffset(undefined);
       setPosition(undefined);
       appStore.setState(state => (state.draggedClassData = undefined));
-    };
+    },
+    [dragging, data]
+  );
+
+  useEffect(() => {
+    if (!data) return;
 
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
@@ -48,7 +54,7 @@ const DraggedClass = () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [dragging, data, offset, position]);
+  }, [data, handleMouseMove, handleMouseUp]);
 
   useEffect(() => {
     if (draggableRef.current && data) {
@@ -62,8 +68,10 @@ const DraggedClass = () => {
     }
   }, [data]);
 
-  return (
-    data && (
+  const draggedContent = useMemo(() => {
+    if (!data) return null;
+
+    return (
       <div
         ref={draggableRef}
         className="p-1 rounded font-lato opacity-50 z-[2000]"
@@ -82,7 +90,7 @@ const DraggedClass = () => {
                 <HamburgerMenuIcon />
               </div>
               <span className="text-spdx-dark w-full text-center truncate px-[2px] font-lato font-semibold">
-                {parseIRI(data!.targetClass).name}
+                {parseIRI(data.targetClass).name}
               </span>
               <div className="min-w-[23px] h-[24px] flex items-center justify-center" />
             </div>
@@ -90,8 +98,10 @@ const DraggedClass = () => {
           </div>
         </div>
       </div>
-    )
-  );
+    );
+  }, [data, position, dragging]);
+
+  return draggedContent;
 };
 
 export default DraggedClass;

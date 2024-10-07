@@ -1,24 +1,28 @@
+import React, { useMemo } from 'react';
 import { Position, type ConnectionLineComponentProps } from 'reactflow';
-
 import { appStore } from '@/store/app';
 import PropertyEdge from '@/components/edge/PropertyEdge';
 
-function ConnectionLine({
+const ConnectionLine = React.memo(function ConnectionLine({
   fromNode: sourceNode,
   toX,
   toY,
   connectionLineStyle: style,
 }: ConnectionLineComponentProps) {
+  const label = useMemo(
+    () => appStore.getState().draggedPropData?.classProperty.name,
+    []
+  );
+
   return (
     <PropertyEdge
-      id={'connection'}
+      id="connection"
       source={sourceNode!.id}
       targetX={toX}
       targetY={toY}
       style={style}
-      label={appStore.getState().draggedPropData?.classProperty.name}
+      label={label}
       selected={false}
-      // below dummy props are required by reactflow
       target=""
       sourceX={0}
       sourceY={0}
@@ -26,6 +30,6 @@ function ConnectionLine({
       targetPosition={Position.Top}
     />
   );
-}
+});
 
 export default ConnectionLine;
