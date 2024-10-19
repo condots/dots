@@ -10,6 +10,7 @@ const AlertToast = () => {
     if (!open) {
       appStore.setState(state => {
         state.alertToast = undefined;
+        return state;
       });
     }
   }, []);

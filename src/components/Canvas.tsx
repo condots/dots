@@ -12,7 +12,7 @@ import {
   ReactFlow,
   XYPosition,
   useReactFlow,
-} from 'reactflow';
+} from '@xyflow/react';
 
 import { appStore } from '@/store/app';
 import { getItem } from '@/store/onto';
@@ -61,7 +61,7 @@ const Canvas = () => {
           'inst',
           generateURN(),
           data.classProperty.targetClass,
-          screenToCanvas(e.clientX - 128, e.clientY - 26)
+          screenToCanvas(e.clientX - 128, e.clientY - 40.5)
         );
         addEdges([
           {
@@ -73,7 +73,10 @@ const Canvas = () => {
           },
         ]);
       }
-      appStore.setState(state => (state.draggedPropData = undefined));
+      appStore.setState(state => {
+        state.draggedPropData = undefined;
+        return state;
+      });
     },
     [addEdges]
   );
@@ -92,7 +95,7 @@ const Canvas = () => {
       const file = e.target.files?.[0];
       const refPos = screenToCanvas(
         window.innerWidth / 2 - 128,
-        window.innerHeight / 2 - 26
+        window.innerHeight / 2 - 40.5
       );
       handleImport(file, refPos);
       e.target.value = '';
@@ -104,7 +107,7 @@ const Canvas = () => {
     (e: DragEvent<HTMLDivElement>) => {
       e.preventDefault();
       const file = e.dataTransfer.files?.[0];
-      const refPos = screenToCanvas(e.clientX - 128, e.clientY - 26);
+      const refPos = screenToCanvas(e.clientX - 128, e.clientY - 40.5);
       handleImport(file, refPos);
     },
     [handleImport]
@@ -179,6 +182,7 @@ const Canvas = () => {
           onClick={() => {
             appStore.setState(state => {
               state.showHelpDialog = true;
+              return state;
             });
           }}
           title="help"
@@ -199,6 +203,7 @@ const Canvas = () => {
           onClick={() => {
             appStore.setState(state => {
               state.showAboutDialog = true;
+              return state;
             });
           }}
           title="about dots"

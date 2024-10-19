@@ -1,5 +1,6 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css';
 
@@ -12,6 +13,7 @@ const HelpDialog = () => {
   const handleOpenChange = useCallback((open: boolean) => {
     appStore.setState(state => {
       state.showHelpDialog = open;
+      return state;
     });
   }, []);
 
@@ -46,7 +48,10 @@ const HelpDialog = () => {
       overflow-auto
       pt-5 pb-3"
       >
-        <Dialog.Title className="font-roboto text-spdx-dark text-3xl"></Dialog.Title>
+        <VisuallyHidden>
+          <Dialog.Title>Help dialog</Dialog.Title>
+          <Dialog.Description />
+        </VisuallyHidden>
         <Dialog.Description asChild>{YouTubeEmbed}</Dialog.Description>
         <Dialog.Close asChild>
           <button className="absolute top-4 right-4 items-center justify-center rounded text-spdx-dark hover:bg-spdx-dark/5">

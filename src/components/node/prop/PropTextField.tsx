@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, ChangeEvent, MouseEvent } from 'react';
-import { useNodeId } from 'reactflow';
+import { useNodeId } from '@xyflow/react';
 import { inputProperties } from '@/scripts/app-utils';
 import { useNodeProperty, setNodeProperty } from '@/store/flow';
 

@@ -17,6 +17,7 @@ const InfoDialog = () => {
     if (showInfoDialog && !item) {
       appStore.setState(state => {
         state.showInfoDialog = false;
+        return state;
       });
     }
   }, [showInfoDialog, item]);
@@ -24,6 +25,7 @@ const InfoDialog = () => {
   const handleOpenChange = useCallback((open: boolean) => {
     appStore.setState(state => {
       state.showInfoDialog = open;
+      return state;
     });
   }, []);
 
@@ -101,6 +103,7 @@ const InfoDialog = () => {
                                     item as Class
                                   ).subClassOf;
                                   state.showInfoDialog = true;
+                                  return state;
                                 })
                               }
                             >

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Tooltip from '@radix-ui/react-tooltip';
-import { useNodeId } from 'reactflow';
+import { useNodeId } from '@xyflow/react';
 
 import { appStore } from '@/store/app';
 import { useNodeShallow } from '@/store/flow';
@@ -16,11 +16,13 @@ const NodeSpdxId = () => {
       await navigator.clipboard.writeText(nodeId);
       appStore.setState(state => {
         state.alertToast = 'Copied!';
+        return state;
       });
     } catch (error) {
       console.error('Unable to copy to clipboard:', error);
       appStore.setState(state => {
         state.alertToast = 'Copy failed!';
+        return state;
       });
     }
   };

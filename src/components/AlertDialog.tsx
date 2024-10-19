@@ -13,6 +13,7 @@ const AlertDialog = () => {
       deselectAll();
       appStore.setState(state => {
         state.alertMessage = undefined;
+        return state;
       });
     }
   }, []);

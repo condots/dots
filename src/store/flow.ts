@@ -11,28 +11,28 @@ import createSelectors from '@/store/createSelectors';
 import { useShallow } from 'zustand/react/shallow';
 
 import {
-  Connection,
-  Edge,
-  EdgeChange,
+  applyNodeChanges,
+  applyEdgeChanges,
+  getOutgoers,
+  getIncomers,
+} from '@xyflow/react';
+import type {
   Node,
+  Edge,
   NodeChange,
+  EdgeChange,
+  Connection,
   OnNodesChange,
   OnEdgesChange,
   OnConnect,
   OnSelectionChangeFunc,
   OnNodesDelete,
-  NodeDragHandler,
-  applyNodeChanges,
-  applyEdgeChanges,
-  getOutgoers,
-  getIncomers,
-} from 'reactflow';
-import type {
   ReactFlowInstance,
   OnInit,
   OnSelectionChangeParams,
   XYPosition,
-} from 'reactflow';
+  OnNodeDrag,
+} from '@xyflow/react';
 
 import {
   Class,
@@ -40,6 +40,7 @@ import {
   ClassProperty,
   DevtoolsActive,
   FlowNode,
+  DraggedPropData,
   IRI,
   NodeData,
   NodeProperty,
@@ -51,22 +52,22 @@ import {
   isNodePropertyValid,
   generateURN,
 } from '@/scripts/app-utils';
-import { appStore } from './app';
+import { appStore } from '@/store/app';
 
 export type RFState = {
   nodes: FlowNode[];
   edges: Edge[];
   reactFlowInstance: ReactFlowInstance | undefined;
   devtoolsActive: DevtoolsActive;
-  onNodesChange: OnNodesChange;
-  onEdgesChange: OnEdgesChange;
+  onNodesChange: OnNodesChange<FlowNode>;
+  onEdgesChange: OnEdgesChange<Edge>;
   onConnect: OnConnect;
   onSelectionChange: OnSelectionChangeFunc;
-  onNodeDragStart: NodeDragHandler;
-  onNodeDragStop: NodeDragHandler;
-  onInit: OnInit;
-  onNodesDelete: OnNodesDelete;
-  setNodes: (nodes: Node[]) => void;
+  onNodeDragStart: OnNodeDrag<FlowNode>;
+  onNodeDragStop: OnNodeDrag<FlowNode>;
+  onInit: OnInit<FlowNode, Edge>;
+  onNodesDelete: OnNodesDelete<FlowNode>;
+  setNodes: (nodes: FlowNode[]) => void;
   setEdges: (edges: Edge[]) => void;
   setDevtoolsActive: (name: keyof DevtoolsActive) => void;
   reset: () => void;
@@ -101,19 +102,19 @@ const myPersist: typeof persist = !import.meta.env.PROD
 
 export const flowStoreBase = create<RFState>()(
   immer(
-    devtools(
-      subscribeWithSelector(
+    subscribeWithSelector(
+      devtools(
         myPersist(
           (set, get) => ({
             ...initialState,
             onNodesChange: (changes: NodeChange[]) => {
-              set(state => {
+              set((state: any) => {
                 state.nodes = applyNodeChanges(changes, state.nodes);
               });
             },
             onEdgesChange: (changes: EdgeChange[]) => {
               set({
-                edges: applyEdgeChanges(changes, get().edges),
+                edges: applyEdgeChanges(changes, (get() as RFState).edges),
               });
             },
             onConnect: (connection: Connection) => {
@@ -128,14 +129,15 @@ export const flowStoreBase = create<RFState>()(
               };
               appStore.setState(state => {
                 state.draggedPropData = undefined;
+                return state;
               });
-              set(state => {
+              set((state: RFState) => {
                 state.edges = [...state.edges, newEdge];
               });
             },
             onSelectionChange: (params: OnSelectionChangeParams) => {
               const selectedNodes = params.nodes.map(param => param.id);
-              set(state => {
+              set((state: RFState) => {
                 state.nodes.forEach(n => {
                   if (!selectedNodes.includes(n.id)) {
                     n.data.expanded = false;
@@ -143,37 +145,39 @@ export const flowStoreBase = create<RFState>()(
                 });
               });
             },
-            onNodeDragStart: (_, node) => {
-              set(state => {
+            onNodeDragStart: (_: any, node: FlowNode) => {
+              set((state: RFState) => {
                 state.nodes.find(n => n.id === node.id)!.data.active = true;
               });
             },
-            onNodeDragStop: (_, node) => {
-              set(state => {
+            onNodeDragStop: (_: any, node: FlowNode) => {
+              set((state: RFState) => {
                 state.nodes.find(n => n.id === node.id)!.data.active = false;
               });
             },
             onInit: (reactFlowInstance: ReactFlowInstance) => {
               set({ reactFlowInstance });
             },
-            onNodesDelete: (nodes: Node[]) => {
-              const nodesToDelete: Node[] = [];
+            onNodesDelete: (nodes: FlowNode[]) => {
+              const nodesToDelete: FlowNode[] = [];
               for (const node of nodes) {
-                const collapsedNodes = get().nodes.filter(n =>
-                  node.data.hiddenNodes.includes(n.id)
+                const collapsedNodes = (get() as RFState).nodes.filter(
+                  (n: FlowNode) => node.data.hiddenNodes.includes(n.id)
                 );
                 nodesToDelete.push(...collapsedNodes);
               }
-              get().reactFlowInstance!.deleteElements({ nodes: nodesToDelete });
+              (get() as RFState).reactFlowInstance!.deleteElements({
+                nodes: nodesToDelete,
+              });
             },
-            setNodes: (nodes: Node[]) => {
+            setNodes: (nodes: FlowNode[]) => {
               set({ nodes });
             },
             setEdges: (edges: Edge[]) => {
               set({ edges });
             },
             setDevtoolsActive: (name: keyof DevtoolsActive) =>
-              set(state => {
+              set((state: RFState) => {
                 state.devtoolsActive[name] = !state.devtoolsActive[name];
               }),
             reset: () =>
@@ -183,11 +187,11 @@ export const flowStoreBase = create<RFState>()(
             name: 'flow',
             storage,
           }
-        )
-      ),
-      { enabled: !import.meta.env.PROD }
+        ),
+        { enabled: !import.meta.env.PROD }
+      )
     )
-  )
+  ) as any
 );
 
 export const flowStore = createSelectors(flowStoreBase);
@@ -223,6 +227,7 @@ export function selectNode(nodeId?: string) {
     state.nodes.forEach(n => {
       n.selected = n.id === nodeId;
     });
+    return state;
   });
 }
 
@@ -231,6 +236,7 @@ export function selectEdge(edgeId?: string) {
     state.edges.forEach(e => {
       e.selected = e.id === edgeId;
     });
+    return state;
   });
 }
 
@@ -269,6 +275,7 @@ export function addNode(
   const node = initNode(type, id, classIRI, position);
   flowStore.setState(state => {
     state.nodes.push(node);
+    return state;
   });
   return id;
 }
@@ -293,6 +300,7 @@ export function addNodeProperty(
   flowStore.setState(state => {
     const data = state.nodes.find(n => n.id === nodeId)!.data;
     data.nodeProps[nodeProperty.id] = nodeProperty;
+    return state;
   });
   return nodeProperty.id;
 }
@@ -309,6 +317,7 @@ export function setNodeProperty(
     if (!nodeProperty) throw new Error('Node property not found');
     nodeProperty.value = value;
     nodeProperty.valid = isNodePropertyValid(nodeProperty);
+    return state;
   });
 }
 
@@ -317,6 +326,7 @@ export function deleteNodeProperty(nodeId: string, propertyId: string) {
     const nodeProperties = state.nodes.find(n => n.id === nodeId)!.data
       .nodeProps;
     delete nodeProperties[propertyId];
+    return state;
   });
 }
 
@@ -340,6 +350,7 @@ export function isValidConnection(connection: Connection) {
 export function setNodeExpanded(nodeId: string, open: boolean) {
   flowStore.setState(state => {
     state.nodes.find(n => n.id === nodeId)!.data.expanded = open;
+    return state;
   });
 }
 
@@ -392,7 +403,9 @@ export function outEdgeCount(
     edges = flowStore.getState().edges;
   }
   const outEdge = edges.filter(
-    edge => edge.data.classProperty.path === path && edge.source === nodeId
+    edge =>
+      (edge.data as DraggedPropData).classProperty.path === path &&
+      edge.source === nodeId
   );
   return outEdge?.length || 0;
 }
@@ -429,9 +442,9 @@ export function hasUnmetNodeClsProps(
 }
 
 export function hideTreeNodes(nodeId: string) {
-  flowStore.setState(state => {
+  flowStoreBase.setState(state => {
     const node = state.nodes.find(n => n.id === nodeId);
-    if (!node || node.data.hiddenNodes.length > 0) return;
+    if (!node || node.data.hiddenNodes.length > 0) return state;
     node.data.hiddenNodes = getNodeTree(node)
       .filter(n => n.id !== node.id)
       .map(n => n.id);
@@ -439,13 +452,14 @@ export function hideTreeNodes(nodeId: string) {
       state.nodes.find(n => n.id === hn)!.hidden = true;
     }
     node.data.initialHidePosition = node.position;
+    return state;
   });
 }
 
 export function unhideTreeNodes(nodeId: string) {
   flowStore.setState(state => {
     const node = state.nodes.find(n => n.id === nodeId);
-    if (!node || node.data.hiddenNodes.length === 0) return;
+    if (!node || node.data.hiddenNodes.length === 0) return state;
     const offset = {
       x: node.position.x - node.data.initialHidePosition!.x,
       y: node.position.y - node.data.initialHidePosition!.y,
@@ -460,6 +474,7 @@ export function unhideTreeNodes(nodeId: string) {
     }
     node.data.hiddenNodes = [];
     node.selected = false;
+    return state;
   });
 }
 

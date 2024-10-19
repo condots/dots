@@ -56,6 +56,7 @@ const ProfileMenu = React.memo(() => {
           clientY: event.clientY,
           targetClass: targetClass,
         };
+        return state;
       });
       appStore.setState({ showClassesMenu: false });
     },

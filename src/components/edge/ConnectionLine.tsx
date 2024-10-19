@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Position, type ConnectionLineComponentProps } from 'reactflow';
+import { Position, type ConnectionLineComponentProps } from '@xyflow/react';
 import { appStore } from '@/store/app';
 import PropertyEdge from '@/components/edge/PropertyEdge';
 

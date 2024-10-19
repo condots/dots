@@ -1,4 +1,4 @@
-import { Node, XYPosition } from 'reactflow';
+import { Node, InternalNode, XYPosition } from '@xyflow/react';
 
 export interface SharedFields {
   iri: IRI;
@@ -112,6 +112,7 @@ export type NodeData = {
 export type ClsPropMin = Record<string, number>;
 
 export type FlowNode = Node<NodeData>;
+export type InternalFlowNode = InternalNode<FlowNode>;
 
 export type InputProperties = Map<LiteralPropertyTypes, InputProperty>;
 
@@ -141,6 +142,7 @@ export interface DraggedClassData {
 export interface DraggedPropData {
   classProperty: ClassProperty;
   sourceNodeId: string;
+  [key: string]: unknown;
 }
 
 export type OntologyMetadata = Record<string, string>;

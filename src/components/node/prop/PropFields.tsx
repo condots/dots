@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useNodeId } from 'reactflow';
+import { useNodeId } from '@xyflow/react';
 import { useNodeShallow } from '@/store/flow';
 import PropSelectField from '@/components/node/prop/PropSelectField';
 import PropLabel from '@/components/node/prop/PropLabel';

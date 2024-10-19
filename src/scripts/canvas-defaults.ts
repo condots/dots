@@ -3,7 +3,7 @@ import {
   EdgeTypes,
   MarkerType,
   NodeTypes,
-} from 'reactflow';
+} from '@xyflow/react';
 
 import ClassNode from '@/components/node/ClassNode';
 import PropertyEdge from '@/components/edge/PropertyEdge';

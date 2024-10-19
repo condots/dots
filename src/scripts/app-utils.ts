@@ -261,7 +261,7 @@ export function initNodeProps(recClsProps: NodeData['recClsProps']) {
 export async function importExample() {
   const refPos = screenToCanvas(
     window.innerWidth / 2 - 128,
-    window.innerHeight / 2 - 26
+    window.innerHeight / 2 - 40.5
   );
   await importSpdxJsonLd('examples/spdx-doc.json', refPos, false);
 }

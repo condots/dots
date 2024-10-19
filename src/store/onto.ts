@@ -72,8 +72,8 @@ const myPersist: typeof persist = !import.meta.env.PROD
 
 const ontoStoreBase = create<OntoState>()(
   immer(
-    devtools(
-      subscribeWithSelector(
+    subscribeWithSelector(
+      devtools(
         myPersist(
           set => ({
             ...initialState,
@@ -85,9 +85,9 @@ const ontoStoreBase = create<OntoState>()(
             name: 'onto',
             storage,
           }
-        )
-      ),
-      { enabled: !import.meta.env.PROD }
+        ),
+        { enabled: !import.meta.env.PROD }
+      )
     )
   )
 );

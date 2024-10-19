@@ -18,7 +18,7 @@ import {
 } from '@/types';
 import { getMediaTypes } from '@/scripts/app-utils';
 
-type AppState = {
+export type AppState = {
   showLoader: boolean;
   showClassesMenu: boolean;
   showInfoDialog: boolean;
@@ -49,18 +49,7 @@ const initialState = {
   mediaTypes: undefined,
 };
 
-const storage: PersistStorage<{
-  [k: string]:
-    | string
-    | boolean
-    | AlertMessage
-    | PreviewData
-    | DraggedClassData
-    | DraggedPropData
-    | PropertyOption[]
-    | (() => void)
-    | undefined;
-}> = {
+const storage: PersistStorage<{ [k: string]: unknown }> = {
   getItem: name => {
     const str = localStorage.getItem(name);
     if (!str) return null;
@@ -78,8 +67,8 @@ const myPersist: typeof persist = !import.meta.env.PROD
 
 const appStoreBase = create<AppState>()(
   immer(
-    devtools(
-      subscribeWithSelector(
+    subscribeWithSelector(
+      devtools(
         myPersist(
           set => ({
             ...initialState,
@@ -92,7 +81,7 @@ const appStoreBase = create<AppState>()(
             storage,
             partialize: state =>
               Object.fromEntries(
-                Object.entries(state).filter(
+                Object.entries(state as { [key: string]: unknown }).filter(
                   ([key]) =>
                     ![
                       'showLoader',
@@ -110,9 +99,9 @@ const appStoreBase = create<AppState>()(
                 )
               ),
           }
-        )
-      ),
-      { enabled: !import.meta.env.PROD }
+        ),
+        { enabled: !import.meta.env.PROD }
+      )
     )
   )
 );

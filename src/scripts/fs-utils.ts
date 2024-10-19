@@ -5,9 +5,15 @@ import { JsonLdParser } from 'jsonld-streaming-parser';
 import { promisifyEventEmitter } from 'event-emitter-promisify';
 import jsonld, { JsonLdDocument } from 'jsonld';
 import { saveAs } from 'file-saver';
-import { XYPosition } from 'reactflow';
+import { XYPosition } from '@xyflow/react';
 
-import { ClassProperty, FlowNode, NodeProperty, Property } from '@/types';
+import {
+  ClassProperty,
+  DraggedPropData,
+  FlowNode,
+  NodeProperty,
+  Property,
+} from '@/types';
 import { appStore } from '@/store/app';
 import { getItem, ontoStore } from '@/store/onto';
 import {
@@ -80,7 +86,7 @@ function genEdgeQuads(store: Store, subjects: SubjectMap, node: FlowNode) {
     if (subjects.has(edge.target)) {
       const q = quad(
         sourceSubject,
-        namedNode(edge.data.classProperty.path),
+        namedNode((edge.data as DraggedPropData).classProperty.path),
         subjects.get(edge.target)!
       );
       store.add(q);
@@ -148,6 +154,7 @@ export async function generateSpdxJsonLd(nodes?: FlowNode[]) {
         title: 'Invalid Value',
         description: `"${invalidProp.node.data.cls.name}" has an invalid "${invalidProp.nodeProp.classProperty.name}" value`,
       };
+      return state;
     });
     return;
   }
@@ -159,6 +166,7 @@ export async function generateSpdxJsonLd(nodes?: FlowNode[]) {
         title: 'Missing Edge',
         description: `"${missingProp.node.data.cls.name}" has a missing "${missingProp.clsProp.name}" edge`,
       };
+      return state;
     });
     return;
   }
@@ -234,6 +242,7 @@ export async function importSpdxJsonLd(
 ) {
   appStore.setState(state => {
     state.showLoader = true;
+    return state;
   });
 
   try {
@@ -263,6 +272,7 @@ export async function importSpdxJsonLd(
           title: 'Context mismatch',
           description: `The URL of the context in the imported document has to match "${expectedContext}"`,
         };
+        return state;
       });
       return;
     }
@@ -282,6 +292,7 @@ export async function importSpdxJsonLd(
           title: 'Existing node ID',
           description: `A node with ID "${sid}" already exists. Please remove bofore importing.`,
         };
+        return state;
       });
       return;
     }
@@ -351,6 +362,7 @@ export async function importSpdxJsonLd(
         };
         flowStore.setState(state => {
           state.edges = [...state.edges, newEdge];
+          return state;
         });
       }
     }
@@ -366,6 +378,7 @@ export async function importSpdxJsonLd(
   } finally {
     appStore.setState(state => {
       state.showLoader = false;
+      return state;
     });
   }
 }

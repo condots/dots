@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
-import { useReactFlow } from 'reactflow';
+import { useReactFlow } from '@xyflow/react';
 
 import 'primereact/resources/primereact.min.css';
 import 'primeflex/primeflex.min.css';

@@ -1,6 +1,7 @@
 import { useMemo, useCallback } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 import { appStore } from '@/store/app';
 import JsonHighlight from '@/components/JsonHighlight';
@@ -12,6 +13,7 @@ const PreviewDialog = () => {
     if (!open) {
       appStore.setState(state => {
         state.previewData = undefined;
+        return state;
       });
     }
   }, []);
@@ -33,6 +35,10 @@ const PreviewDialog = () => {
             focus:outline-none overflow-auto pt-5 pb-3 
             data-[state=open]:animate-contentShow"
         >
+          <VisuallyHidden>
+            <Dialog.Title>Preview dialog</Dialog.Title>
+            <Dialog.Description />
+          </VisuallyHidden>
           <Dialog.Description asChild>
             <JsonHighlight value={description} />
           </Dialog.Description>

@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
-import { useNodeId } from 'reactflow';
+import { useNodeId } from '@xyflow/react';
 
 import { contentClass } from '@/scripts/app-utils';
 import { useNodeProperty, setNodeProperty } from '@/store/flow';

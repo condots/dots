@@ -1,20 +1,19 @@
 import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 
-import type { NodeProps } from 'reactflow';
+import type { NodeProps, ConnectionState } from '@xyflow/react';
 import {
   Position,
   Handle,
-  useStore,
   useOnSelectionChange,
   Edge,
   Node,
-  ReactFlowState,
-} from 'reactflow';
+  useConnection,
+} from '@xyflow/react';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { Separator } from '@radix-ui/react-separator';
 
-import type { NodeData } from '@/types';
+import type { FlowNode } from '@/types';
 import { appStore } from '@/store/app';
 import {
   getNodeIncomers,
@@ -30,33 +29,35 @@ import { parseIRI, preferredLabels } from '@/scripts/app-utils';
 
 import '@/components/node/ClassNode.css';
 
-const connectionStartHandleSelector = (state: ReactFlowState) =>
-  state.connectionStartHandle;
-const connectionEndHandleSelector = (state: ReactFlowState) =>
-  state.connectionEndHandle;
+const connectionSelector = (connection: ConnectionState) => ({
+  inProgress: connection.inProgress,
+  sourceNode: connection.fromNode?.id,
+  targetNode: connection.toNode?.id,
+});
 
 const ClassNode = ({
   id: nodeId,
   data,
   selected,
   dragging,
-}: NodeProps<NodeData>) => {
+}: NodeProps<FlowNode>) => {
   const [tooltipDisabled, setTooltipDisabled] = useState(false);
   const [subtitle, setSubtitle] = useState('');
   const textRef = useRef<HTMLSpanElement | null>(null);
   const showExpandButton = Object.entries(data.nodeProps).length > 0;
-  const connectionSource = useStore(connectionStartHandleSelector)?.nodeId;
-  const connectionEndHandle = useStore(connectionEndHandleSelector);
-  const isPotentialConnection = connectionEndHandle?.nodeId === nodeId;
+  const { inProgress, sourceNode, targetNode } =
+    useConnection(connectionSelector);
+  const isSource = inProgress && sourceNode === nodeId;
+  const isTarget = targetNode === nodeId;
   const draggedPropData = appStore.use.draggedPropData();
   const targetClass = draggedPropData?.classProperty.targetClass ?? '';
 
   const isTargetHandleConnectable = useMemo(
     () =>
-      nodeId !== connectionSource &&
+      !isSource &&
       (targetClass === data.cls.iri ||
         data.inheritanceList.includes(targetClass)),
-    [nodeId, connectionSource, targetClass, data.cls.iri, data.inheritanceList]
+    [nodeId, targetClass, data.cls.iri, data.inheritanceList]
   );
 
   const targetHandle = useMemo(
@@ -151,14 +152,13 @@ const ClassNode = ({
       const outgoersIds = getNodeOutgoers(nodeId).map(node => node.id);
       const incomersIds = getNodeIncomers(nodeId).map(node => node.id);
       const dim =
-        !selected &&
         nodeIds.length > 0 &&
         nodeIds.every(
           n => !outgoersIds.includes(n) && !incomersIds.includes(n)
         );
       setDimNode(dim);
     },
-    [nodeId, selected]
+    [nodeId]
   );
 
   useOnSelectionChange({ onChange });
@@ -173,10 +173,10 @@ const ClassNode = ({
           ${selected && 'outline-[3px]'}
           ${dragging && 'shadow-4'}
           ${
-            isTargetHandleConnectable &&
-            (isPotentialConnection
+            isTarget
               ? 'outline outline-4 outline-spdx-dark'
-              : 'outline-dashed outline-4 outline-spdx-dark')
+              : isTargetHandleConnectable &&
+                'outline-dashed outline-4 outline-spdx-dark'
           }
         `}
       >
@@ -220,7 +220,7 @@ const ClassNode = ({
       selected,
       dragging,
       isTargetHandleConnectable,
-      isPotentialConnection,
+      isTarget,
       menuButton,
       data.cls.name,
       tooltipDisabled,
@@ -238,7 +238,7 @@ const ClassNode = ({
       className={`
         relative p-1 font-lato rounded
         ${
-          dimNode && !isTargetHandleConnectable && !isPotentialConnection
+          dimNode && !selected && !isTargetHandleConnectable && !isTarget
             ? 'opacity-10 transition-none'
             : 'transition-opacity'
         }

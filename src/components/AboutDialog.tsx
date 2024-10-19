@@ -11,6 +11,7 @@ const AboutDialog = () => {
   const handleOpenChange = useCallback((open: boolean) => {
     appStore.setState(state => {
       state.showAboutDialog = open;
+      return state;
     });
   }, []);
 
@@ -43,6 +44,7 @@ const AboutDialog = () => {
             </Dialog.Title>
           </div>
         </a>
+        <Dialog.Description />
         <Dialog.Close asChild>
           <button className="absolute top-4 right-4 items-center justify-center rounded text-spdx-dark hover:bg-spdx-dark/5">
             <Cross2Icon />

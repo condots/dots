@@ -17,18 +17,19 @@ import {
   useEdges,
   useOnSelectionChange,
   ReactFlowState,
-} from 'reactflow';
+  useInternalNode,
+} from '@xyflow/react';
 
-import type { Edge, EdgeProps } from 'reactflow';
+import type { Edge, EdgeProps } from '@xyflow/react';
 
+import { DraggedPropData, InternalFlowNode } from '@/types';
 import { getEdgeParams } from '@/scripts/flow-utils.js';
 import { parseIRI } from '@/scripts/app-utils';
 import { appStore } from '@/store/app';
 
-const connectionStartHandleSelector = (state: ReactFlowState) =>
-  state.connectionStartHandle;
-const connectionEndHandleSelector = (state: ReactFlowState) =>
-  state.connectionEndHandle;
+const fromHandleSelector = (state: ReactFlowState) =>
+  state.connection.fromHandle;
+const toHandleSelector = (state: ReactFlowState) => state.connection.toHandle;
 
 const PropertyEdge = React.memo(
   ({
@@ -43,8 +44,8 @@ const PropertyEdge = React.memo(
     selected,
     data,
   }: EdgeProps) => {
-    const connectionSource = useStore(connectionStartHandleSelector)?.nodeId;
-    const connectionTarget = useStore(connectionEndHandleSelector)?.nodeId;
+    const connectionSource = useStore(fromHandleSelector)?.nodeId;
+    const connectionTarget = useStore(toHandleSelector)?.nodeId;
     const target = edgeTarget ? edgeTarget : connectionTarget!;
     const labelRef = useRef<HTMLDivElement>(null);
     const edges = useEdges();
@@ -52,19 +53,17 @@ const PropertyEdge = React.memo(
       edge => edge.source === source && edge.target === target
     );
 
-    const sourceNode = useStore(
-      useCallback(store => store.nodeInternals.get(source), [source])
-    )!;
-    const targetNode = useStore(
-      useCallback(store => store.nodeInternals.get(target), [target])
-    )!;
+    const sourceNode = useInternalNode(source) as InternalFlowNode;
+    const targetNode = useInternalNode(target) as InternalFlowNode;
 
     const { sx, sy, tx, ty, sourcePos, targetPos } = getEdgeParams(
       sourceNode,
       targetNode ?? {
-        width: 5,
-        height: 5,
-        positionAbsolute: { x: targetX, y: targetY },
+        measured: {
+          width: 5,
+          height: 5,
+        },
+        internals: { positionAbsolute: { x: targetX, y: targetY } },
       }
     );
 
@@ -75,6 +74,7 @@ const PropertyEdge = React.memo(
       targetPosition: targetPos,
       targetX: tx,
       targetY: ty,
+      borderRadius: 20,
     });
 
     const labelHeight = 27;
@@ -185,7 +185,7 @@ const PropertyEdge = React.memo(
       height: labelHeight,
       marginTop: marginTop,
       pointerEvents: 'all',
-      zIndex: Number(edgeZIndex ?? 0) + 1000,
+      zIndex: Number(edgeZIndex ?? 0) + 1001,
       visibility: creationInfoHidden ? 'hidden' : 'visible',
       opacity: dimEdge ? 0.1 : 1,
     };
@@ -213,7 +213,8 @@ const PropertyEdge = React.memo(
             `}
               onDoubleClick={() =>
                 appStore.setState({
-                  selectedInfoIri: data?.classProperty.path,
+                  selectedInfoIri: (data as DraggedPropData)?.classProperty
+                    .path,
                   showInfoDialog: true,
                 })
               }

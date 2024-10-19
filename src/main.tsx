@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client';
 
 import { PrimeReactProvider } from 'primereact/api';
 
-import { ReactFlowProvider } from 'reactflow';
-import 'reactflow/dist/style.css';
+import { ReactFlowProvider } from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
 
 import { enableMapSet } from 'immer';
 enableMapSet();

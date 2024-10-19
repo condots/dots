@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { useNodeId } from 'reactflow';
+import { useNodeId } from '@xyflow/react';
 import { useNodeProperty, setNodeProperty } from '@/store/flow';
 
 const PropBoolField = React.memo(({ propertyId }: { propertyId: string }) => {

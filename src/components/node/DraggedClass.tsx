@@ -5,7 +5,7 @@ import { generateURN, parseIRI } from '@/scripts/app-utils';
 import { addNode, screenToCanvas } from '@/store/flow';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import { Separator } from '@radix-ui/react-separator';
-import { XYPosition } from 'reactflow';
+import { XYPosition } from '@xyflow/react';
 
 const DraggedClass = () => {
   const data = appStore.use.draggedClassData();
@@ -33,13 +33,16 @@ const DraggedClass = () => {
           'inst',
           generateURN(),
           data.targetClass,
-          screenToCanvas(e.clientX - 128, e.clientY - 26)
+          screenToCanvas(e.clientX - 128, e.clientY - 40.5)
         );
       }
       setDragging(false);
       setOffset(undefined);
       setPosition(undefined);
-      appStore.setState(state => (state.draggedClassData = undefined));
+      appStore.setState(state => {
+        state.draggedClassData = undefined;
+        return state;
+      });
     },
     [dragging, data]
   );

@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { ArrowRightIcon, ChevronRightIcon } from '@radix-ui/react-icons';
-import { Handle, Position, useNodeId } from 'reactflow';
+import { Handle, Position, useNodeId } from '@xyflow/react';
 
 import { Class, ClassProperty, IRI } from '@/types';
 import {
@@ -42,6 +42,7 @@ const NodeMenuClass = () => {
       if (event.button !== 0) return;
       appStore.setState(state => {
         state.draggedPropData = { classProperty, sourceNodeId: node.id };
+        return state;
       });
       event.target?.dispatchEvent(
         new MouseEvent('click', {

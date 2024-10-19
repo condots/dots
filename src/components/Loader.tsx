@@ -1,4 +1,5 @@
 import * as Dialog from '@radix-ui/react-dialog';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 import { appStore } from '@/store/app';
 
@@ -13,6 +14,10 @@ const Loader = () => {
       <Dialog.Portal>
         <Dialog.Overlay className="data-[state=open]:animate-overlayShow fixed inset-0 DialogOverlay" />
         <Dialog.Content className="loader">
+          <VisuallyHidden>
+            <Dialog.Title>Loading...</Dialog.Title>
+            <Dialog.Description />
+          </VisuallyHidden>
           <div className="relative">
             <div className="loader absolute grad-spin">
               <img src={O} />

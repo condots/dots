@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { useNodeId } from 'reactflow';
+import { useNodeId } from '@xyflow/react';
 import { Property } from '@/types';
 import { appStore } from '@/store/app';
 import { useNodeProperty, deleteNodeProperty } from '@/store/flow';

@@ -3,7 +3,7 @@ import { useMemo, useCallback } from 'react';
 import sanitize from 'sanitize-filename';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
-import { useNodeId } from 'reactflow';
+import { useNodeId } from '@xyflow/react';
 
 import { appStore } from '@/store/app';
 import { contentClass, itemClass } from '@/scripts/app-utils';
@@ -60,6 +60,7 @@ const NodeMenu = () => {
           appStore.setState(state => {
             state.selectedInfoIri = node?.data.cls.iri;
             state.showInfoDialog = true;
+            return state;
           });
         }}
       >
@@ -91,6 +92,7 @@ const NodeMenu = () => {
                 title: node!.data.cls.name,
                 description: v,
               };
+              return state;
             });
           }
         }}
