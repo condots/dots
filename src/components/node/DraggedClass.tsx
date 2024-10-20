@@ -30,7 +30,6 @@ const DraggedClass = () => {
     (e: MouseEvent) => {
       if (dragging && data) {
         addNode(
-          'inst',
           generateURN(),
           data.targetClass,
           screenToCanvas(e.clientX - 128, e.clientY - 40.5)

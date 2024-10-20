@@ -319,7 +319,7 @@ export async function importSpdxJsonLd(
         classIRI: classIRI!,
         position: positions[s.id] ?? refPos,
       };
-      addNode('inst', impNode.id, impNode.classIRI, impNode.position);
+      addNode(impNode.id, impNode.classIRI, impNode.position);
       impNodes[s.value] = impNode;
     }
 

@@ -243,12 +243,7 @@ export function selectEdge(edgeId?: string) {
 export const screenToCanvas = (x: number, y: number) =>
   flowStore.getState().reactFlowInstance!.screenToFlowPosition({ x, y });
 
-export function initNode(
-  type: string,
-  id: string,
-  classIRI: IRI,
-  position: XYPosition
-) {
+export function initNode(id: string, classIRI: IRI, position: XYPosition) {
   const recClsProps = ontoStore.getState().allRecClsProps![classIRI];
   const inheritanceList = [...recClsProps.keys()];
   const isElement = !!inheritanceList.find(c => c.endsWith('/Core/Element'));
@@ -263,16 +258,11 @@ export function initNode(
     hiddenNodes: [],
   };
 
-  const node: FlowNode = { id, position, data, type };
+  const node: FlowNode = { id, position, data, type: 'inst' };
   return node;
 }
-export function addNode(
-  type: string,
-  id: string,
-  classIRI: IRI,
-  position: XYPosition
-) {
-  const node = initNode(type, id, classIRI, position);
+export function addNode(id: string, classIRI: IRI, position: XYPosition) {
+  const node = initNode(id, classIRI, position);
   flowStore.setState(state => {
     state.nodes.push(node);
     return state;

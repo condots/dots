@@ -24,6 +24,14 @@ export default defineConfig({
           }
         },
       },
+      onwarn(warning, warn) {
+        if (
+          warning.code === 'MODULE_EXTERNALIZED' &&
+          warning.message.includes('fs')
+        ) {
+          return;
+        }
+      },
     },
     chunkSizeWarningLimit: 1000,
   },

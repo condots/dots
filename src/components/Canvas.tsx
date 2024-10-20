@@ -58,7 +58,6 @@ const Canvas = () => {
         !(getItem(data.classProperty.targetClass) as Class).abstract
       ) {
         const targetNodeId = addNode(
-          'inst',
           generateURN(),
           data.classProperty.targetClass,
           screenToCanvas(e.clientX - 128, e.clientY - 40.5)

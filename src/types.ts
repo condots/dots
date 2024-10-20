@@ -111,7 +111,7 @@ export type NodeData = {
 
 export type ClsPropMin = Record<string, number>;
 
-export type FlowNode = Node<NodeData>;
+export type FlowNode = Node<NodeData, 'inst'>;
 export type InternalFlowNode = InternalNode<FlowNode>;
 
 export type InputProperties = Map<LiteralPropertyTypes, InputProperty>;
