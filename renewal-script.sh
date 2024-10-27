@@ -1,23 +1,21 @@
 #!/bin/sh
 
-TIMESTAMP_FILE="/etc/letsencrypt-renewal/last_renewal"
+mkdir -p /usr/share/nginx/html
+chmod -R 755 /usr/share/nginx/html
 
-if [ ! -f "$TIMESTAMP_FILE" ]; then
-  date +%s > "$TIMESTAMP_FILE"
-fi
-
-CHECK_INTERVAL=3600 # Check every hour
-RENEWAL_INTERVAL=86400 # Try to renew every day
+chmod -R 755 /etc/letsencrypt /data/letsencrypt /var/lib/letsencrypt
+find /etc/letsencrypt -type f -exec chmod 644 {} +
 
 while true; do
   echo "Checking..."
-  CURRENT_TIME=$(date +%s)
-  LAST_RENEWAL=$(cat "$TIMESTAMP_FILE")
-  TIME_DIFF=$((CURRENT_TIME - LAST_RENEWAL))
-  if [ "$TIME_DIFF" -ge "$RENEWAL_INTERVAL" ]; then
-    echo "Renewing certificate..."
-    certbot renew
-    date +%s > "$TIMESTAMP_FILE"
+  certbot renew --webroot -w /usr/share/nginx/html
+  if [ $? -eq 0 ]; then
+    tee -a /var/log/letsencrypt/renewal.log
+    chmod 755 /etc/letsencrypt/live /etc/letsencrypt/archive
+    chmod 644 /etc/letsencrypt/live/condots.duckdns.org/fullchain.pem
+    chmod 644 /etc/letsencrypt/live/condots.duckdns.org/privkey.pem
+  else
+    echo "Certificate renewal failed" | tee -a /var/log/letsencrypt/renewal.log
   fi
-  sleep $CHECK_INTERVAL
+  sleep 12h
 done

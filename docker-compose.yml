@@ -14,6 +14,10 @@
 # Trigger rebuild on changes (run once):
 # nohup docker compose -f /home/opc/dots/docker-compose.yml watch > /tmp/docker-compose.log 2>&1 &
 
+# To stop docker compose:
+# docker compose -f /home/opc/dots/docker-compose.yml down && \
+#   pkill -f 'docker compose -f /home/opc/dots/docker-compose.yml watch'
+
 services:
   dots:
     image: dots
@@ -23,8 +27,12 @@ services:
     ports:
       - '80:80'
       - '443:443'
+    user: root
     volumes:
-      - certs:/etc/letsencrypt
+      - certs:/etc/letsencrypt:rw
+      - webroot:/usr/share/nginx/html
+      - ./entrypoint.sh:/entrypoint.sh
+    entrypoint: ['/bin/sh', '/entrypoint.sh']
     develop:
       watch:
         - action: rebuild
@@ -36,7 +44,7 @@ services:
       - certs:/etc/letsencrypt
       - certs-data:/data/letsencrypt
       - certs-lib:/var/lib/letsencrypt
-      - letsencrypt-renewal:/etc/letsencrypt-renewal
+      - webroot:/usr/share/nginx/html
       - ./renewal-script.sh:/etc/renewal-script.sh
     entrypoint: /bin/sh -c '/etc/renewal-script.sh'
 
@@ -44,4 +52,4 @@ volumes:
   certs:
   certs-data:
   certs-lib:
-  letsencrypt-renewal:
+  webroot:
