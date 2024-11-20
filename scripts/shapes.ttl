@@ -1,15 +1,11 @@
 @prefix sh: <http://www.w3.org/ns/shacl#> .
-@prefix spdxsec: <https://spdx.org/rdf/3.0.1/terms/Security/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix spdxcore: <https://spdx.org/rdf/3.0.1/terms/Core/> .
 
-spdxsec:VexNotAffectedVulnAssessmentRelationship
-    sh:or (
-        [ sh:property [
-            sh:path spdxsec:impactStatement ;
-            sh:minCount 1 ;
-        ] ]
-        [ sh:property [
-            sh:path spdxsec:justificationType ;
-            sh:minCount 1 ;
-        ] ]
-    ) ;
-    sh:message "One of impactStatement or justificationType is required. Including both is also allowed." .
+spdxcore:PositiveIntegerRange
+    sh:property [
+        sh:path spdxcore:beginIntegerRange ;
+        sh:datatype xsd:positiveInteger ;
+        sh:lessThanOrEquals spdxcore:endIntegerRange ;
+        sh:message "beginIntegerRange must be less than or equal to endIntegerRange" ;
+    ] .

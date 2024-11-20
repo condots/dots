@@ -1,15 +1,7 @@
-@prefix ex: <http://example.org/ns#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix spdxcore: <https://spdx.org/rdf/3.0.1/terms/Core/> .
 @prefix spdxsw: <https://spdx.org/rdf/3.0.1/terms/Software/> .
-@prefix spdxsec: <https://spdx.org/rdf/3.0.1/terms/Security/> .
-@prefix spdxsecjust: <https://spdx.org/rdf/3.0.1/terms/Security/VexJustificationType/> .
-
-spdxsecjust:componentNotPresent a spdxsec:VexJustificationType .
-spdxsecjust:vulnerableCodeNotPresent a spdxsec:VexJustificationType .
-spdxsecjust:vulnerableCodeCannotBeControlledByAdversary a spdxsec:VexJustificationType .
-spdxsecjust:vulnerableCodeNotInExecutePath a spdxsec:VexJustificationType .
-spdxsecjust:inlineMitigationsAlreadyExist a spdxsec:VexJustificationType .
+@prefix ex: <http://example.org/ns#> .
 
 ex:MyAgent
     a spdxcore:Agent ;
@@ -21,46 +13,37 @@ _:MyCreationInfo
     spdxcore:created "2024-09-04T20:25:34Z"^^xsd:dateTimeStamp ;
     spdxcore:specVersion "3.0.1" .
 
-ex:MyPackage
-    a spdxsw:Package ;
+ex:MyFile
+    a spdxsw:File ;
     spdxcore:creationInfo _:MyCreationInfo .
 
-ex:MyVulnerability
-    a spdxsec:Vulnerability ;
-    spdxcore:creationInfo _:MyCreationInfo .
-
-ex:ShouldPassWithImpactStatement
-    a spdxsec:VexNotAffectedVulnAssessmentRelationship ;
+ex:ValidLessThan
+    a spdxsw:Snippet ;
     spdxcore:creationInfo _:MyCreationInfo ;
-    spdxcore:from ex:MyVulnerability ;
-    spdxcore:to ex:MyPackage ;
-    spdxsec:impactStatement "This is an impact statement" .
+    spdxsw:snippetFromFile ex:MyFile ;
+    spdxsw:byteRange [
+        a spdxcore:PositiveIntegerRange ;
+        spdxcore:beginIntegerRange "1"^^xsd:positiveInteger ;
+        spdxcore:endIntegerRange "2"^^xsd:positiveInteger
+    ] .
 
-ex:ShouldPassJustificationType
-    a spdxsec:VexNotAffectedVulnAssessmentRelationship ;
+ex:ValidEqual
+    a spdxsw:Snippet ;
     spdxcore:creationInfo _:MyCreationInfo ;
-    spdxcore:from ex:MyVulnerability ;
-    spdxcore:to ex:MyPackage ;
-    spdxsec:justificationType spdxsecjust:componentNotPresent .
+    spdxsw:snippetFromFile ex:MyFile ;
+    spdxsw:byteRange [
+        a spdxcore:PositiveIntegerRange ;
+        spdxcore:beginIntegerRange "2"^^xsd:positiveInteger ;
+        spdxcore:endIntegerRange "2"^^xsd:positiveInteger
+    ] .
 
-ex:ShouldFailBothAreMissing
-    a spdxsec:VexNotAffectedVulnAssessmentRelationship ;
+ex:InvalidMoreThan
+    a spdxsw:Snippet ;
     spdxcore:creationInfo _:MyCreationInfo ;
-    spdxcore:from ex:MyVulnerability ;
-    spdxcore:to ex:MyPackage .
+    spdxsw:snippetFromFile ex:MyFile ;
+    spdxsw:byteRange [
+        a spdxcore:PositiveIntegerRange ;
+        spdxcore:beginIntegerRange "3"^^xsd:positiveInteger ;
+        spdxcore:endIntegerRange "2"^^xsd:positiveInteger
+    ] .
 
-ex:ShouldFailTooManyImpactStatement
-    a spdxsec:VexNotAffectedVulnAssessmentRelationship ;
-    spdxcore:creationInfo _:MyCreationInfo ;
-    spdxcore:from ex:MyVulnerability ;
-    spdxcore:to ex:MyPackage ;
-    spdxsec:impactStatement "This is an impact statement" ;
-    spdxsec:impactStatement "Here's another impact statement" .
-
-ex:ShouldFailTooManyJustificationType
-    a spdxsec:VexNotAffectedVulnAssessmentRelationship ;
-    spdxcore:creationInfo _:MyCreationInfo ;
-    spdxcore:from ex:MyVulnerability ;
-    spdxcore:to ex:MyPackage ;
-    spdxsec:justificationType spdxsecjust:componentNotPresent ;
-    spdxsec:justificationType spdxsecjust:vulnerableCodeNotPresent .
