@@ -56,18 +56,6 @@ def validate_shacl(shapes_graph, data_graph):
         click.secho(f"-" * 100)
 
 
-def list_shapes(shapes_graph):
-    for shape in shapes_graph.subjects(rdflib.RDF.type, rdflib.SH["NodeShape"]):
-        print(shape)
-        for prop in shapes_graph.objects(shape, rdflib.SH["property"]):
-            path = shapes_graph.value(prop, rdflib.SH["path"])
-            if path:
-                print(f"  Property path: {path}")
-                for p, o in shapes_graph.predicate_objects(prop):
-                    if p != rdflib.SH["path"]:
-                        print(f"    {p}: {o}")
-
-
 @click.command()
 @click.option(
     "--shapes",
