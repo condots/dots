@@ -1,0 +1,15 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix spdxsec: <https://spdx.org/rdf/3.0.1/terms/Security/> .
+
+spdxsec:VexNotAffectedVulnAssessmentRelationship
+    sh:or (
+        [ sh:property [
+            sh:path spdxsec:impactStatement ;
+            sh:minCount 1 ;
+        ] ]
+        [ sh:property [
+            sh:path spdxsec:justificationType ;
+            sh:minCount 1 ;
+        ] ]
+    ) ;
+    sh:message "One of impactStatement or justificationType is required. Including both is also allowed." .
