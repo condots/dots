@@ -52,7 +52,7 @@ def validate_shacl(shapes_graph, data_graph):
         click.secho(f"Property path: {pth}")
         click.secho(f"Focus node: {focus_node}")
         if parent_node:
-            click.secho(f"BlankNode parent: {parent_node}")
+            click.secho(f"Parent node: {parent_node}")
         click.secho(f"-" * 100)
 
 
