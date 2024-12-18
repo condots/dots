@@ -246,7 +246,7 @@
     "name": "AI",
     "properties": {
       "autonomyType": {
-        "description": "Indicates if the system is fully automated or a human is involved in any of the\ndecisions of the AI system.\n\n- yes: Indicates that the system is fully automated\n- no: Indicates that a human is involved in any of the decisions of the AI\n  system\n- noAssertion: Makes no assertion about the autonomy",
+        "description": "Indicates if the system is fully automated or a human is involved in any of the\ndecisions of the AI system.\n\n- yes: Indicates that the system is fully automated.\n- no: Indicates that a human is involved in any of the decisions of the AI\n  system.\n- noAssertion: Makes no assertion about the autonomy.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/AI/autonomyType",
         "name": "autonomyType",
         "profileName": "AI",
@@ -554,7 +554,7 @@
         "summary": "Class that describes a build instance of software/artifacts."
       }
     },
-    "description": "A Software Build is defined here as the act of converting software inputs into\nsoftware artifacts using software build tools. Inputs can include source code,\nconfig files, artifacts that are build environments, and build tools. Outputs\ncan include intermediate artifacts to other build inputs or the final\nartifacts.\n\nThe Build profile provides a subclass of Element called Build.\n\nIt also provides a minimum set of required Relationship Types from the Core\nprofile:\n\n- hasInput: Describes the relationship from the Build element to its inputs.\n- hasOutput: Describes the relationship from the Build element to its outputs.\n- invokedBy: Describes the relationship from the Build element to the Agent\n  that invoked it.\n\nIn addition, the following Relationship Types may be used to describe a Build.\n\n- hasHost: Describes the relationship from the Build element to the build stage\n  or host.\n- configures: Describes the relationship from a configuration to the Build\n  element.\n- ancestorOf: Describes a relationship from a Build element to Build eelements\n  that describe its child builds.\n- decendentOf: Describes a relationship from a child Build element to its\n  parent.\n- usesTool: Describes a relationship from a Build element to a build tool.\n\nAll relationships in the Build Profile are scoped to the \"build\"\nLifecycleScopeType period.\n\nThe `hasInput` relationship can be applied to a config file or a build tool if\nthe nature of these inputs are not known at the creation of an SPDX document.",
+    "description": "A Software Build is defined here as the act of converting software inputs into\nsoftware artifacts using software build tools. Inputs can include source code,\nconfig files, artifacts that are build environments, and build tools. Outputs\ncan include intermediate artifacts to other build inputs or the final\nartifacts.\n\nThe Build profile provides a subclass of Element called Build.\n\nIt also provides a minimum set of required Relationship Types from the Core\nprofile:\n\n- hasInput: Describes the relationship from the Build element to its inputs.\n- hasOutput: Describes the relationship from the Build element to its outputs.\n- invokedBy: Describes the relationship from the Build element to the Agent\n  that invoked it.\n\nIn addition, the following Relationship Types may be used to describe a Build.\n\n- hasHost: Describes the relationship from the Build element to the build stage\n  or host.\n- configures: Describes the relationship from a configuration to the Build\n  element.\n- ancestorOf: Describes a relationship from a Build element to Build elements\n  that describe its child builds.\n- descendantOf: Describes a relationship from a child Build element to its\n  parent.\n- usesTool: Describes a relationship from a Build element to a build tool.\n\nAll relationships in the Build Profile are scoped to the \"build\"\nLifecycleScopeType period.\n\nThe `hasInput` relationship can be applied to a config file or a build tool if\nthe nature of these inputs are not known at the creation of an SPDX document.",
     "individuals": {},
     "iri": "https://spdx.org/rdf/3.0.1/terms/Build",
     "name": "Build",
@@ -569,7 +569,7 @@
       },
       "buildId": {
         "datatype": "http://www.w3.org/2001/XMLSchema#string",
-        "description": "A buildId is a locally unique identifier to identify a unique instance of a\nbuild.\n\nThis identifier differs based on build toolchain, platform, or naming\nconvention used by an organization or standard.",
+        "description": "A buildId is a locally unique identifier to identify a unique instance of a\nbuild, according to the buildType.\n\nThis identifier differs based on build toolchain, platform, or naming\nconvention used by an organization or standard.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Build/buildId",
         "name": "buildId",
         "profileName": "Build",
@@ -585,14 +585,14 @@
       },
       "buildType": {
         "datatype": "http://www.w3.org/2001/XMLSchema#anyURI",
-        "description": "A buildType is a URI expressing the toolchain, platform, or infrastructure that\nthe build was invoked on.\n\nFor example, if the build was invoked on GitHub's CI platform using GitHub\nActions, the buildType can be expressed as `https://github.com/actions`.\nIn contrast, if the build was invoked on a local machine, the buildType can be\nexpressed as `file://username@host/path/to/build`.",
+        "description": "A buildType is an IRI expressing the toolchain, platform, or infrastructure that\nthe build was invoked on.\n\nThe buildType is used to interpret the meaning of other build parameters by\ndefining the \"type\" of build; if the same buildType is seen in different Build\nelements, it means they are the same kind of build, but difference instances\nand possible with different configurations.\n\nIf you are not using a well-known buildType, it should be namespaced to a\ndomain you own to prevent conflicts with other buildType IRIs.\n\nExamples of a buildType might be:\n\n- A GitHub action workflow\n- A step in a GitHub actions pipeline\n- An invocation of a compiler or other tool\n- A script that orchestrates builds at a higher level\n\nKeep in mind that builds can be \"nested\" using the `ancestorOf` relationship.\n\nIf the buildType IRI is not recognized, it is still possible to inspect other\nproperties of the build, but it may not be possible to derive deeper meaning\nfrom them.\n\nFor more information, see the SLSA definition of buildType.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Build/buildType",
         "name": "buildType",
         "profileName": "Build",
         "summary": "A buildType is a hint that is used to indicate the toolchain, platform, or\ninfrastructure that the build was invoked on."
       },
       "configSourceDigest": {
-        "description": "configSourceDigest is the checksum of the build configuration file used by a\nbuilder to execute a build.\n\nThis Property uses the Core model's [Hash](../../Core/Classes/Hash.md) class.",
+        "description": "configSourceDigest is the checksum of the build configuration file used by a\nbuilder to execute a build, according to the buildType.\n\nThis Property uses the Core model's [Hash](../../Core/Classes/Hash.md) class.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Build/configSourceDigest",
         "name": "configSourceDigest",
         "profileName": "Build",
@@ -601,7 +601,7 @@
       },
       "configSourceEntrypoint": {
         "datatype": "http://www.w3.org/2001/XMLSchema#string",
-        "description": "A build entrypoint is the invoked executable of a build which always runs when\nthe build is triggered.\n\nFor example, when a build is triggered by running a shell script, the\nentrypoint is `script.sh`.\n\nIn terms of a declared build, the entrypoint is the position in a configuration\nfile or a build declaration which is always run when the build is triggered.\n\nFor example, in the following configuration file, the entrypoint of the build\nis `publish`.\n\n```yaml\nname: Publish packages to PyPI\n\non:\ncreate:\ntags: \"*\"\n\njobs:\npublish:\nruns-on: ubuntu-latest\nif: startsWith(github.ref, 'refs/tags/')\nsteps:\n\n...\n```",
+        "description": "A build entrypoint is the invoked executable of a build which always runs when\nthe build is triggered, according to the buildType.\n\nFor example, when a build is triggered by running a shell script, the\nentrypoint is `script.sh`.\n\nIn terms of a declared build, the entrypoint is the position in a configuration\nfile or a build declaration which is always run when the build is triggered.\n\nFor example, in the following configuration file, the entrypoint of the build\nis `publish`.\n\n```yaml\nname: Publish packages to PyPI\n\non:\n  create:\n    tags: \"*\"\n\njobs:\n  publish:\n    runs-on: ubuntu-latest\n    if: startsWith(github.ref, 'refs/tags/')\n    steps:\n\n...\n```",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Build/configSourceEntrypoint",
         "name": "configSourceEntrypoint",
         "profileName": "Build",
@@ -609,14 +609,14 @@
       },
       "configSourceUri": {
         "datatype": "http://www.w3.org/2001/XMLSchema#anyURI",
-        "description": "If a build configuration exists for the toolchain or platform performing the\nbuild, the configSourceUri of a build is the URI of that build configuration.\n\nFor example, a build triggered by a GitHub Action is defined by a build\nconfiguration YAML file. In this case, the configSourceUri is the URL of that\nYAML file.",
+        "description": "If a build configuration exists for the toolchain or platform performing the\nbuild, the configSourceUri of a build is the URI of that build configuration,\naccording to the buildType.\n\nFor example, a build triggered by a GitHub Action is defined by a build\nconfiguration YAML file. In this case, the configSourceUri is the URL of that\nYAML file.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Build/configSourceUri",
         "name": "configSourceUri",
         "profileName": "Build",
         "summary": "Property that describes the URI of the build configuration source file."
       },
       "environment": {
-        "description": "environment is a map of environment variables and values that are set during a\nbuild session.\n\nThis is different from the [parameter](parameter.md) property in that it\ndescribes the environment variables set before a build is invoked rather than\nthe variables provided to the builder.",
+        "description": "environment is a map of environment variables and values that are set during a\nbuild session, according to the buildType.\n\nThis is different from the [parameter](parameter.md) property in that it\ndescribes the environment variables set before a build is invoked rather than\nthe variables provided to the builder.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Build/environment",
         "name": "environment",
         "profileName": "Build",
@@ -624,7 +624,7 @@
         "summary": "Property describing the session in which a build is invoked."
       },
       "parameter": {
-        "description": "parameter is a key-value of a build parameter and its value that\nwas provided to the builder for a build instance.\n\nThis is different from the [environment](environment.md) property in that\nthe key and value are provided as command line arguments or\na configuration file to the builder.",
+        "description": "parameter is a key-value of a build parameter and its value that\nwas provided to the builder for a build instance, according to the buildType.\n\nThis is different from the [environment](environment.md) property in that\nthe key and value are provided as command line arguments or\na configuration file to the builder.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Build/parameter",
         "name": "parameter",
         "profileName": "Build",
@@ -695,7 +695,8 @@
             "name": "subject",
             "nodeKind": "IRI",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/Core/Annotation",
-            "path": "https://spdx.org/rdf/3.0.1/terms/Core/subject"
+            "path": "https://spdx.org/rdf/3.0.1/terms/Core/subject",
+            "targetClass": "https://spdx.org/rdf/3.0.1/terms/Core/Element"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.1/terms/Core/Element",
@@ -708,6 +709,11 @@
         "name": "Artifact",
         "profileName": "Core",
         "properties": {
+          "22-rdf-syntax-ns#type": {
+            "name": "22-rdf-syntax-ns#type",
+            "parentClass": "https://spdx.org/rdf/3.0.1/terms/Core/Artifact",
+            "path": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          },
           "builtTime": {
             "datatype": "dateTimeStamp",
             "maxCount": 1,
@@ -721,7 +727,8 @@
             "name": "originatedBy",
             "nodeKind": "IRI",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/Core/Artifact",
-            "path": "https://spdx.org/rdf/3.0.1/terms/Core/originatedBy"
+            "path": "https://spdx.org/rdf/3.0.1/terms/Core/originatedBy",
+            "targetClass": "https://spdx.org/rdf/3.0.1/terms/Core/Agent"
           },
           "releaseTime": {
             "datatype": "dateTimeStamp",
@@ -744,7 +751,8 @@
             "name": "suppliedBy",
             "nodeKind": "IRI",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/Core/Artifact",
-            "path": "https://spdx.org/rdf/3.0.1/terms/Core/suppliedBy"
+            "path": "https://spdx.org/rdf/3.0.1/terms/Core/suppliedBy",
+            "targetClass": "https://spdx.org/rdf/3.0.1/terms/Core/Agent"
           },
           "supportLevel": {
             "name": "supportLevel",
@@ -854,13 +862,15 @@
             "name": "createdBy",
             "nodeKind": "IRI",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/Core/CreationInfo",
-            "path": "https://spdx.org/rdf/3.0.1/terms/Core/createdBy"
+            "path": "https://spdx.org/rdf/3.0.1/terms/Core/createdBy",
+            "targetClass": "https://spdx.org/rdf/3.0.1/terms/Core/Agent"
           },
           "createdUsing": {
             "name": "createdUsing",
             "nodeKind": "IRI",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/Core/CreationInfo",
-            "path": "https://spdx.org/rdf/3.0.1/terms/Core/createdUsing"
+            "path": "https://spdx.org/rdf/3.0.1/terms/Core/createdUsing",
+            "targetClass": "https://spdx.org/rdf/3.0.1/terms/Core/Tool"
           },
           "specVersion": {
             "datatype": "SemVer",
@@ -909,6 +919,11 @@
         "name": "Element",
         "profileName": "Core",
         "properties": {
+          "22-rdf-syntax-ns#type": {
+            "name": "22-rdf-syntax-ns#type",
+            "parentClass": "https://spdx.org/rdf/3.0.1/terms/Core/Element",
+            "path": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          },
           "comment": {
             "datatype": "string",
             "maxCount": 1,
@@ -983,16 +998,22 @@
       },
       "ElementCollection": {
         "abstract": true,
-        "description": "An ElementCollection is a collection of Elements, not necessarily with unifying\ncontext.\n\nNote that all ElementCollections must conform to the core profile even if the\ncore profile is no specified in the profileConformance property.\n\nIf the profileConformance property is not provided, core is to be assumed as\nthe default.\n\n**Constraints**\n\n- If the ElementCollection has at least 1 element, it must also have at least\n  1 rootElement.\n- The element must not be of type SpdxDocument.\n- The rootElement must not be of type SpdxDocument.",
+        "description": "An ElementCollection is a collection of Elements, not necessarily with unifying\ncontext.\n\nNote that all ElementCollections must conform to the Core profile even if the\nCore profile is not specified in the profileConformance property.\n\nIf the profileConformance property is not provided, \"core\" is to be assumed as\nthe default.\n\n*Constraints*\n\n- If the ElementCollection has at least 1 element, it must also have at least\n  1 rootElement.\n- The element must not be of type SpdxDocument.\n- The rootElement must not be of type SpdxDocument.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Core/ElementCollection",
         "name": "ElementCollection",
         "profileName": "Core",
         "properties": {
+          "22-rdf-syntax-ns#type": {
+            "name": "22-rdf-syntax-ns#type",
+            "parentClass": "https://spdx.org/rdf/3.0.1/terms/Core/ElementCollection",
+            "path": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          },
           "element": {
             "name": "element",
             "nodeKind": "IRI",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/Core/ElementCollection",
-            "path": "https://spdx.org/rdf/3.0.1/terms/Core/element"
+            "path": "https://spdx.org/rdf/3.0.1/terms/Core/element",
+            "targetClass": "https://spdx.org/rdf/3.0.1/terms/Core/Element"
           },
           "profileConformance": {
             "name": "profileConformance",
@@ -1046,7 +1067,8 @@
             "name": "rootElement",
             "nodeKind": "IRI",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/Core/ElementCollection",
-            "path": "https://spdx.org/rdf/3.0.1/terms/Core/rootElement"
+            "path": "https://spdx.org/rdf/3.0.1/terms/Core/rootElement",
+            "targetClass": "https://spdx.org/rdf/3.0.1/terms/Core/Element"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.1/terms/Core/Element",
@@ -1150,7 +1172,7 @@
       },
       "ExternalMap": {
         "abstract": false,
-        "description": "An external map is a map of Element identifiers that are used within a Document\nbut defined external to that Document.\nThe external map provides details about the externally-defined Element\nsuch as its provenance, where to retrieve it, and how to verify its integrity.",
+        "description": "An external map is a map of Element identifiers that are used within an\nSpdxDocument but defined external to that SpdxDocument.\nThe external map provides details about the externally-defined Element\nsuch as its provenance, where to retrieve it, and how to verify its integrity.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalMap",
         "name": "ExternalMap",
         "profileName": "Core",
@@ -1160,7 +1182,8 @@
             "name": "definingArtifact",
             "nodeKind": "IRI",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalMap",
-            "path": "https://spdx.org/rdf/3.0.1/terms/Core/definingArtifact"
+            "path": "https://spdx.org/rdf/3.0.1/terms/Core/definingArtifact",
+            "targetClass": "https://spdx.org/rdf/3.0.1/terms/Core/Artifact"
           },
           "externalSpdxId": {
             "datatype": "anyURI",
@@ -1534,6 +1557,16 @@
         "subClassOf": "https://spdx.org/rdf/3.0.1/terms/Core/IntegrityMethod",
         "summary": "A mathematically calculated representation of a grouping of data."
       },
+      "IndividualElement": {
+        "abstract": false,
+        "description": "Individuals, such as NoneElement and NoAssertionElement, need to reference a\nconcrete subclass of Element.\n\nThis class provides the type used by the individuals defined in the Core profile.",
+        "iri": "https://spdx.org/rdf/3.0.1/terms/Core/IndividualElement",
+        "name": "IndividualElement",
+        "profileName": "Core",
+        "properties": {},
+        "subClassOf": "https://spdx.org/rdf/3.0.1/terms/Core/Element",
+        "summary": "A concrete subclass of Element used by Individuals in the\nCore profile."
+      },
       "IntegrityMethod": {
         "abstract": true,
         "description": "An IntegrityMethod provides an independently reproducible mechanism that permits verification\nof a specific Element that correlates to the data in this SPDX document. This identifier enables\na recipient to determine if anything in the original Element has been changed and eliminates\nconfusion over which version or modification of a specific Element is referenced.\n\nPlease note that different profiles may also provide additional methods for verifying the integrity of specific subclasses of Elements.",
@@ -1541,6 +1574,11 @@
         "name": "IntegrityMethod",
         "profileName": "Core",
         "properties": {
+          "22-rdf-syntax-ns#type": {
+            "name": "22-rdf-syntax-ns#type",
+            "parentClass": "https://spdx.org/rdf/3.0.1/terms/Core/IntegrityMethod",
+            "path": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          },
           "comment": {
             "datatype": "string",
             "maxCount": 1,
@@ -1799,7 +1837,7 @@
       },
       "Relationship": {
         "abstract": false,
-        "description": "A Relationship is a grouping of characteristics unique to an assertion\nthat one Element is related to one or more other Elements in some way.\n\nTo explicitly assert that no such relationships exist, the `to` property\nshould contain the 'NONE' individual and no other elements.\n\nA relationship that contains 'NONE' and additional elements in the `to`\nproperty is not valid.\n\nTo explicitly assert that no assertions are being made regarding the\nexistence of such relationships, the `to` property should contain the\n'NOASSERTION' individual.",
+        "description": "A Relationship is a grouping of characteristics unique to an assertion\nthat one Element is related to one or more other Elements in some way.\n\nTo explicitly assert that no such relationships exist, the `to` property\nshould contain the NoneElement individual and no other elements.\n\nA relationship that contains NoneElement and additional elements in the `to`\nproperty is not valid.\n\nTo explicitly assert that no assertions are being made regarding the\nexistence of such relationships, the `to` property should contain the\nNoAssertionElement individual.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Core/Relationship",
         "name": "Relationship",
         "profileName": "Core",
@@ -1840,7 +1878,8 @@
             "name": "from",
             "nodeKind": "IRI",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/Core/Relationship",
-            "path": "https://spdx.org/rdf/3.0.1/terms/Core/from"
+            "path": "https://spdx.org/rdf/3.0.1/terms/Core/from",
+            "targetClass": "https://spdx.org/rdf/3.0.1/terms/Core/Element"
           },
           "relationshipType": {
             "maxCount": 1,
@@ -2102,7 +2141,8 @@
             "name": "to",
             "nodeKind": "IRI",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/Core/Relationship",
-            "path": "https://spdx.org/rdf/3.0.1/terms/Core/to"
+            "path": "https://spdx.org/rdf/3.0.1/terms/Core/to",
+            "targetClass": "https://spdx.org/rdf/3.0.1/terms/Core/Element"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.1/terms/Core/Element",
@@ -2130,7 +2170,8 @@
             "name": "dataLicense",
             "nodeKind": "IRI",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/Core/SpdxDocument",
-            "path": "https://spdx.org/rdf/3.0.1/terms/Core/dataLicense"
+            "path": "https://spdx.org/rdf/3.0.1/terms/Core/dataLicense",
+            "targetClass": "https://spdx.org/rdf/3.0.1/terms/SimpleLicensing/AnyLicenseInfo"
           },
           "import": {
             "name": "import",
@@ -2263,7 +2304,7 @@
         "summary": "Provides information about the creation of the Element."
       },
       "dataLicense": {
-        "description": "The data license provides the license under which the SPDX documentation of the Element can be used.\n\nThis is to alleviate any concern that content (the data or database) in an SPDX file\nis subject to any form of intellectual property right that could restrict the re-use\nof the information or the creation of another SPDX file for the same project(s).\n\nThis approach avoids intellectual property and related restrictions over the SPDX file,\nhowever individuals can still contract with each other to restrict release\nof specific collections of SPDX files (which map to software bill of materials)\nand the identification of the supplier of SPDX files.\n\nCompliance with this document includes populating the SPDX fields therein\nwith data related to such fields (\"SPDX-Metadata\").\n\n\nThis document contains numerous fields where an SPDX file creator may provide\nrelevant explanatory text in SPDX-Metadata. Without opining on the lawfulness\nof \"database rights\" (in jurisdictions where applicable),\nsuch explanatory text is copyrightable subject matter in most Berne Convention countries.\n\nBy using the SPDX specification, or any portion hereof,\nyou hereby agree that any copyright rights (as determined by your jurisdiction)\nin any SPDX-Metadata, including without limitation explanatory text,\nshall be subject to the terms of the Creative Commons CC0 1.0 Universal license.\n\nFor SPDX-Metadata not containing any copyright rights,\nyou hereby agree and acknowledge that the SPDX-Metadata is provided to you \"as-is\"\nand without any representations or warranties of any kind concerning the SPDX-Metadata,\nexpress, implied, statutory or otherwise, including without limitation warranties\nof title, merchantability, fitness for a particular purpose, non-infringement,\nor the absence of latent or other defects, accuracy, or the presence or absence of errors,\nwhether or not discoverable, all to the greatest extent permissible under applicable law.",
+        "description": "The data license provides the license under which the SPDX documentation of the Element can be used.\n\nThis is to alleviate any concern that content (the data or database) in an SPDX file\nis subject to any form of intellectual property right that could restrict the re-use\nof the information or the creation of another SPDX file for the same project(s).\n\nThis approach avoids intellectual property and related restrictions over the SPDX file,\nhowever individuals can still contract with each other to restrict release\nof specific collections of SPDX files (which map to software bill of materials)\nand the identification of the supplier of SPDX files.\n\nCompliance with this document includes populating the SPDX fields therein\nwith data related to such fields (\"SPDX-Metadata\").\n\nThis document contains numerous fields where an SPDX file creator may provide\nrelevant explanatory text in SPDX-Metadata. Without opining on the lawfulness\nof \"database rights\" (in jurisdictions where applicable),\nsuch explanatory text is copyrightable subject matter in most Berne Convention countries.\n\nBy using the SPDX specification, or any portion hereof,\nyou hereby agree that any copyright rights (as determined by your jurisdiction)\nin any SPDX-Metadata, including without limitation explanatory text,\nshall be subject to the terms of the Creative Commons CC0 1.0 Universal license.\n\nFor SPDX-Metadata not containing any copyright rights,\nyou hereby agree and acknowledge that the SPDX-Metadata is provided to you \"as-is\"\nand without any representations or warranties of any kind concerning the SPDX-Metadata,\nexpress, implied, statutory or otherwise, including without limitation warranties\nof title, merchantability, fitness for a particular purpose, non-infringement,\nor the absence of latent or other defects, accuracy, or the presence or absence of errors,\nwhether or not discoverable, all to the greatest extent permissible under applicable law.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Core/dataLicense",
         "name": "dataLicense",
         "profileName": "Core",
@@ -2352,7 +2393,7 @@
       },
       "externalSpdxId": {
         "datatype": "http://www.w3.org/2001/XMLSchema#anyURI",
-        "description": "ExternalSpdxId identifies an external Element used within a Document but\ndefined external to that Document.",
+        "description": "An externalSpdxId identifies an external Element used within an SpdxDocument but\ndefined external to that SpdxDocument.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Core/externalSpdxId",
         "name": "externalSpdxId",
         "profileName": "Core",
@@ -2368,7 +2409,7 @@
       },
       "hashValue": {
         "datatype": "http://www.w3.org/2001/XMLSchema#string",
-        "description": "HashValue is the result of applying a hash algorithm to an Element.",
+        "description": "A hashValue is the result of applying a hash algorithm to an Element.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Core/hashValue",
         "name": "hashValue",
         "profileName": "Core",
@@ -2391,7 +2432,7 @@
         "summary": "Provides the location for more information regarding an external identifier."
       },
       "import": {
-        "description": "Import provides an ExternalMap of an Element identifier that is used within a\ndocument but defined external to that document.",
+        "description": "An import provides an ExternalMap of an Element identifier that is used within a\ndocument but defined external to that document.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Core/import",
         "name": "import",
         "profileName": "Core",
@@ -2455,7 +2496,7 @@
         "summary": "Provides a NamespaceMap of prefixes and associated namespace partial URIs applicable to an SpdxDocument and independent of any specific serialization format or instance."
       },
       "originatedBy": {
-        "description": "OriginatedBy identifies from where or whom the Element originally came.",
+        "description": "An originatedBy identifies from where or whom the Element originally came.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Core/originatedBy",
         "name": "originatedBy",
         "profileName": "Core",
@@ -2464,7 +2505,7 @@
       },
       "packageVerificationCodeExcludedFile": {
         "datatype": "http://www.w3.org/2001/XMLSchema#string",
-        "description": "A relative filename with the root of the package archive or directory\nreferencing a file to be excluded from the `PackageVerificationCode`.\n\nIn general, every filename is preceded with a `./`, see\n[RFC 3986 Uniform Resource Identifier (URI): Generic Syntax](https://www.rfc-editor.org/info/rfc3986)\nfor syntax.",
+        "description": "A relative filename with the root of the package archive or directory\nreferencing a file to be excluded from the `PackageVerificationCode`.\n\nEvery filename is preceded with a `./`.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Core/packageVerificationCodeExcludedFile",
         "name": "packageVerificationCodeExcludedFile",
         "profileName": "Core",
@@ -2479,7 +2520,7 @@
         "summary": "A substitute for a URI."
       },
       "profileConformance": {
-        "description": "Describes a profile to which the creator of this ElementCollection intends to\nconform.\n\nThe profileConformance will apply to all Elements contained within the\ncollection as well as the collection itself.\n\nConformance to a profile is defined by the additional restrictions documented\nin the profile specific documentation and schema files.\n\nUse of this property allows the creator of an ElementCollection to communicate\nto consumers their intent to adhere to the profile additional restrictions.\n\nThe profileConformance has a default value of core if no other\nprofileConformance is specified since all ElementCollections and Element must\nadhere to the core profile.",
+        "description": "Describes a profile to which the creator of this ElementCollection intends to\nconform.\n\nThe profileConformance will apply to all Elements contained within the\ncollection as well as the collection itself.\n\nConformance to a profile is defined by the additional restrictions documented\nin the profile specific documentation and schema files.\n\nUse of this property allows the creator of an ElementCollection to communicate\nto consumers their intent to adhere to the profile additional restrictions.\n\nThe profileConformance has a default value of \"core\" if no other\nprofileConformance is specified since all ElementCollections and Element must\nadhere to the Core profile.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Core/profileConformance",
         "name": "profileConformance",
         "profileName": "Core",
@@ -2528,7 +2569,7 @@
       },
       "standardName": {
         "datatype": "http://www.w3.org/2001/XMLSchema#string",
-        "description": "Various standards may be relevant to useful to capture for specific artifacts.",
+        "description": "Various standards may be relevant or useful to capture for specific artifacts.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Core/standardName",
         "name": "standardName",
         "profileName": "Core",
@@ -2607,7 +2648,7 @@
         "summary": "A value used in a generic key-value pair."
       },
       "verifiedUsing": {
-        "description": "VerifiedUsing provides an IntegrityMethod with which the integrity of an\nElement can be asserted.\n\nPlease note that different profiles may also provide additional methods for\nverifying the integrity of specific subclasses of Elements.",
+        "description": "A verifiedUsing provides an IntegrityMethod with which the integrity of an\nElement can be asserted.\n\nPlease note that different profiles may also provide additional methods for\nverifying the integrity of specific subclasses of Elements.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Core/verifiedUsing",
         "name": "verifiedUsing",
         "profileName": "Core",
@@ -2639,7 +2680,7 @@
         "summary": "Specifies the type of an annotation."
       },
       "ExternalIdentifierType": {
-        "description": "ExteralIdentifierType specifies the type of an external identifier.",
+        "description": "ExternalIdentifierType specifies the type of an external identifier.",
         "entries": {
           "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/cpe22": {
             "iri": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/cpe22",
@@ -3212,7 +3253,7 @@
         "summary": "Categories of presence or absence."
       },
       "ProfileIdentifierType": {
-        "description": "There are a set of profiles that have been defined by a profile team.\n\nA profile consists of a namespace that may add properties and classes to the\ncore profile unique to the domain covered by the profile.\n\nThe profile may also contain additional restrictions on existing properties and\nclasses defined in other profiles.\n\nIf the creator of an SPDX collection of elements includes a profile in the list\nof profileConformance, they are claiming that all contained elements conform\nto all restrictions defined for that profile.",
+        "description": "There are a set of profiles that have been defined by a profile team.\n\nA profile consists of a namespace that may add properties and classes to the\nCore profile unique to the domain covered by the profile.\n\nThe profile may also contain additional restrictions on existing properties and\nclasses defined in other profiles.\n\nIf the creator of an SPDX collection of elements includes a profile in the list\nof profileConformance, they are claiming that all contained elements conform\nto all restrictions defined for that profile.",
         "entries": {
           "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/ai": {
             "iri": "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/ai",
@@ -3242,7 +3283,7 @@
             "iri": "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/expandedLicensing",
             "name": "expandedLicensing",
             "profileName": "ProfileIdentifierType",
-            "summary": "the element follows the expanded Licensing profile specification"
+            "summary": "the element follows the ExpandedLicensing profile specification"
           },
           "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/extension": {
             "iri": "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/extension",
@@ -3266,7 +3307,7 @@
             "iri": "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/simpleLicensing",
             "name": "simpleLicensing",
             "profileName": "ProfileIdentifierType",
-            "summary": "the element follows the simple Licensing profile specification"
+            "summary": "the element follows the SimpleLicensing profile specification"
           },
           "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/software": {
             "iri": "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/software",
@@ -3308,7 +3349,7 @@
         "summary": "Indicates whether a relationship is known to be complete, incomplete, or if no assertion is made with respect to relationship completeness."
       },
       "RelationshipType": {
-        "description": "Provides information about the relationship between two Elements.\nFor example, you can represent a relationship between two different Files,\nbetween a Package and a File, between two Packages, or between one SpdxDocument\nand another SpdxDocument.\n\nRelationship names be descriptive enough to easily deduce the correct direction\nfrom their name. The best way to do this is to make sure that the relationship\nname completes the sentence:\n\n`from` (is) (a) `RELATIONSHIP` `to`",
+        "description": "Provides information about the relationship between two Elements.\nFor example, you can represent a relationship between two different Files,\nbetween a Package and a File, between two Packages, or between one SpdxDocument\nand another SpdxDocument.\n\nRelationship names should be descriptive enough to easily deduce the correct direction\nfrom their name. The best way to do this is to make sure that the relationship\nname completes the sentence:\n\n`from` (is) (a) `RELATIONSHIP` `to`",
         "entries": {
           "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/affects": {
             "iri": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/affects",
@@ -3952,7 +3993,7 @@
     "properties": {
       "anonymizationMethodUsed": {
         "datatype": "http://www.w3.org/2001/XMLSchema#string",
-        "description": "A free-form text that describes the methods used to anonymize the dataset (of fields in the dataset).",
+        "description": "A free-form text that describes the methods used to anonymize the dataset\nor fields in the dataset.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Dataset/anonymizationMethodUsed",
         "name": "anonymizationMethodUsed",
         "profileName": "Dataset",
@@ -4238,7 +4279,8 @@
             "name": "member",
             "nodeKind": "IRI",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/ConjunctiveLicenseSet",
-            "path": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/member"
+            "path": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/member",
+            "targetClass": "https://spdx.org/rdf/3.0.1/terms/SimpleLicensing/AnyLicenseInfo"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.1/terms/SimpleLicensing/AnyLicenseInfo",
@@ -4276,7 +4318,8 @@
             "name": "member",
             "nodeKind": "IRI",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/DisjunctiveLicenseSet",
-            "path": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/member"
+            "path": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/member",
+            "targetClass": "https://spdx.org/rdf/3.0.1/terms/SimpleLicensing/AnyLicenseInfo"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.1/terms/SimpleLicensing/AnyLicenseInfo",
@@ -4288,7 +4331,13 @@
         "iri": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/ExtendableLicense",
         "name": "ExtendableLicense",
         "profileName": "ExpandedLicensing",
-        "properties": {},
+        "properties": {
+          "22-rdf-syntax-ns#type": {
+            "name": "22-rdf-syntax-ns#type",
+            "parentClass": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/ExtendableLicense",
+            "path": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          }
+        },
         "subClassOf": "https://spdx.org/rdf/3.0.1/terms/SimpleLicensing/AnyLicenseInfo",
         "summary": "Abstract class representing a License or an OrLaterOperator."
       },
@@ -4309,6 +4358,11 @@
         "name": "License",
         "profileName": "ExpandedLicensing",
         "properties": {
+          "22-rdf-syntax-ns#type": {
+            "name": "22-rdf-syntax-ns#type",
+            "parentClass": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/License",
+            "path": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          },
           "isDeprecatedLicenseId": {
             "datatype": "boolean",
             "maxCount": 1,
@@ -4392,6 +4446,11 @@
         "name": "LicenseAddition",
         "profileName": "ExpandedLicensing",
         "properties": {
+          "22-rdf-syntax-ns#type": {
+            "name": "22-rdf-syntax-ns#type",
+            "parentClass": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/LicenseAddition",
+            "path": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          },
           "additionText": {
             "datatype": "string",
             "maxCount": 1,
@@ -4511,7 +4570,8 @@
             "name": "subjectLicense",
             "nodeKind": "IRI",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/OrLaterOperator",
-            "path": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/subjectLicense"
+            "path": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/subjectLicense",
+            "targetClass": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/License"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/ExtendableLicense",
@@ -4530,7 +4590,8 @@
             "name": "subjectAddition",
             "nodeKind": "IRI",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/WithAdditionOperator",
-            "path": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/subjectAddition"
+            "path": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/subjectAddition",
+            "targetClass": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/LicenseAddition"
           },
           "subjectExtendableLicense": {
             "maxCount": 1,
@@ -4538,7 +4599,8 @@
             "name": "subjectExtendableLicense",
             "nodeKind": "IRI",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/WithAdditionOperator",
-            "path": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/subjectExtendableLicense"
+            "path": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/subjectExtendableLicense",
+            "targetClass": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/ExtendableLicense"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.1/terms/SimpleLicensing/AnyLicenseInfo",
@@ -4740,11 +4802,17 @@
       },
       "Extension": {
         "abstract": true,
-        "description": "An Extension is a characterization of some aspect of an Element that is associated with the Element in a generalized fashion.\n\nRather than being associated with a particular Element through the typical use of a purpose-specific object property an Extension is associated with the Element it characterizes using a single common generalized object property.\n\nThis approach serves multiple purposes:\n\n1. Support profile-based extended characterization of Elements. Enables specification and expression of Element characterization extensions within any profile and namespace of SPDX without requiring changes to other profiles or namespaces and without requiring local subclassing of remote classes (which could inhibit ecosystem interoperability in some cases).\n\n2. Support extension of SPDX by adopting individuals or communities with Element characterization details uniquely specialized to their particular context. Enables adopting individuals or communities to utilize SPDX expressive capabilities along with expressing more arcane Element characterization details specific to them and not appropriate for standardization across SPDX.\n\n3. Support structured capture of expressive solutions for gaps in SPDX coverage from real-world use. Enables adopting individuals or communities to express Element characterization details they require that are not currently defined in SPDX but likely should be. Enables a practical pipeline that\n\n    - identifies gaps in SPDX that should be filled,\n    - expresses solutions to those gaps in a way that allows the identifying adopters to use the extended solutions with SPDX and does not conflict with current SPDX,\n    - can be clearly detected among the SPDX content exchange ecosystem,\n    - provides a clear and structured definition of gap solution that can be used as submission for revision to SPDX standard",
+        "description": "An Extension is a characterization of some aspect of an Element that is associated with the Element in a generalized fashion.\n\nRather than being associated with a particular Element through the typical use of a purpose-specific object property an Extension is associated with the Element it characterizes using a single common generalized object property.\n\nThis approach serves multiple purposes:\n\n1. Support profile-based extended characterization of Elements. Enables specification and expression of Element characterization extensions within any profile and namespace of SPDX without requiring changes to other profiles or namespaces and without requiring local subclassing of remote classes (which could inhibit ecosystem interoperability in some cases).\n\n2. Support extension of SPDX by adopting individuals or communities with Element characterization details uniquely specialized to their particular context. Enables adopting individuals or communities to utilize SPDX expressive capabilities along with expressing more arcane Element characterization details specific to them and not appropriate for standardization across SPDX.\n\n3. Support structured capture of expressive solutions for gaps in SPDX coverage from real-world use. Enables adopting individuals or communities to express Element characterization details they require that are not currently defined in SPDX but likely should be. Enables a practical pipeline that:\n\n    - identifies gaps in SPDX that should be filled,\n    - expresses solutions to those gaps in a way that allows the identifying adopters to use the extended solutions with SPDX and does not conflict with current SPDX,\n    - can be clearly detected among the SPDX content exchange ecosystem,\n    - provides a clear and structured definition of gap solution that can be used as submission for revision to SPDX standard",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Extension/Extension",
         "name": "Extension",
         "profileName": "Extension",
-        "properties": {},
+        "properties": {
+          "22-rdf-syntax-ns#type": {
+            "name": "22-rdf-syntax-ns#type",
+            "parentClass": "https://spdx.org/rdf/3.0.1/terms/Extension/Extension",
+            "path": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          }
+        },
         "summary": "A characterization of some aspect of an Element that is associated with the Element in a generalized fashion."
       }
     },
@@ -5053,6 +5121,7 @@
           "actionStatement": {
             "datatype": "string",
             "maxCount": 1,
+            "minCount": 1,
             "name": "actionStatement",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/Security/VexAffectedVulnAssessmentRelationship",
@@ -5060,6 +5129,7 @@
           },
           "actionStatementTime": {
             "datatype": "dateTimeStamp",
+            "maxCount": 1,
             "name": "actionStatementTime",
             "nodeKind": "Literal",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/Security/VexAffectedVulnAssessmentRelationship",
@@ -5072,7 +5142,7 @@
       },
       "VexFixedVulnAssessmentRelationship": {
         "abstract": false,
-        "description": "VexFixedVulnAssessmentRelationship links a vulnerability to a number of elements\nrepresenting VEX products where a vulnerability has been fixed and are no longer\naffected. It represents the VEX fixed status.\n\n*Constraints*\n\nWhen linking elements using a VexFixedVulnAssessmentRelationship, the following\nrequirements must be observed:\n\n- Elements linked with a VulnVexFixedAssessmentRelationship are constrained to\n  using the fixedIn relationship type.\n- The from: end of the relationship must ve a /Security/Vulnerability classed\n  element.\n\n*Example*\n\n```json\n{\n  \"type\": \"VexFixedVulnAssessmentRelationship\",\n  \"spdxId\": \"urn:spdx.dev:vex-fixed-in-1\",\n  \"relationshipType\": \"fixedIn\",\n  \"from\": \"urn:spdx.dev:vuln-cve-2020-28498\",\n  \"to\": [\"urn:product-acme-application-1.3\"],\n  \"security_assessedElement\": \"urn:npm-elliptic-6.5.4\",\n  \"suppliedBy\": [\"urn:spdx.dev:agent-jane-doe\"],\n  \"publishedTime\": \"2021-03-09T11:04:53Z\"\n}\n```",
+        "description": "VexFixedVulnAssessmentRelationship links a vulnerability to a number of elements\nrepresenting VEX products where a vulnerability has been fixed and are no longer\naffected. It represents the VEX fixed status.\n\n*Constraints*\n\nWhen linking elements using a VexFixedVulnAssessmentRelationship, the following\nrequirements must be observed:\n\n- Elements linked with a VulnVexFixedAssessmentRelationship are constrained to\n  using the fixedIn relationship type.\n- The from: end of the relationship must be a /Security/Vulnerability classed\n  element.\n\n*Example*\n\n```json\n{\n  \"type\": \"VexFixedVulnAssessmentRelationship\",\n  \"spdxId\": \"urn:spdx.dev:vex-fixed-in-1\",\n  \"relationshipType\": \"fixedIn\",\n  \"from\": \"urn:spdx.dev:vuln-cve-2020-28498\",\n  \"to\": [\"urn:product-acme-application-1.3\"],\n  \"security_assessedElement\": \"urn:npm-elliptic-6.5.4\",\n  \"suppliedBy\": [\"urn:spdx.dev:agent-jane-doe\"],\n  \"publishedTime\": \"2021-03-09T11:04:53Z\"\n}\n```",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Security/VexFixedVulnAssessmentRelationship",
         "name": "VexFixedVulnAssessmentRelationship",
         "profileName": "Security",
@@ -5139,7 +5209,7 @@
       },
       "VexUnderInvestigationVulnAssessmentRelationship": {
         "abstract": false,
-        "description": "VexUnderInvestigationVulnAssessmentRelationship links a vulnerability to a\nnumber of products stating the vulnerability's impact on them is being\ninvestigated. It represents the VEX under_investigation status.\n\n*Constraints*\n\nWhen linking elements using a VexUnderInvestigationVulnAssessmentRelationship\nthe following requirements must be observed:\n\n- Elements linked with a VexUnderInvestigationVulnAssessmentRelationship are\n  constrained to using the underInvestigationFor relationship type.\n- The from: end of the relationship must ve a /Security/Vulnerability classed\n  element.\n\n*Example*\n\n```json\n{\n  \"type\": \"VexUnderInvestigationVulnAssessmentRelationship\",\n  \"spdxId\": \"urn:spdx.dev:vex-underInvestigation-1\",\n  \"relationshipType\": \"underInvestigationFor\",\n  \"from\": \"urn:spdx.dev:vuln-cve-2020-28498\",\n  \"to\": [\"urn:product-acme-application-1.3\"],\n  \"security_assessedElement\": \"urn:npm-elliptic-6.5.2\",\n  \"suppliedBy\": [\"urn:spdx.dev:agent-jane-doe\"],\n  \"publishedTime\": \"2021-03-09T11:04:53Z\"\n}\n```",
+        "description": "VexUnderInvestigationVulnAssessmentRelationship links a vulnerability to a\nnumber of products stating the vulnerability's impact on them is being\ninvestigated. It represents the VEX under_investigation status.\n\n*Constraints*\n\nWhen linking elements using a VexUnderInvestigationVulnAssessmentRelationship\nthe following requirements must be observed:\n\n- Elements linked with a VexUnderInvestigationVulnAssessmentRelationship are\n  constrained to using the underInvestigationFor relationship type.\n- The from: end of the relationship must be a /Security/Vulnerability classed\n  element.\n\n*Example*\n\n```json\n{\n  \"type\": \"VexUnderInvestigationVulnAssessmentRelationship\",\n  \"spdxId\": \"urn:spdx.dev:vex-underInvestigation-1\",\n  \"relationshipType\": \"underInvestigationFor\",\n  \"from\": \"urn:spdx.dev:vuln-cve-2020-28498\",\n  \"to\": [\"urn:product-acme-application-1.3\"],\n  \"security_assessedElement\": \"urn:npm-elliptic-6.5.2\",\n  \"suppliedBy\": [\"urn:spdx.dev:agent-jane-doe\"],\n  \"publishedTime\": \"2021-03-09T11:04:53Z\"\n}\n```",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Security/VexUnderInvestigationVulnAssessmentRelationship",
         "name": "VexUnderInvestigationVulnAssessmentRelationship",
         "profileName": "Security",
@@ -5149,11 +5219,16 @@
       },
       "VexVulnAssessmentRelationship": {
         "abstract": true,
-        "description": "VexVulnAssessmentRelationship is an abstract subclass that defined the common\nproperties shared by all the SPDX-VEX status relationships.\n\n*Constraints*\n\nWhen linking elements using a VexVulnAssessmentRelationship, the following\nrequirements must be observed:\n\n- The from: end must be a /Security/Vulnerability classed element\n- The to: end must point to elements representing the VEX _products_.\n\nTo specify a different element where the vulnerability was detected, the VEX\nrelationship can optionally specify _subcomponents_ using the assessedElement\nproperty.\n\nVEX inherits information from the document level down to its statements. When a\nstatement is missing information it can be completed by reading the equivalent\nfield from the containing document. For example, if a VEX relationship is\nmissing data in its createdBy property, tools must consider the entity\nlisted in the CreationInfo section of the document as the VEX author.\nIn the same way, when a VEX relationship does not have a created property,\nthe document's date must be considered as authoritative.",
+        "description": "VexVulnAssessmentRelationship is an abstract subclass that defined the common\nproperties shared by all the SPDX-VEX status relationships.\n\n*Constraints*\n\nWhen linking elements using a VexVulnAssessmentRelationship, the following\nrequirements must be observed:\n\n- The from: end must be a /Security/Vulnerability classed element\n- The to: end must point to elements representing the VEX *products*.\n\nTo specify a different element where the vulnerability was detected, the VEX\nrelationship can optionally specify *subcomponents* using the assessedElement\nproperty.\n\nVEX inherits information from the document level down to its statements. When a\nstatement is missing information it can be completed by reading the equivalent\nfield from the containing document. For example, if a VEX relationship is\nmissing data in its createdBy property, tools must consider the entity\nlisted in the CreationInfo section of the document as the VEX author.\nIn the same way, when a VEX relationship does not have a created property,\nthe document's date must be considered as authoritative.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Security/VexVulnAssessmentRelationship",
         "name": "VexVulnAssessmentRelationship",
         "profileName": "Security",
         "properties": {
+          "22-rdf-syntax-ns#type": {
+            "name": "22-rdf-syntax-ns#type",
+            "parentClass": "https://spdx.org/rdf/3.0.1/terms/Security/VexVulnAssessmentRelationship",
+            "path": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          },
           "statusNotes": {
             "datatype": "string",
             "maxCount": 1,
@@ -5181,12 +5256,18 @@
         "name": "VulnAssessmentRelationship",
         "profileName": "Security",
         "properties": {
+          "22-rdf-syntax-ns#type": {
+            "name": "22-rdf-syntax-ns#type",
+            "parentClass": "https://spdx.org/rdf/3.0.1/terms/Security/VulnAssessmentRelationship",
+            "path": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          },
           "assessedElement": {
             "maxCount": 1,
             "name": "assessedElement",
             "nodeKind": "IRI",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/Security/VulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.1/terms/Security/assessedElement"
+            "path": "https://spdx.org/rdf/3.0.1/terms/Security/assessedElement",
+            "targetClass": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwareArtifact"
           },
           "modifiedTime": {
             "datatype": "dateTimeStamp",
@@ -5211,7 +5292,8 @@
             "name": "suppliedBy",
             "nodeKind": "IRI",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/Security/VulnAssessmentRelationship",
-            "path": "https://spdx.org/rdf/3.0.1/terms/Core/suppliedBy"
+            "path": "https://spdx.org/rdf/3.0.1/terms/Core/suppliedBy",
+            "targetClass": "https://spdx.org/rdf/3.0.1/terms/Core/Agent"
           },
           "withdrawnTime": {
             "datatype": "dateTimeStamp",
@@ -5291,11 +5373,11 @@
         "iri": "https://spdx.org/rdf/3.0.1/terms/Security/assessedElement",
         "name": "assessedElement",
         "profileName": "Security",
-        "range": "https://spdx.org/rdf/3.0.1/terms/Core/Element",
+        "range": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwareArtifact",
         "summary": "Specifies an Element contained in a piece of software where a vulnerability was\nfound."
       },
       "catalogType": {
-        "description": "A catalogType is a mandatory value and must select one of the existing entries in the `ExploitCatalogType.md` vocabulary.",
+        "description": "A catalogType is a mandatory value and must select one of the existing entries\nin the [`ExploitCatalogType`](../Vocabularies/ExploitCatalogType.md) vocabulary.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Security/catalogType",
         "name": "catalogType",
         "profileName": "Security",
@@ -5303,7 +5385,7 @@
         "summary": "Specifies the exploit catalog type."
       },
       "decisionType": {
-        "description": "A decisionType is a mandatory value and must select one of the four entries in\nthe `SsvcDecisionType.md` vocabulary.",
+        "description": "A decisionType is a mandatory value and must select one of the four entries in\nthe [`SsvcDecisionType`](../Vocabularies/SsvcDecisionType.md) vocabulary.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Security/decisionType",
         "name": "decisionType",
         "profileName": "Security",
@@ -5320,7 +5402,7 @@
       },
       "impactStatement": {
         "datatype": "http://www.w3.org/2001/XMLSchema#string",
-        "description": "When a VEX product element is related with a VexNotAffectedVulnAssessmentRelationship\nand a machine readable justification label is not provided, then an impactStatement\nthat further explains how or why the prouct(s) are not affected by the vulnerability\nmust be provided.",
+        "description": "When a VEX product element is related with a VexNotAffectedVulnAssessmentRelationship\nand a machine readable justification label is not provided, then an impactStatement\nthat further explains how or why the product(s) are not affected by the vulnerability\nmust be provided.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Security/impactStatement",
         "name": "impactStatement",
         "profileName": "Security",
@@ -5400,7 +5482,7 @@
       },
       "vectorString": {
         "datatype": "http://www.w3.org/2001/XMLSchema#string",
-        "description": "Specifies any combination of the CVSS Base, Temporal, Threat, Environmental,\nand/or Supplemental vector string values for a vulnerability.\n\nSupports vectorStrings specified in all CVSS versions.\n\n**Constraints**\n\nString values for the vectorString range must only include the abbreviated form\nof metric names specified in CVSS specifications, e.g.\n[Common Vulnerability Scoring System Vector String](https://www.first.org/cvss/v4.0/specification-document#Vector-String).",
+        "description": "Specifies any combination of the CVSS Base, Temporal, Threat, Environmental,\nand/or Supplemental vector string values for a vulnerability.\n\nSupports vectorStrings specified in all CVSS versions.\n\n*Constraints*\n\nString values for the vectorString range must only include the abbreviated form\nof metric names specified in CVSS specifications, e.g.\n[Common Vulnerability Scoring System Vector String](https://www.first.org/cvss/v4.0/specification-document#Vector-String).",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Security/vectorString",
         "name": "vectorString",
         "profileName": "Security",
@@ -5567,7 +5649,13 @@
         "iri": "https://spdx.org/rdf/3.0.1/terms/SimpleLicensing/AnyLicenseInfo",
         "name": "AnyLicenseInfo",
         "profileName": "SimpleLicensing",
-        "properties": {},
+        "properties": {
+          "22-rdf-syntax-ns#type": {
+            "name": "22-rdf-syntax-ns#type",
+            "parentClass": "https://spdx.org/rdf/3.0.1/terms/SimpleLicensing/AnyLicenseInfo",
+            "path": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          }
+        },
         "subClassOf": "https://spdx.org/rdf/3.0.1/terms/Core/Element",
         "summary": "Abstract class representing a license combination consisting of one or more licenses."
       },
@@ -5869,7 +5957,8 @@
             "name": "snippetFromFile",
             "nodeKind": "IRI",
             "parentClass": "https://spdx.org/rdf/3.0.1/terms/Software/Snippet",
-            "path": "https://spdx.org/rdf/3.0.1/terms/Software/snippetFromFile"
+            "path": "https://spdx.org/rdf/3.0.1/terms/Software/snippetFromFile",
+            "targetClass": "https://spdx.org/rdf/3.0.1/terms/Software/File"
           }
         },
         "subClassOf": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwareArtifact",
@@ -5882,6 +5971,11 @@
         "name": "SoftwareArtifact",
         "profileName": "Software",
         "properties": {
+          "22-rdf-syntax-ns#type": {
+            "name": "22-rdf-syntax-ns#type",
+            "parentClass": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwareArtifact",
+            "path": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+          },
           "additionalPurpose": {
             "name": "additionalPurpose",
             "nodeKind": "IRI",
@@ -6164,7 +6258,7 @@
     "name": "Software",
     "properties": {
       "additionalPurpose": {
-        "description": "Additional purpose provides information about the additional purposes of the\nsoftware artifact in addition to the primaryPurpose.",
+        "description": "An additionalPurpose provides information about the additional purpose of the\nsoftware artifact in addition to the primaryPurpose.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Software/additionalPurpose",
         "name": "additionalPurpose",
         "profileName": "Software",
@@ -6293,7 +6387,7 @@
       },
       "sourceInfo": {
         "datatype": "http://www.w3.org/2001/XMLSchema#string",
-        "description": "SourceInfo records any relevant background information or additional comments\nabout the origin of the package.\n\nFor example, this field might include comments indicating whether the package\nwas pulled from a source code management system or has been repackaged.\n\nThe creator can provide additional information to describe any anomalies or\ndiscoveries in the determination of the origin of the package.",
+        "description": "A sourceInfo records any relevant background information or additional comments\nabout the origin of the package.\n\nFor example, this field might include comments indicating whether the package\nwas pulled from a source code management system or has been repackaged.\n\nThe creator can provide additional information to describe any anomalies or\ndiscoveries in the determination of the origin of the package.",
         "iri": "https://spdx.org/rdf/3.0.1/terms/Software/sourceInfo",
         "name": "sourceInfo",
         "profileName": "Software",

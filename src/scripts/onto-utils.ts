@@ -168,9 +168,6 @@ export async function enrichModelFromMarkdown(
           v => v.name === itemName
         )!;
         item.description = modelItem.description;
-        if (sectionName === 'classes' && item.abstract === undefined) {
-          item.abstract = modelItem.metadata.Instantiability === 'Abstract';
-        }
         section[itemName] = item;
       }
 
@@ -260,11 +257,11 @@ function getClasses(graph: Store) {
           .filter(s =>
             graph.countQuads(s, getNamedNode('rdfs', 'label'), null, null)
           ).length
-    )
-    .filter(o => !o.value.endsWith('AbstractClass')); //workaround for invalid AbstractClass
+    );
   const items: Classes = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
+    const [classProperties, abstract] = extractNodeShape(graph, node);
     items[shared.name] = {
       ...shared,
       subClassOf: graph.getObjects(
@@ -272,18 +269,8 @@ function getClasses(graph: Store) {
         getNamedNode('rdfs', 'subClassOf'),
         null
       )[0]?.value,
-      // nodeKind: graph
-      //   .getObjects(node, NS.sh.nodeKind, null)[0]
-      //   .value.split('#')
-      //   .pop() as nodeKindTypes,
-      // abstract: graph.has(
-      //   DataFactory.quad(
-      //     node,
-      //     NS.rdf.type,
-      //     DataFactory.namedNode('http://spdx.invalid./AbstractClass')
-      //   )
-      // ),
-      properties: extractNodeShape(graph, node),
+      properties: classProperties as ClassProperties,
+      abstract: abstract as boolean,
     };
   }
   return groupByProfile(items);
@@ -352,8 +339,7 @@ function getVocabularies(graph: Store) {
           .filter(s =>
             graph.countQuads(s, getNamedNode('rdfs', 'label'), null, null)
           ).length
-    )
-    .filter(o => !o.value.endsWith('AbstractClass')); //workaround for invalid AbstractClass
+    );
   const items: Vocabularies = {};
   for (const node of nodes) {
     const shared = getSharedFields(node, graph);
@@ -403,6 +389,7 @@ function extractNodeShape(graph: Store, node: Term) {
     getNamedNode('sh', 'property'),
     null
   );
+  let abstract: boolean = false;
   for (const pshape of propertyShapes) {
     let path: IRI;
     let name: Name;
@@ -418,7 +405,9 @@ function extractNodeShape(graph: Store, node: Term) {
       switch (field) {
         case 'path':
           path = o.object.value;
-          name = parseIRI(o.object.value).name;
+          if (path !== getNamedNode('rdf', 'type').value) {
+            name = parseIRI(o.object.value).name;
+          }
           break;
         case 'minCount':
           minCount = parseInt(o.object.value);
@@ -444,6 +433,16 @@ function extractNodeShape(graph: Store, node: Term) {
           break;
         case 'class':
           classIRI = o.object.value;
+          break;
+        case 'not':
+          if (
+            graph.getPredicates(o.object.id, null, null)[0].value ===
+            getNamedNode('sh', 'hasValue').value
+          ) {
+            abstract = true;
+          }
+          break;
+        case 'message':
           break;
 
         default:
@@ -488,7 +487,7 @@ function extractNodeShape(graph: Store, node: Term) {
 
     classProperties[classProperty.name] = classProperty;
   }
-  return classProperties;
+  return [classProperties, abstract];
 }
 
 function setShaclLists(graph: Store) {

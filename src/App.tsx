@@ -22,9 +22,11 @@ export default function App() {
   const [exampleLoaded, setExampleLoaded] = useState(false);
 
   const updateOntologyCallback = useCallback(async () => {
-    const source = 'https://spdx.github.io/spdx-spec/v3.0.1/rdf/spdx-model.ttl';
-    const jsonLdContextSource =
-      'https://spdx.github.io/spdx-spec/v3.0.1/rdf/spdx-context.jsonld';
+    // const source = 'https://spdx.github.io/spdx-spec/v3.0.1/rdf/spdx-model.ttl';
+    const source = 'spdx/3.0.1/spdx-model.ttl';
+    // const jsonLdContextSource =
+    //   'https://spdx.github.io/spdx-spec/v3.0.1/rdf/spdx-context.jsonld';
+    const jsonLdContextSource = 'spdx/3.0.1/spdx-context.jsonld';
     const jsonLdContextUrl = 'https://spdx.org/rdf/3.0.1/spdx-context.jsonld';
     const model = 'spdx/3.0.1/model.json';
     await updateOntology(source, jsonLdContextSource, jsonLdContextUrl, model);
