@@ -1,5 +1,5 @@
 {
-  "@context": "https://spdx.org/rdf/3.0.1/spdx-context.jsonld",
+  "@context": "https://spdx.github.io/spdx-spec/v3.0.1/rdf/spdx-context.jsonld",
   "@graph": [
     {
       "spdxId": "https://swinslow.net/spdx-examples/example1/hello-v3-specv3/document0",
@@ -78,11 +78,7 @@
       "spdx:Core/contentType": "application/octet-stream",
       "creationInfo": "_:b0",
       "spdx:Core/name": "./build/hello",
-      "verifiedUsing": [
-        "_:b3",
-        "_:b4",
-        "_:b5"
-      ],
+      "verifiedUsing": ["_:b3", "_:b4", "_:b5"],
       "spdx:Software/copyrightText": "NOASSERTION"
     },
     {
@@ -99,11 +95,7 @@
       "type": "software_File",
       "creationInfo": "_:b0",
       "spdx:Core/name": "./src/Makefile",
-      "verifiedUsing": [
-        "_:b6",
-        "_:b7",
-        "_:b8"
-      ],
+      "verifiedUsing": ["_:b6", "_:b7", "_:b8"],
       "spdx:Software/copyrightText": "NOASSERTION",
       "software_primaryPurpose": "source"
     },
@@ -153,11 +145,7 @@
       "type": "software_File",
       "creationInfo": "_:b0",
       "spdx:Core/name": "./src/hello.c",
-      "verifiedUsing": [
-        "_:b9",
-        "_:b10",
-        "_:b11"
-      ],
+      "verifiedUsing": ["_:b9", "_:b10", "_:b11"],
       "spdx:Software/copyrightText": "Copyright Contributors to the spdx-examples project.",
       "software_primaryPurpose": "source"
     },

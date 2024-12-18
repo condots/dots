@@ -1,5 +1,5 @@
 {
-  "@context": "https://spdx.org/rdf/3.0.1/spdx-context.jsonld",
+  "@context": "https://spdx.github.io/spdx-spec/v3.0.1/rdf/spdx-context.jsonld",
   "@graph": [
     {
       "spdxId": "urn:nanoid:iGssXfcLExlNVoLh-OYz6",
@@ -19,10 +19,7 @@
       "spdxId": "urn:nanoid:bymCRmVMkX1Iv8VBWM9Rx",
       "type": "software_Sbom",
       "creationInfo": "_:b0",
-      "profileConformance": [
-        "core",
-        "software"
-      ],
+      "profileConformance": ["core", "software"],
       "rootElement": [
         "urn:nanoid:1k-rpO9qQ4QPYHlP9ENx6",
         "urn:nanoid:s9B92nt7thHsQbtHkuh1o"
