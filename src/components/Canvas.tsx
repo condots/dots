@@ -1,4 +1,11 @@
-import { useCallback, useRef, ChangeEvent, DragEvent, useMemo } from 'react';
+import {
+  useCallback,
+  useRef,
+  ChangeEvent,
+  DragEvent,
+  useMemo,
+  useState,
+} from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 import {
@@ -37,6 +44,7 @@ import {
 import { importSpdxJsonLd } from '@/scripts/fs-utils';
 import { Class } from '@/types';
 import sLogo from '@/assets/s.svg';
+import SBOM3DVisualization from './SBOM3DVisualization';
 
 const Canvas = () => {
   const { nodes, edges } = flowStore(
@@ -244,25 +252,36 @@ const Canvas = () => {
     []
   );
 
+  const [use3D, setUse3D] = useState(false);
+
   return (
-    <ReactFlow
-      {...memoizedReactFlowProps}
-      onConnectEnd={onConnectEnd}
-      onDrop={handleDrop}
-      onDragOver={handleDragOver}
-    >
-      <Background color="#00416b" variant={BackgroundVariant.Dots} />
-      {MemoizedControls}
-      {MemoizedPanel}
-      <DraggedClass />
-      <input
-        ref={importJsonLdRef}
-        type="file"
-        accept=".jsonld,.json-ld,.json"
-        onChange={handleImportFile}
-        hidden
-      />
-    </ReactFlow>
+    <>
+      <button onClick={() => setUse3D(!use3D)}>
+        Toggle {use3D ? '2D' : '3D'} View
+      </button>
+      {use3D ? (
+        <SBOM3DVisualization nodes={nodes} edges={edges} />
+      ) : (
+        <ReactFlow
+          {...memoizedReactFlowProps}
+          onConnectEnd={onConnectEnd}
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+        >
+          <Background color="#00416b" variant={BackgroundVariant.Dots} />
+          {MemoizedControls}
+          {MemoizedPanel}
+          <DraggedClass />
+          <input
+            ref={importJsonLdRef}
+            type="file"
+            accept=".jsonld,.json-ld,.json"
+            onChange={handleImportFile}
+            hidden
+          />
+        </ReactFlow>
+      )}
+    </>
   );
 };
 
