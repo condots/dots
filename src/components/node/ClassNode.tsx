@@ -67,6 +67,7 @@ const ClassNode = ({
         position={Position.Left}
         className="targetHandle"
         isConnectable={isTargetHandleConnectable}
+        hidden={!isTargetHandleConnectable}
       />
     ),
     [isTargetHandleConnectable]
