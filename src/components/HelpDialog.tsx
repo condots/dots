@@ -1,8 +1,6 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
-import LiteYouTubeEmbed from 'react-lite-youtube-embed';
-import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css';
 
 import { appStore } from '@/store/app';
 import { useCallback, useMemo } from 'react';
@@ -19,10 +17,13 @@ const HelpDialog = () => {
 
   const YouTubeEmbed = useMemo(
     () => (
-      <LiteYouTubeEmbed
-        id="J4hbb4PeLIU"
-        title="Introduction to SPDX 3 using 'dots'"
-      />
+      <iframe
+        width="700"
+        height="520"
+        src="https://www.youtube-nocookie.com/embed/J4hbb4PeLIU?modestbranding=1&rel=0&hd=1"
+        title="Introduction to SPDX 3 using dots"
+        allowFullScreen
+      ></iframe>
     ),
     []
   );
@@ -46,7 +47,7 @@ const HelpDialog = () => {
       focus:outline-none
       prose
       overflow-auto
-      pt-5 pb-3"
+      pt-5 pb-4"
       >
         <VisuallyHidden>
           <Dialog.Title>Help dialog</Dialog.Title>
