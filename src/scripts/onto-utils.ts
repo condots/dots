@@ -405,9 +405,7 @@ function extractNodeShape(graph: Store, node: Term) {
       switch (field) {
         case 'path':
           path = o.object.value;
-          if (path !== getNamedNode('rdf', 'type').value) {
-            name = parseIRI(o.object.value).name;
-          }
+          name = parseIRI(o.object.value).name;
           break;
         case 'minCount':
           minCount = parseInt(o.object.value);
@@ -449,6 +447,10 @@ function extractNodeShape(graph: Store, node: Term) {
           console.log('Unknown field', field, o.object.value);
           break;
       }
+    }
+
+    if (path! === getNamedNode('rdf', 'type').value) {
+      continue;
     }
 
     if (pattern) {
