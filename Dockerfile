@@ -4,11 +4,13 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 WORKDIR /app
 
-FROM base AS build
-COPY package.json /app/package.json
-COPY pnpm-lock.yaml /app/pnpm-lock.yaml
+FROM base AS deps
+COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
-COPY . /app/
+
+FROM base AS build
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 RUN pnpm run build
 
 FROM nginx:latest as server

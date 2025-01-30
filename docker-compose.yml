@@ -30,13 +30,14 @@ services:
     user: root
     volumes:
       - certs:/etc/letsencrypt:rw
-      - webroot:/usr/share/nginx/html
+      - webroot:/var/www/.well-known:rw
       - ./entrypoint.sh:/entrypoint.sh
     entrypoint: ['/bin/sh', '/entrypoint.sh']
     develop:
       watch:
         - action: rebuild
           path: .
+          target: build
 
   certbot:
     image: certbot/certbot

@@ -8,7 +8,7 @@ find /etc/letsencrypt -type f -exec chmod 644 {} +
 
 while true; do
   echo "Checking..."
-  certbot renew --webroot -w /usr/share/nginx/html
+  certbot renew --webroot -w /var/www
   if [ $? -eq 0 ]; then
     tee -a /var/log/letsencrypt/renewal.log
     chmod 755 /etc/letsencrypt/live /etc/letsencrypt/archive
