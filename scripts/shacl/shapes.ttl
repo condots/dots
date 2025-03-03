@@ -1,0 +1,29 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix spdxcore: <https://spdx.org/rdf/3.0.1/terms/Core/> .
+
+spdxcore:ElementCollection
+    sh:property [ 
+        sh:path [ sh:alternativePath ( spdxcore:element spdxcore:rootElement ) ] ;
+        sh:qualifiedValueShape [
+            sh:path rdf:type ;
+            sh:hasValue spdxcore:SpdxDocument ;
+        ] ;
+        sh:qualifiedMaxCount 0 ;
+        sh:message "An element or rootElement of ElementCollection must not be of type SpdxDocument."@en
+    ] ;
+    sh:or (
+        [
+            sh:property [
+                sh:path spdxcore:element ;
+                sh:maxCount 0 ;
+            ]
+        ]
+        [
+            sh:property [
+                sh:path spdxcore:rootElement ;
+                sh:minCount 1 ;
+            ]
+        ]
+    ) ;
+    sh:message "If the ElementCollection has at least 1 element, it must also have at least 1 rootElement."@en .

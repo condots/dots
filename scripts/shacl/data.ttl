@@ -1,0 +1,49 @@
+@prefix ex: <http://example.org/ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix spdxcore: <https://spdx.org/rdf/3.0.1/terms/Core/> .
+@prefix spdxsw: <https://spdx.org/rdf/3.0.1/terms/Software/> .
+
+ex:MyAgent
+    a spdxcore:Agent ;
+    spdxcore:creationInfo _:MyCreationInfo .
+
+ex:MyPerson
+    a spdxcore:Person ;
+    spdxcore:creationInfo _:MyCreationInfo .
+
+_:MyCreationInfo
+    a spdxcore:CreationInfo ;
+    spdxcore:createdBy ex:MyAgent ;
+    spdxcore:created "2024-09-04T20:25:34Z"^^xsd:dateTimeStamp ;
+    spdxcore:specVersion "3.0.1" .
+
+ex:MySpdxDocument
+    a spdxcore:SpdxDocument ;
+    spdxcore:creationInfo _:MyCreationInfo .
+
+ex:MyPackage
+    a spdxsw:Package ;
+    spdxcore:creationInfo _:MyCreationInfo .
+
+ex:Valid
+    a spdxcore:Bundle ;
+    spdxcore:creationInfo _:MyCreationInfo ;
+    spdxcore:rootElement ex:MyPackage ;
+    spdxcore:element ex:MyPackage .
+
+ex:InvalidLinkElementToSpdxDocument
+    a spdxcore:Bundle ;
+    spdxcore:creationInfo _:MyCreationInfo ;
+    spdxcore:rootElement ex:MyPackage ;
+    spdxcore:element ex:MySpdxDocument .
+
+ex:InvalidLinkRootElementToSpdxDocument
+    a spdxcore:Bundle ;
+    spdxcore:creationInfo _:MyCreationInfo ;
+    spdxcore:rootElement ex:MySpdxDocument ;
+    spdxcore:element ex:MyPackage .
+
+ex:InvalidElementWithoutRootElement
+    a spdxcore:Bundle ;
+    spdxcore:creationInfo _:MyCreationInfo ;
+    spdxcore:element ex:MyPackage .
