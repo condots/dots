@@ -8,7 +8,7 @@
 # ONLY RUN ON FIRST DEPLOYMENT !!!
 # Generate certificates:
 # docker compose -f /home/opc/dots/docker-compose.yml run --rm --entrypoint \
-#   "certbot certonly --webroot -w /usr/share/nginx/html -d condots.duckdns.org" \
+#   "certbot certonly --webroot -w /var/www -d condots.duckdns.org" \
 #   certbot
 
 # Trigger rebuild on changes (run once):
@@ -29,10 +29,12 @@ services:
       - '443:443'
     user: root
     volumes:
-      - certs:/etc/letsencrypt:rw
-      - webroot:/var/www/.well-known:rw
+      - webroot:/var/www:rw
+      - ./certs:/etc/letsencrypt:rw
       - ./entrypoint.sh:/entrypoint.sh
     entrypoint: ['/bin/sh', '/entrypoint.sh']
+    depends_on:
+      - certbot
     develop:
       watch:
         - action: rebuild
@@ -42,15 +44,13 @@ services:
   certbot:
     image: certbot/certbot
     volumes:
-      - certs:/etc/letsencrypt
-      - certs-data:/data/letsencrypt
       - certs-lib:/var/lib/letsencrypt
-      - webroot:/usr/share/nginx/html
+      - webroot:/var/www
+      - ./certs:/etc/letsencrypt
+      - ./logs:/var/log/letsencrypt
       - ./renewal-script.sh:/etc/renewal-script.sh
     entrypoint: /bin/sh -c '/etc/renewal-script.sh'
 
 volumes:
-  certs:
-  certs-data:
   certs-lib:
   webroot:
