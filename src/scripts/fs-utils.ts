@@ -278,8 +278,17 @@ export async function importSpdxJsonLd(
     }
 
     const store = new Store();
+    const jsonLdContextUrl = ontoStore.getState().jsonLdContextUrl!;
+    const jsonLdContext = ontoStore.getState().jsonLdContext!;
     const parser = new JsonLdParser({
-      context: ontoStore.getState().jsonLdContext! as object,
+      context: jsonLdContext as object,
+      // Prevent fetching the remote @context URL embedded in imported documents.
+      documentLoader: {
+        load: async (url: string) => {
+          if (url === jsonLdContextUrl) return { '@context': jsonLdContext };
+          return (await fetch(url)).json();
+        },
+      },
     });
     parser.write(data);
     parser.end();

@@ -4,7 +4,12 @@ import packageVersion from 'vite-plugin-package-version';
 import { fileURLToPath } from 'node:url';
 import { visualizer } from 'rollup-plugin-visualizer';
 
+// Base path for GitHub Pages project site (https://<user>.github.io/dots/).
+// Override with BASE_PATH=/ for a custom domain or user/org root page.
+const base = process.env.BASE_PATH ?? '/dots/';
+
 export default defineConfig({
+  base,
   plugins: [react(), packageVersion()],
   resolve: {
     alias: [
@@ -16,11 +21,12 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      plugins: [visualizer({ open: true })],
+      plugins: [visualizer({ open: !process.env.CI })],
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            return id.split('node_modules/')[1].split('/')[0];
+            const chunk = id.split('node_modules/')[1].split('/')[0];
+            return chunk.replace(/^\.+/, '');
           }
         },
       },
