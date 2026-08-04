@@ -69,7 +69,7 @@ def validate_shacl(model_graph, shapes_graph, data_graph, inference):
     "--model",
     "-m",
     help="URL to SPDX model",
-    default="https://spdx.github.io/spdx-spec/v3.0.1/rdf/spdx-model.ttl",
+    default="https://spdx.org/rdf/3.0.1/spdx-model.ttl",
 )
 @click.option(
     "--shapes",
